@@ -53,7 +53,7 @@ namespace msfs_server.Components
              */
 
 
-            if (AircraftStatus.Latitude > 0 && AircraftStatus.Longitude > 0  && (_latitude != AircraftStatus.Latitude || _longitude != AircraftStatus.Longitude || _heading != AircraftStatus.TrueHeading))
+            if (AircraftStatus.Latitude != 0 && AircraftStatus.Longitude != 0  && (_latitude != AircraftStatus.Latitude || _longitude != AircraftStatus.Longitude || _heading != AircraftStatus.TrueHeading))
             {
                 _latitude = AircraftStatus.Latitude;
 
