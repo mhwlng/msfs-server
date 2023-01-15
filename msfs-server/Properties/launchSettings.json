@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "msfs-server": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:51044;http://localhost:51045"
+    }
+  }
+}
