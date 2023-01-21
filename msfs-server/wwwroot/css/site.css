@@ -14,3 +14,14 @@
     }
 }
 
+.leaflet-touch .leaflet-bar button {
+    height: 50px !important;
+    width: 50px !important;
+    padding: 8px;
+}
+
+.leaflet-touch .leaflet-bar a {
+    height: 50px !important;
+    width: 50px !important;
+    padding: 8px;
+}

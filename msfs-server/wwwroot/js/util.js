@@ -2,12 +2,16 @@
 
 var map;
 var marker;
-var layerControl;
-
-/*var followButton;
+var trackline;
 var flightPathButton;
 var flightPath;
-*/
+
+var layerControl;
+
+var followButton;
+var following = true;
+
+
 
 export function InitMap() {
 
@@ -100,54 +104,94 @@ export function InitMap() {
         rotationOrigin: 'center center'
     }).addTo(map);
 
-    layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+    trackline = L.polyline([], { color: 'red', smoothFactor: 3, opacity : 1.0 }).addTo(map);
 
-  //  map.on("dragstart", () => {
-  //      followButton.disable();
-  //  });
+    flightPathButton = L.easyButton({
+        states: [{
+            stateName: 'display-flight-path',     
+            icon: '<span style="padding-top:4px;" class="material-icons">timeline</span>',               
+            title: 'flight path shown',     
+            onClick: function (btn, map) {     
 
+                trackline.setStyle({ opacity: 0 });
+                btn.state('hide-flight-path'); 
+            }
+        }, {
+            stateName: 'hide-flight-path',
+            icon: '<span style="padding-top:4px;color:grey;" class="material-icons">timeline</span>',
+            title: 'flight path hidden',
+            onClick: function (btn, map) {
+
+                trackline.setStyle({ opacity: 1.0 });
+
+                btn.state('display-flight-path');
+            }
+        }]
+    }).addTo(map);
+
+    followButton = L.easyButton({
+        states: [{
+            stateName: 'follow',
+            icon: '<span style="padding-top:4px;" class="material-icons">flight</span>',
+            title: 'aircraft followed',
+            onClick: function (btn, map) {
+
+                following = false;
+                btn.state('dont-follow');
+            }
+        }, {
+            stateName: 'dont-follow',
+            icon: '<span style="padding-top:4px;color:grey;" class="material-icons">flight</span>',
+            title: 'aircraft not followed',
+            onClick: function (btn, map) {
+
+                following = true;
+                btn.state('follow');
+            }
+        }]
+    }).addTo(map);
+
+    map.on("dragstart", () => {
+        following = false;
+
+        followButton.state('dont-follow');
+    });
 
     /*
-    followButton = L.easyButton('<span class="material-icons">flight</span>', function () {
-        const state = button.classList.contains("disabled");
-        if (state)
-            enable();
-        else
-            disable();
-    }, 'Follow aircraft').addTo(map);
-
     flightPathButton = L.easyButton('<span class="material-icons">timeline</span>', () => {
-        if (!flightPath)
-            return;
-
+   
         const state = flightPathButton.button.classList.contains("disabled");
         if (state) {
-            flightPath.addTo(map);
+           // trackline.setStyle({ opacity: 1.0 });
+
+            //if (flightpath) {
+            //    flightPath.addTo(map);
+            //} 
             flightPathButton.enable();
         }
         else {
-            flightPath.remove();
+            //trackline.setStyle({ opacity: 0 });
+
+            //if (flightpath) {
+            //    flightPath.remove();
+           // }
             flightPathButton.disable();
         }
     }, 'Display flight path').addTo(map);*/
+
+    layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+
+
+
+ 
 
     /*
      	fltpln_arr = data.FLT_PLN;
 		gps_next_lat = data.NEXT_WP_LAT;
 		gps_next_lon = data.NEXT_WP_LON;
 		gps_next_wp_arr = [[latitude, longitude],[gps_next_lat, gps_next_lon]];
-           // Trackline Update
-    trackline.addLatLng([latitude, longitude]);
-    
-    // Trackline clear when distance between points > 2000m (MSFS places the plane in menu to 0,0)
-    tracklinelen = trackline.getLatLngs().length;
-    if (tracklinelen > 1) {
-        if (trackline.getLatLngs()[tracklinelen - 1].distanceTo(trackline.getLatLngs()[tracklinelen - 2]) > 2000) {
-            trackline.setLatLngs([]);
-            // Force Frequecy Sync
-            syncRadio();
-        }
-    };
+
     
     // GPS Next WP Polyline Update
     if (gps_next_wp_arr[1] != null) {
@@ -155,10 +199,7 @@ export function InitMap() {
     }
 
     this.map.DrawFlightPath([newData.gpsNextWPLatitude, newData.gpsNextWPLongitude], [newData.gpsPrevWPLatitude, newData.gpsPrevWPLongitude]);
-		
-    // Add GPS Trackline
-	var trackline;
-	trackline = L.polyline([], {color: 'red', smoothFactor: 3}).addTo(map);
+
 	
 	// Add GPS Waypoints
 	var gpswp;
@@ -181,5 +222,20 @@ export function SetMapCoordinates(latitude, longitude, heading) {
     marker.setLatLng(newPos);
     marker.setRotationAngle(heading);
 
-    map.setView(newPos);
+    if (following) {
+        map.setView(newPos);
+    }
+
+    // Trackline Update
+    trackline.addLatLng([latitude, longitude]);
+
+    // Trackline clear when distance between points > 2000m (MSFS places the plane in menu to 0,0)
+    var tracklinelen = trackline.getLatLngs().length;
+    if (tracklinelen > 1) {
+        if (trackline.getLatLngs()[tracklinelen - 1].distanceTo(trackline.getLatLngs()[tracklinelen - 2]) > 2000) {
+            trackline.setLatLngs([]);
+            // Force Frequecy Sync
+            //syncRadio();
+        }
+    };
 }
