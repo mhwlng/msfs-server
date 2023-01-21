@@ -2,16 +2,15 @@
 
 var map;
 var marker;
-var trackline;
 var flightPathButton;
-var flightPath;
-
-var layerControl;
-
 var followButton;
+
 var following = true;
 
+var trackline;
+var gpsWaypoints;
 
+var layerControl;
 
 export function InitMap() {
 
@@ -106,6 +105,8 @@ export function InitMap() {
 
     trackline = L.polyline([], { color: 'red', smoothFactor: 3, opacity : 1.0 }).addTo(map);
 
+    gpsWaypoints = L.polyline([], { color: '#c842f5', smoothFactor: 3, opacity: 1.0, dashArray: '20, 10' }).addTo(map);
+
     flightPathButton = L.easyButton({
         states: [{
             stateName: 'display-flight-path',     
@@ -114,6 +115,9 @@ export function InitMap() {
             onClick: function (btn, map) {     
 
                 trackline.setStyle({ opacity: 0 });
+
+                gpsWaypoints.setStyle({ opacity: 0 });
+
                 btn.state('hide-flight-path'); 
             }
         }, {
@@ -123,6 +127,8 @@ export function InitMap() {
             onClick: function (btn, map) {
 
                 trackline.setStyle({ opacity: 1.0 });
+
+                gpsWaypoints.setStyle({ opacity: 1.0 });
 
                 btn.state('display-flight-path');
             }
@@ -157,63 +163,11 @@ export function InitMap() {
         followButton.state('dont-follow');
     });
 
-    /*
-    flightPathButton = L.easyButton('<span class="material-icons">timeline</span>', () => {
-   
-        const state = flightPathButton.button.classList.contains("disabled");
-        if (state) {
-           // trackline.setStyle({ opacity: 1.0 });
-
-            //if (flightpath) {
-            //    flightPath.addTo(map);
-            //} 
-            flightPathButton.enable();
-        }
-        else {
-            //trackline.setStyle({ opacity: 0 });
-
-            //if (flightpath) {
-            //    flightPath.remove();
-           // }
-            flightPathButton.disable();
-        }
-    }, 'Display flight path').addTo(map);*/
-
     layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
-
-
-
-
- 
-
-    /*
-     	fltpln_arr = data.FLT_PLN;
-		gps_next_lat = data.NEXT_WP_LAT;
-		gps_next_lon = data.NEXT_WP_LON;
-		gps_next_wp_arr = [[latitude, longitude],[gps_next_lat, gps_next_lon]];
-
-    
-    // GPS Next WP Polyline Update
-    if (gps_next_wp_arr[1] != null) {
-        gpswp.setLatLngs(gps_next_wp_arr);
-    }
-
-    this.map.DrawFlightPath([newData.gpsNextWPLatitude, newData.gpsNextWPLongitude], [newData.gpsPrevWPLatitude, newData.gpsPrevWPLongitude]);
-
-	
-	// Add GPS Waypoints
-	var gpswp;
-	gpswp = L.polyline([], {color: '#c842f5', smoothFactor: 3, dashArray: '20, 10'}).addTo(map);
-	gpswp.setStyle({opacity: 0});
-	
-	// Add Flight Plan
-	var fltpln;
-	fltpln = L.polyline([], {color: '#f542bc', smoothFactor: 3}).addTo(map);
-     */
 
 }
 
-export function SetMapCoordinates(latitude, longitude, heading) {
+export function SetMapCoordinates(latitude, longitude, heading, flightPlanActive, waypointIndex, nextWPLatitude, nextWPLongitude, prevWPLatitude, prevWPLongitude) {
 
     //console.log(`${latitude} ${longitude} `);
 
@@ -238,4 +192,12 @@ export function SetMapCoordinates(latitude, longitude, heading) {
             //syncRadio();
         }
     };
+
+    if (flightPlanActive && nextWPLatitude != 0 && nextWPLongitude != 0/* && prevWPLatitude != 0 && prevWPLongitude != 0*/) {
+
+        gpsWaypoints.setLatLngs([[latitude, longitude], [nextWPLatitude, nextWPLongitude]]);
+
+    } else {
+        gpsWaypoints.setLatLngs([]);
+    }
 }
