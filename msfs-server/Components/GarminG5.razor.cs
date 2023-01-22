@@ -20,9 +20,11 @@ namespace msfs_server.Components
 
         [Inject] public AircraftStatusFastModel AircraftStatusFast { get; set; }
 
-        private double _bankdegrees;
+        private double _bankDegrees;
 
-        private double _pitchdegrees;
+        private double _pitchDegrees;
+
+        private double _indicatedAltitude;
         
         private Task<IJSObjectReference> _moduleReference;
         private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/garming5.js").AsTask();
@@ -31,8 +33,9 @@ namespace msfs_server.Components
 
         protected override async Task OnInitializedAsync()
         {
-            _bankdegrees = AircraftStatusFast.BankDegrees;
-            _pitchdegrees = AircraftStatusFast.PitchDegrees;
+            _bankDegrees = AircraftStatusFast.BankDegrees;
+            _pitchDegrees = AircraftStatusFast.PitchDegrees;
+            _indicatedAltitude = AircraftStatusFast.IndicatedAltitude;
 
             hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
@@ -42,13 +45,16 @@ namespace msfs_server.Components
             {
                 //InvokeAsync(StateHasChanged);
 
-                if (_bankdegrees != AircraftStatusFast.BankDegrees ||
-                    _pitchdegrees != AircraftStatusFast.PitchDegrees)
+                if (_bankDegrees != AircraftStatusFast.BankDegrees ||
+                    _pitchDegrees != AircraftStatusFast.PitchDegrees ||
+                    _indicatedAltitude != AircraftStatusFast.IndicatedAltitude)
                 {
-                    _bankdegrees = AircraftStatusFast.BankDegrees;
-                    _pitchdegrees = AircraftStatusFast.PitchDegrees;
+                    _bankDegrees = AircraftStatusFast.BankDegrees;
+                    _pitchDegrees = AircraftStatusFast.PitchDegrees;
+                    _indicatedAltitude = AircraftStatusFast.IndicatedAltitude;
 
-                    await SetG5Values(_bankdegrees, _pitchdegrees);
+
+                    await SetG5Values(_bankDegrees, _pitchDegrees, _indicatedAltitude);
                 }
             });
 
@@ -66,10 +72,10 @@ namespace msfs_server.Components
             }
         }
 
-        async Task SetG5Values(double bankdegrees, double pitchdegrees)
+        async Task SetG5Values(double bankDegrees, double pitchDegrees, double indicatedAltitude)
         {
             var module = await ModuleReference;
-            await module.InvokeVoidAsync("SetG5Values", bankdegrees, pitchdegrees);
+            await module.InvokeVoidAsync("SetG5Values", bankDegrees, pitchDegrees, indicatedAltitude);
         }
 
         async Task InitG5()

@@ -30,6 +30,9 @@ namespace msfs_server.msfs
 
         public double PitchDegrees { get; set; }
 
+        public double IndicatedAltitude { get; set; }
+
+
         public AircraftStatusFastModel(IHubContext<MyHub> myHub)
         {
             _myHub = myHub;
@@ -39,6 +42,7 @@ namespace msfs_server.msfs
         {
             BankDegrees = statusSlow.BankDegrees;
             PitchDegrees = statusSlow.PitchDegrees;
+            IndicatedAltitude = statusSlow.IndicatedAltitude;
 
             _myHub.Clients.All.SendAsync("MsFsFastRefresh");
 

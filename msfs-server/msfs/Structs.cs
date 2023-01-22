@@ -27,6 +27,10 @@ namespace msfs_server.msfs
 
             [DataDefinition("PLANE PITCH DEGREES", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double PitchDegrees;
+
+            [DataDefinition("INDICATED ALTITUDE", "feet", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double IndicatedAltitude;
+
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
