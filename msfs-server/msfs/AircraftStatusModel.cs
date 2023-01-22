@@ -32,17 +32,23 @@ namespace msfs_server.msfs
 
         public double IndicatedAltitude { get; set; }
 
+        public int VerticalSpeed { get; set; }
+
+        public double AirspeedIndicated { get; set; }
+
 
         public AircraftStatusFastModel(IHubContext<MyHub> myHub)
         {
             _myHub = myHub;
         }
 
-        public void SetData(SimConnectStructs.AircraftStatusFastStruct statusSlow)
+        public void SetData(SimConnectStructs.AircraftStatusFastStruct statusFast)
         {
-            BankDegrees = statusSlow.BankDegrees;
-            PitchDegrees = statusSlow.PitchDegrees;
-            IndicatedAltitude = statusSlow.IndicatedAltitude;
+            BankDegrees = statusFast.BankDegrees;
+            PitchDegrees = statusFast.PitchDegrees;
+            IndicatedAltitude = statusFast.IndicatedAltitude;
+            VerticalSpeed = statusFast.VerticalSpeed;
+            AirspeedIndicated = statusFast.AirspeedIndicated;
 
             _myHub.Clients.All.SendAsync("MsFsFastRefresh");
 
@@ -59,8 +65,7 @@ namespace msfs_server.msfs
       public double TotalFuel { get; set; }
       public double CurrentFuel { get; set; }
       public double TrueHeading { get; set; }
-      public double AirspeedIndicated { get; set; }
-      public double AirspeedTrue { get; set; }
+       public double AirspeedTrue { get; set; }
       public bool NavHasSignal { get; set; }
       public bool NavHasDME { get; set; }
       public double DMEDistance { get; set; }
@@ -89,7 +94,6 @@ namespace msfs_server.msfs
          TotalFuel = statusSlow.TotalFuel;
          CurrentFuel = statusSlow.CurrentFuel;
          TrueHeading = statusSlow.TrueHeading;
-         AirspeedIndicated = statusSlow.AirspeedIndicated;
          AirspeedTrue = statusSlow.AirspeedTrue;
 
          NavHasSignal = statusSlow.NavHasSignal;

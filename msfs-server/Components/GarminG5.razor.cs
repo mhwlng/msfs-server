@@ -25,7 +25,12 @@ namespace msfs_server.Components
         private double _pitchDegrees;
 
         private double _indicatedAltitude;
-        
+
+        private int _verticalSpeed;
+
+        private double _airspeedIndicated;
+
+
         private Task<IJSObjectReference> _moduleReference;
         private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/garming5.js").AsTask();
 
@@ -36,6 +41,8 @@ namespace msfs_server.Components
             _bankDegrees = AircraftStatusFast.BankDegrees;
             _pitchDegrees = AircraftStatusFast.PitchDegrees;
             _indicatedAltitude = AircraftStatusFast.IndicatedAltitude;
+            _verticalSpeed = AircraftStatusFast.VerticalSpeed;
+            _airspeedIndicated = AircraftStatusFast.AirspeedIndicated;
 
             hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
@@ -47,14 +54,17 @@ namespace msfs_server.Components
 
                 if (_bankDegrees != AircraftStatusFast.BankDegrees ||
                     _pitchDegrees != AircraftStatusFast.PitchDegrees ||
-                    _indicatedAltitude != AircraftStatusFast.IndicatedAltitude)
+                    _indicatedAltitude != AircraftStatusFast.IndicatedAltitude ||
+                    _verticalSpeed != AircraftStatusFast.VerticalSpeed ||
+                    _airspeedIndicated != AircraftStatusFast.AirspeedIndicated)
                 {
                     _bankDegrees = AircraftStatusFast.BankDegrees;
                     _pitchDegrees = AircraftStatusFast.PitchDegrees;
                     _indicatedAltitude = AircraftStatusFast.IndicatedAltitude;
+                    _verticalSpeed = AircraftStatusFast.VerticalSpeed;
+                    _airspeedIndicated = AircraftStatusFast.AirspeedIndicated;
 
-
-                    await SetG5Values(_bankDegrees, _pitchDegrees, _indicatedAltitude);
+                    await SetG5Values(_bankDegrees, _pitchDegrees, _indicatedAltitude, _verticalSpeed, _airspeedIndicated);
                 }
             });
 
@@ -72,10 +82,10 @@ namespace msfs_server.Components
             }
         }
 
-        async Task SetG5Values(double bankDegrees, double pitchDegrees, double indicatedAltitude)
+        async Task SetG5Values(double bankDegrees, double pitchDegrees, double indicatedAltitude, int verticalSpeed, double airspeedIndicated)
         {
             var module = await ModuleReference;
-            await module.InvokeVoidAsync("SetG5Values", bankDegrees, pitchDegrees, indicatedAltitude);
+            await module.InvokeVoidAsync("SetG5Values", bankDegrees, pitchDegrees, indicatedAltitude, verticalSpeed, airspeedIndicated);
         }
 
         async Task InitG5()

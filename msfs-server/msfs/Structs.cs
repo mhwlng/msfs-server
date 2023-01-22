@@ -31,6 +31,14 @@ namespace msfs_server.msfs
             [DataDefinition("INDICATED ALTITUDE", "feet", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double IndicatedAltitude;
 
+            [DataDefinition("VERTICAL SPEED", "feet per second", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public int VerticalSpeed;
+
+            [DataDefinition("AIRSPEED INDICATED", "knots", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double AirspeedIndicated;
+
+
+
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
@@ -53,9 +61,6 @@ namespace msfs_server.msfs
 
             [DataDefinition("PLANE HEADING DEGREES TRUE", "degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double TrueHeading;
-
-            [DataDefinition("AIRSPEED INDICATED", "knots", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
-            public double AirspeedIndicated;
 
             [DataDefinition("AIRSPEED TRUE", "knots", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double AirspeedTrue;
