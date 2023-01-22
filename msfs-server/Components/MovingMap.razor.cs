@@ -24,7 +24,6 @@ namespace msfs_server.Components
         private double _heading;
 
         private bool _gpsFlightPlanActive;
-        private int _gpsWaypointIndex;
         private double _gpsNextWpLatitude;
         private double _gpsNextWpLongitude;
         private double _gpsPrevWpLatitude;
@@ -33,14 +32,21 @@ namespace msfs_server.Components
         [Parameter] public AircraftStatusModel AircraftStatus { get; set; }
 
         private Task<IJSObjectReference> _moduleReference;
-        private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/util.js").AsTask();
+        private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/movingmap.js").AsTask();
 
         protected override void OnInitialized()
         {
             _longitude = AircraftStatus.Longitude;
             _latitude = AircraftStatus.Latitude;
             _heading = AircraftStatus.TrueHeading;
+
+            _gpsFlightPlanActive = AircraftStatus.GPSFlightPlanActive;
+            _gpsNextWpLatitude = AircraftStatus.GPSNextWPLatitude;
+            _gpsNextWpLongitude = AircraftStatus.GPSNextWPLongitude;
+            _gpsPrevWpLatitude = AircraftStatus.GPSPrevWPLatitude;
+            _gpsPrevWpLongitude = AircraftStatus.GPSPrevWPLongitude;
         }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
@@ -71,14 +77,13 @@ namespace msfs_server.Components
                 _heading = AircraftStatus.TrueHeading;
 
                 _gpsFlightPlanActive = AircraftStatus.GPSFlightPlanActive;
-                _gpsWaypointIndex = AircraftStatus.GPSWaypointIndex;
                 _gpsNextWpLatitude = AircraftStatus.GPSNextWPLatitude;
                 _gpsNextWpLongitude = AircraftStatus.GPSNextWPLongitude;
                 _gpsPrevWpLatitude = AircraftStatus.GPSPrevWPLatitude;
                 _gpsPrevWpLongitude = AircraftStatus.GPSPrevWPLongitude;
                 
                 await SetMapCoordinates(_latitude, _longitude, _heading,
-                    _gpsFlightPlanActive, _gpsWaypointIndex,
+                    _gpsFlightPlanActive,
                     _gpsNextWpLatitude,
                     _gpsNextWpLongitude,
                     _gpsPrevWpLatitude,
@@ -87,10 +92,10 @@ namespace msfs_server.Components
             }
         }
 
-        async Task SetMapCoordinates(double latitude, double longitude, double heading, bool gpsFlightPlanActive, int gpsWaypointIndex, double gpsNextWPLatitude, double gpsNextWPLongitude, double gpsPrevWPLatitude, double gpsPrevWPLongitude)
+        async Task SetMapCoordinates(double latitude, double longitude, double heading, bool gpsFlightPlanActive, double gpsNextWPLatitude, double gpsNextWPLongitude, double gpsPrevWPLatitude, double gpsPrevWPLongitude)
         {
             var module = await ModuleReference;
-            await module.InvokeVoidAsync("SetMapCoordinates", latitude, longitude, heading, gpsFlightPlanActive, gpsWaypointIndex, gpsNextWPLatitude, gpsNextWPLongitude, gpsPrevWPLatitude, gpsPrevWPLongitude);
+            await module.InvokeVoidAsync("SetMapCoordinates", latitude, longitude, heading, gpsFlightPlanActive, gpsNextWPLatitude, gpsNextWPLongitude, gpsPrevWPLatitude, gpsPrevWPLongitude);
         }
 
         async Task InitMap()

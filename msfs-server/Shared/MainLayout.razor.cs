@@ -14,13 +14,8 @@ namespace msfs_server.Shared
     {
         [Inject] private NavigationManager NavigationManager { get; set; }
 
-        [Inject] private IJSRuntime MyJsRuntime { get; set; }
-
 
         private HubConnection hubConnection;
-
-        private Task<IJSObjectReference> _moduleReference;
-        private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/util.js").AsTask();
 
         protected override async Task OnInitializedAsync()
         {

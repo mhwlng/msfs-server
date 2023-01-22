@@ -26,6 +26,10 @@ namespace msfs_server.msfs
     {
       private readonly IHubContext<MyHub> _myHub;
         
+      public double BankDegrees { get; set; }
+
+      public double PitchDegrees { get; set; }
+
       public double Latitude { get; set; }
       public double Longitude { get; set; }
       public double Altitude { get; set; }
@@ -56,6 +60,9 @@ namespace msfs_server.msfs
 
       public void SetData(SimConnectStructs.AircraftStatusStruct status)
       {
+         BankDegrees = status.BankDegrees;
+         PitchDegrees = status.PitchDegrees;
+
          Latitude = status.Latitude;
          Longitude = status.Longitude;
          Altitude = status.Altitude;

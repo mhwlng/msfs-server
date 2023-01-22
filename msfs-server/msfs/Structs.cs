@@ -20,6 +20,12 @@ namespace msfs_server.msfs
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
         public struct AircraftStatusStruct
         {
+            [DataDefinition("PLANE BANK DEGREES", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double BankDegrees;
+
+            [DataDefinition("PLANE PITCH DEGREES", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double PitchDegrees;
+
             [DataDefinition("PLANE LATITUDE", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double Latitude;
 
@@ -128,7 +134,6 @@ namespace msfs_server.msfs
             data.AddField("ATC ID", type: DataType.String32);
             data.AddField("TITLE", type: DataType.String256);
             data.AddField("PLANE PITCH DEGREES", units: "DEGREES", type: DataType.Float64, epsilon: 1.0f);
-            data.AddField("PLANE BANK DEGREES", units: "DEGREES", type: DataType.Float64, epsilon: 1.0f);
             data.AddField("SIM ON GROUND", units: "BOOL", type: DataType.Int32);
              */
         }

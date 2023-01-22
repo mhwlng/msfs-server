@@ -32,9 +32,19 @@ var config = {
 ![touch screen](https://i.imgur.com/erLvZY7.jpg)
 
 
+you need the deja vu font for the garmin G5. download ttf here
 
-inspired by
+https://www.fontsquirrel.com/fonts/dejavu-sans>https://www.fontsquirrel.com/fonts/dejavu-sans
+
+or on raspberry pi
+
+sudo apt-get install fonts-dejavu
+
+
+thanks to
 
 https://github.com/kurt1288/msfs-flight-following
 
 https://github.com/mracko/MSFS-Mobile-Companion-App
+
+https://github.com/joeherwig/portable-sim-panels
