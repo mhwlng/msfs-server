@@ -22,8 +22,8 @@ namespace msfs_server.Services
     public class Worker : BackgroundService
     {
         private AircraftStatusSlowModel _aircraftStatusSlow;
-        private AircraftStatusFastModel _aircraftStatusFast;
 
+        private AircraftStatusFastModel _aircraftStatusFast;
 
         private static Task _simTask;
         private static CancellationTokenSource _simTokenSource = new();
