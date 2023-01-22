@@ -22,14 +22,33 @@ namespace msfs_server.msfs
         public bool Nav1 { get; set; }
     }
 
-    public class AircraftStatusModel
+    public class AircraftStatusFastModel
+    {
+        private readonly IHubContext<MyHub> _myHub;
+
+        public double BankDegrees { get; set; }
+
+        public double PitchDegrees { get; set; }
+
+        public AircraftStatusFastModel(IHubContext<MyHub> myHub)
+        {
+            _myHub = myHub;
+        }
+
+        public void SetData(SimConnectStructs.AircraftStatusFastStruct statusSlow)
+        {
+            BankDegrees = statusSlow.BankDegrees;
+            PitchDegrees = statusSlow.PitchDegrees;
+
+            _myHub.Clients.All.SendAsync("MsFsFastRefresh");
+
+        }
+    }
+
+    public class AircraftStatusSlowModel
     {
       private readonly IHubContext<MyHub> _myHub;
-        
-      public double BankDegrees { get; set; }
-
-      public double PitchDegrees { get; set; }
-
+      
       public double Latitude { get; set; }
       public double Longitude { get; set; }
       public double Altitude { get; set; }
@@ -53,57 +72,54 @@ namespace msfs_server.msfs
       
       public AutoPilot Autopilot { get; set; } = new AutoPilot();
 
-      public AircraftStatusModel(IHubContext<MyHub> myHub)
+      public AircraftStatusSlowModel(IHubContext<MyHub> myHub)
       {
           _myHub = myHub;
       }
 
-      public void SetData(SimConnectStructs.AircraftStatusStruct status)
+      public void SetData(SimConnectStructs.AircraftStatusSlowStruct statusSlow)
       {
-         BankDegrees = status.BankDegrees;
-         PitchDegrees = status.PitchDegrees;
+         Latitude = statusSlow.Latitude;
+         Longitude = statusSlow.Longitude;
+         Altitude = statusSlow.Altitude;
+         TotalFuel = statusSlow.TotalFuel;
+         CurrentFuel = statusSlow.CurrentFuel;
+         TrueHeading = statusSlow.TrueHeading;
+         AirspeedIndicated = statusSlow.AirspeedIndicated;
+         AirspeedTrue = statusSlow.AirspeedTrue;
 
-         Latitude = status.Latitude;
-         Longitude = status.Longitude;
-         Altitude = status.Altitude;
-         TotalFuel = status.TotalFuel;
-         CurrentFuel = status.CurrentFuel;
-         TrueHeading = status.TrueHeading;
-         AirspeedIndicated = status.AirspeedIndicated;
-         AirspeedTrue = status.AirspeedTrue;
-
-         NavHasSignal = status.NavHasSignal;
-         NavHasDME = status.NavHasDME;
-         DMEDistance = status.DMEDistance;
-         GPSFlightPlanActive = status.GPSFlightPlanActive;
-         GPSWaypointModeActive = status.GPSWaypointModeActive;
-         GPSWaypointIndex = status.GPSWaypointIndex;
-         GPSWaypointDistance = status.GPSWaypointDistance;
-         GPSNextWPLatitude = status.GPSNextWPLatitude;
-         GPSNextWPLongitude = status.GPSNextWPLongitude;
-         GPSPrevWPLatitude = status.GPSPrevWPLatitude;
-         GPSPrevWPLongitude = status.GPSPrevWPLongitude;
-         GPSWPETE = status.GPSWPETE;
+         NavHasSignal = statusSlow.NavHasSignal;
+         NavHasDME = statusSlow.NavHasDME;
+         DMEDistance = statusSlow.DMEDistance;
+         GPSFlightPlanActive = statusSlow.GPSFlightPlanActive;
+         GPSWaypointModeActive = statusSlow.GPSWaypointModeActive;
+         GPSWaypointIndex = statusSlow.GPSWaypointIndex;
+         GPSWaypointDistance = statusSlow.GPSWaypointDistance;
+         GPSNextWPLatitude = statusSlow.GPSNextWPLatitude;
+         GPSNextWPLongitude = statusSlow.GPSNextWPLongitude;
+         GPSPrevWPLatitude = statusSlow.GPSPrevWPLatitude;
+         GPSPrevWPLongitude = statusSlow.GPSPrevWPLongitude;
+         GPSWPETE = statusSlow.GPSWPETE;
 
          Autopilot = new AutoPilot()
          {
-            Available = status.AutopilotAvailable,
-            Master = status.AutopilotMaster,
-            FlightDirector = status.AutopilotFlightDirector,
-            Airspeed = status.AutopilotAirspeed,
-            Altitude = status.AutopilotAltitude,
-            Approach = status.AutopilotApproach,
-            Autothrottle = status.AutopilotAutothrottle,
-            Backcourse = status.AutopilotBackcourse,
-            Heading = status.AutopilotHeading,
-            Level = status.AutopilotWingLevel,
-            Mach = status.AutopilotMach,
-            Nav1 = status.AutopilotNav1,
-            VerticalHold = status.AutopilotVerticalHold,
-            YawDamper = status.AutopilotYawDamper
+            Available = statusSlow.AutopilotAvailable,
+            Master = statusSlow.AutopilotMaster,
+            FlightDirector = statusSlow.AutopilotFlightDirector,
+            Airspeed = statusSlow.AutopilotAirspeed,
+            Altitude = statusSlow.AutopilotAltitude,
+            Approach = statusSlow.AutopilotApproach,
+            Autothrottle = statusSlow.AutopilotAutothrottle,
+            Backcourse = statusSlow.AutopilotBackcourse,
+            Heading = statusSlow.AutopilotHeading,
+            Level = statusSlow.AutopilotWingLevel,
+            Mach = statusSlow.AutopilotMach,
+            Nav1 = statusSlow.AutopilotNav1,
+            VerticalHold = statusSlow.AutopilotVerticalHold,
+            YawDamper = statusSlow.AutopilotYawDamper
          };
 
-         _myHub.Clients.All.SendAsync("MsFsRefresh");
+         _myHub.Clients.All.SendAsync("MsFsSlowRefresh");
 
       }
 

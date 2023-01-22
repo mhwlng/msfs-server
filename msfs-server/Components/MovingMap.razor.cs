@@ -8,14 +8,17 @@ using System.Threading.Tasks;
 using System.Windows;
 using MudBlazor.Extensions;
 using static MudBlazor.Colors;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace msfs_server.Components
 {
     public partial class MovingMap
     {
-        //[Inject] private NavigationManager NavigationManager { get; set; }
+        [Inject] private NavigationManager NavigationManager { get; set; }
 
         [Inject] private IJSRuntime MyJsRuntime { get; set; }
+
+        [Inject] public AircraftStatusSlowModel AircraftStatusSlow { get; set; }
 
         private double _latitude;
 
@@ -29,22 +32,65 @@ namespace msfs_server.Components
         private double _gpsPrevWpLatitude;
         private double _gpsPrevWpLongitude;
 
-        [Parameter] public AircraftStatusModel AircraftStatus { get; set; }
 
         private Task<IJSObjectReference> _moduleReference;
         private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/movingmap.js").AsTask();
 
-        protected override void OnInitialized()
-        {
-            _longitude = AircraftStatus.Longitude;
-            _latitude = AircraftStatus.Latitude;
-            _heading = AircraftStatus.TrueHeading;
+        private HubConnection hubConnection;
 
-            _gpsFlightPlanActive = AircraftStatus.GPSFlightPlanActive;
-            _gpsNextWpLatitude = AircraftStatus.GPSNextWPLatitude;
-            _gpsNextWpLongitude = AircraftStatus.GPSNextWPLongitude;
-            _gpsPrevWpLatitude = AircraftStatus.GPSPrevWPLatitude;
-            _gpsPrevWpLongitude = AircraftStatus.GPSPrevWPLongitude;
+        protected override async Task OnInitializedAsync()
+        {
+            _longitude = AircraftStatusSlow.Longitude;
+            _latitude = AircraftStatusSlow.Latitude;
+            _heading = AircraftStatusSlow.TrueHeading;
+
+            _gpsFlightPlanActive = AircraftStatusSlow.GPSFlightPlanActive;
+            _gpsNextWpLatitude = AircraftStatusSlow.GPSNextWPLatitude;
+            _gpsNextWpLongitude = AircraftStatusSlow.GPSNextWPLongitude;
+            _gpsPrevWpLatitude = AircraftStatusSlow.GPSPrevWPLatitude;
+            _gpsPrevWpLongitude = AircraftStatusSlow.GPSPrevWPLongitude;
+
+            hubConnection = new HubConnectionBuilder()
+                .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
+                .Build();
+
+            hubConnection.On("MsFsSlowRefresh", async () =>
+            {
+                //InvokeAsync(StateHasChanged);
+
+                /* null island ???
+                 0.00040748246254171134 0.01397450300629543 
+                 0.000407520306147189   0.01397450300629543 
+                 */
+
+
+                if (AircraftStatusSlow.Latitude != 0 && AircraftStatusSlow.Longitude != 0 &&
+                    (_latitude != AircraftStatusSlow.Latitude || _longitude != AircraftStatusSlow.Longitude ||
+                     _heading != AircraftStatusSlow.TrueHeading))
+                {
+                    _latitude = AircraftStatusSlow.Latitude;
+
+                    _longitude = AircraftStatusSlow.Longitude;
+
+                    _heading = AircraftStatusSlow.TrueHeading;
+
+                    _gpsFlightPlanActive = AircraftStatusSlow.GPSFlightPlanActive;
+                    _gpsNextWpLatitude = AircraftStatusSlow.GPSNextWPLatitude;
+                    _gpsNextWpLongitude = AircraftStatusSlow.GPSNextWPLongitude;
+                    _gpsPrevWpLatitude = AircraftStatusSlow.GPSPrevWPLatitude;
+                    _gpsPrevWpLongitude = AircraftStatusSlow.GPSPrevWPLongitude;
+
+                    await SetMapCoordinates(_latitude, _longitude, _heading,
+                        _gpsFlightPlanActive,
+                        _gpsNextWpLatitude,
+                        _gpsNextWpLongitude,
+                        _gpsPrevWpLatitude,
+                        _gpsPrevWpLongitude);
+                }
+
+            });
+
+            await hubConnection.StartAsync();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -55,40 +101,6 @@ namespace msfs_server.Components
                 await InitMap();
 
                 StateHasChanged();
-            }
-        }
-
-        protected override async Task OnParametersSetAsync()
-        {
-            /* null island ???
-             0.00040748246254171134 0.01397450300629543 
-             0.000407520306147189   0.01397450300629543 
-             */
-
-
-            if (AircraftStatus.Latitude != 0 && AircraftStatus.Longitude != 0 &&
-                (_latitude != AircraftStatus.Latitude || _longitude != AircraftStatus.Longitude ||
-                 _heading != AircraftStatus.TrueHeading))
-            {
-                _latitude = AircraftStatus.Latitude;
-
-                _longitude = AircraftStatus.Longitude;
-
-                _heading = AircraftStatus.TrueHeading;
-
-                _gpsFlightPlanActive = AircraftStatus.GPSFlightPlanActive;
-                _gpsNextWpLatitude = AircraftStatus.GPSNextWPLatitude;
-                _gpsNextWpLongitude = AircraftStatus.GPSNextWPLongitude;
-                _gpsPrevWpLatitude = AircraftStatus.GPSPrevWPLatitude;
-                _gpsPrevWpLongitude = AircraftStatus.GPSPrevWPLongitude;
-                
-                await SetMapCoordinates(_latitude, _longitude, _heading,
-                    _gpsFlightPlanActive,
-                    _gpsNextWpLatitude,
-                    _gpsNextWpLongitude,
-                    _gpsPrevWpLatitude,
-                    _gpsPrevWpLongitude);
-
             }
         }
 
@@ -104,8 +116,16 @@ namespace msfs_server.Components
             await module.InvokeVoidAsync("InitMap");
         }
 
+        public bool IsConnected =>
+            hubConnection.State == HubConnectionState.Connected;
+
         public async ValueTask DisposeAsync()
         {
+            if (hubConnection is not null)
+            {
+                await hubConnection.DisposeAsync();
+            }
+
             if (_moduleReference != null)
             {
                 var module = await _moduleReference;

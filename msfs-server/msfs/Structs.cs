@@ -9,23 +9,29 @@ namespace msfs_server.msfs
     {
         public enum DEFINITIONS
         {
-            AircraftStatus
+            AircraftStatusSlow,
+            AircraftStatusFast
         }
 
         public enum DATA_REQUEST
         {
-            AircraftStatus
+            AircraftStatusSlow,
+            AircraftStatusFast
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
-        public struct AircraftStatusStruct
+        public struct AircraftStatusFastStruct
         {
             [DataDefinition("PLANE BANK DEGREES", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double BankDegrees;
 
             [DataDefinition("PLANE PITCH DEGREES", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double PitchDegrees;
+        }
 
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+        public struct AircraftStatusSlowStruct
+        {
             [DataDefinition("PLANE LATITUDE", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double Latitude;
 

@@ -36,7 +36,8 @@ namespace msfs_server
             services.AddServerSideBlazor();
             services.AddMudServices();
 
-            services.AddSingleton<AircraftStatusModel>();
+            services.AddSingleton<AircraftStatusSlowModel>();
+            services.AddSingleton<AircraftStatusFastModel>();
 
             if (!Debugger.IsAttached)
             {

@@ -8,28 +8,51 @@ using System.Threading.Tasks;
 using System.Windows;
 using MudBlazor.Extensions;
 using static MudBlazor.Colors;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace msfs_server.Components
 {
     public partial class GarminG5
     {
-        //[Inject] private NavigationManager NavigationManager { get; set; }
+        [Inject] private NavigationManager NavigationManager { get; set; }
 
         [Inject] private IJSRuntime MyJsRuntime { get; set; }
+
+        [Inject] public AircraftStatusFastModel AircraftStatusFast { get; set; }
 
         private double _bankdegrees;
 
         private double _pitchdegrees;
-
-        [Parameter] public AircraftStatusModel AircraftStatus { get; set; }
-
+        
         private Task<IJSObjectReference> _moduleReference;
         private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/garming5.js").AsTask();
 
-        protected override void OnInitialized()
+        private HubConnection hubConnection;
+
+        protected override async Task OnInitializedAsync()
         {
-            _bankdegrees = AircraftStatus.BankDegrees;
-            _pitchdegrees = AircraftStatus.PitchDegrees;
+            _bankdegrees = AircraftStatusFast.BankDegrees;
+            _pitchdegrees = AircraftStatusFast.PitchDegrees;
+
+            hubConnection = new HubConnectionBuilder()
+                .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
+                .Build();
+
+            hubConnection.On("MsFsFastRefresh", async () =>
+            {
+                //InvokeAsync(StateHasChanged);
+
+                if (_bankdegrees != AircraftStatusFast.BankDegrees ||
+                    _pitchdegrees != AircraftStatusFast.PitchDegrees)
+                {
+                    _bankdegrees = AircraftStatusFast.BankDegrees;
+                    _pitchdegrees = AircraftStatusFast.PitchDegrees;
+
+                    await SetG5Values(_bankdegrees, _pitchdegrees);
+                }
+            });
+
+            await hubConnection.StartAsync();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -40,19 +63,6 @@ namespace msfs_server.Components
                 await InitG5();
 
                 StateHasChanged();
-            }
-        }
-
-        protected override async Task OnParametersSetAsync()
-        {
-
-            if (_bankdegrees != AircraftStatus.BankDegrees ||
-                _pitchdegrees != AircraftStatus.PitchDegrees)
-            {
-                _bankdegrees = AircraftStatus.BankDegrees;
-                _pitchdegrees = AircraftStatus.PitchDegrees;
-
-                await SetG5Values(_bankdegrees, _pitchdegrees);
             }
         }
 
@@ -68,8 +78,16 @@ namespace msfs_server.Components
             await module.InvokeVoidAsync("InitG5");
         }
 
+        public bool IsConnected =>
+            hubConnection.State == HubConnectionState.Connected;
+
         public async ValueTask DisposeAsync()
         {
+            if (hubConnection is not null)
+            {
+                await hubConnection.DisposeAsync();
+            }
+
             if (_moduleReference != null)
             {
                 var module = await _moduleReference;

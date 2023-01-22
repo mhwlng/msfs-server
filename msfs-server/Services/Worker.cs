@@ -21,7 +21,9 @@ namespace msfs_server.Services
  
     public class Worker : BackgroundService
     {
-        private AircraftStatusModel _aircraftStatus;
+        private AircraftStatusSlowModel _aircraftStatusSlow;
+        private AircraftStatusFastModel _aircraftStatusFast;
+
 
         private static Task _simTask;
         private static CancellationTokenSource _simTokenSource = new();
@@ -35,14 +37,17 @@ namespace msfs_server.Services
         private bool _simConnected = false;
         private bool _simDisconnected = false;
 
-        public Worker(AircraftStatusModel aircraftStatus)
+        private static int _fastCounter = 0;
+
+        public Worker(AircraftStatusSlowModel aircraftStatusSlow, AircraftStatusFastModel aircraftStatusFast)
         {
 
             var win = MessageWindow.GetWindow();
             WindowHandle = win.Hwnd;
             win.WndProcHandle += W_WndProcHandle;
 
-            _aircraftStatus = aircraftStatus;
+            _aircraftStatusSlow = aircraftStatusSlow;
+            _aircraftStatusFast = aircraftStatusFast;
         }
 
         private IntPtr W_WndProcHandle(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
@@ -68,16 +73,29 @@ namespace msfs_server.Services
 
         private void SetFlightDataDefinitions()
         {
-            foreach (var fieldInfo in typeof(SimConnectStructs.AircraftStatusStruct).GetFields())
+            foreach (var fieldInfo in typeof(SimConnectStructs.AircraftStatusSlowStruct).GetFields())
             {
                 foreach (DataDefinition dd in fieldInfo.GetCustomAttributes(true))
                 {
-                    simconnect.AddToDataDefinition(SimConnectStructs.DEFINITIONS.AircraftStatus, dd.DatumName,
+                    simconnect.AddToDataDefinition(SimConnectStructs.DEFINITIONS.AircraftStatusSlow, dd.DatumName,
                         dd.UnitsName, dd.DatumType, dd.fEpsilon, SimConnect.SIMCONNECT_UNUSED);
                 }
             }
 
-            simconnect.RegisterDataDefineStruct<SimConnectStructs.AircraftStatusStruct>(SimConnectStructs.DEFINITIONS.AircraftStatus);
+            simconnect.RegisterDataDefineStruct<SimConnectStructs.AircraftStatusSlowStruct>(SimConnectStructs.DEFINITIONS.AircraftStatusSlow);
+
+            //------------------------
+            
+            foreach (var fieldInfo in typeof(SimConnectStructs.AircraftStatusFastStruct).GetFields())
+            {
+                foreach (DataDefinition dd in fieldInfo.GetCustomAttributes(true))
+                {
+                    simconnect.AddToDataDefinition(SimConnectStructs.DEFINITIONS.AircraftStatusFast, dd.DatumName,
+                        dd.UnitsName, dd.DatumType, dd.fEpsilon, SimConnect.SIMCONNECT_UNUSED);
+                }
+            }
+
+            simconnect.RegisterDataDefineStruct<SimConnectStructs.AircraftStatusFastStruct>(SimConnectStructs.DEFINITIONS.AircraftStatusFast);
         }
 
         private void SimDisconnect()
@@ -90,9 +108,14 @@ namespace msfs_server.Services
         {
             switch (data.dwRequestID)
             {
-                case (uint)SimConnectStructs.DATA_REQUEST.AircraftStatus:
+                case (uint)SimConnectStructs.DATA_REQUEST.AircraftStatusSlow:
 
-                    _aircraftStatus.SetData((SimConnectStructs.AircraftStatusStruct)data.dwData[0]);
+                    _aircraftStatusSlow.SetData((SimConnectStructs.AircraftStatusSlowStruct)data.dwData[0]);
+
+                    break;
+                case (uint)SimConnectStructs.DATA_REQUEST.AircraftStatusFast:
+
+                    _aircraftStatusFast.SetData((SimConnectStructs.AircraftStatusFastStruct)data.dwData[0]);
 
                     break;
             }
@@ -175,8 +198,29 @@ namespace msfs_server.Services
                         {
                             try
                             {
-                                simconnect.RequestDataOnSimObjectType(SimConnectStructs.DATA_REQUEST.AircraftStatus,
-                                SimConnectStructs.DEFINITIONS.AircraftStatus, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
+                                // 10 times per second
+
+                                simconnect.RequestDataOnSimObjectType(SimConnectStructs.DATA_REQUEST.AircraftStatusFast,
+                                    SimConnectStructs.DEFINITIONS.AircraftStatusFast, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
+
+                                _fastCounter++;
+
+                                //--------------------
+
+                                if (_fastCounter >= 10) // 1 per second 
+                                {
+
+                                    simconnect.RequestDataOnSimObjectType(
+                                        SimConnectStructs.DATA_REQUEST.AircraftStatusSlow,
+                                        SimConnectStructs.DEFINITIONS.AircraftStatusSlow, 0,
+                                        SIMCONNECT_SIMOBJECT_TYPE.USER);
+
+                                    _fastCounter = 0;
+                                }
+
+
+
+
                             }
                             catch (COMException ex)
                             {
@@ -187,7 +231,7 @@ namespace msfs_server.Services
 
                     }
 
-                    await Task.Delay(1000, _simTokenSource.Token); // repeat every 5 seconds
+                    await Task.Delay(100, _simTokenSource.Token);
                 }
 
 
