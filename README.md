@@ -2,7 +2,7 @@
 
 **EARLY PROTOTYPE, UNDER DEVELOPMENT**
 
-Web server, **using blazor and net7**, that connects via simconnect to MSFS 2020 and serves a web page that shows a moving map.
+Web server, **using blazor and net7**, that connects via simconnect to MSFS 2020 and serves a web page that shows a moving map and instruments.
 
 The port number of the web server is defined in appsettings.json (default = 5002)
 
@@ -34,7 +34,7 @@ var config = {
 
 you need the deja vu font for the garmin G5. download ttf here
 
-https://www.fontsquirrel.com/fonts/dejavu-sans>https://www.fontsquirrel.com/fonts/dejavu-sans
+https://www.fontsquirrel.com/fonts/dejavu-sans
 
 or on raspberry pi
 
