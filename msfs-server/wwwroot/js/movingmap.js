@@ -167,7 +167,15 @@ export function InitMap() {
 
 }
 
-export function SetMapCoordinates(latitude, longitude, heading, flightPlanActive, nextWPLatitude, nextWPLongitude, prevWPLatitude, prevWPLongitude) {
+export function SetMapValues(
+    latitude,
+    longitude,
+    heading,
+    flightPlanActive,
+    nextWPLatitude,
+    nextWPLongitude,
+    prevWPLatitude,
+    prevWPLongitude) {
 
     //console.log(`${latitude} ${longitude} `);
 

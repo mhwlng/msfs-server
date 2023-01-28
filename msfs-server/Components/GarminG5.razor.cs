@@ -9,6 +9,7 @@ using System.Windows;
 using MudBlazor.Extensions;
 using static MudBlazor.Colors;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.FlightSimulator.SimConnect;
 
 namespace msfs_server.Components
 {
@@ -29,6 +30,28 @@ namespace msfs_server.Components
         private int _verticalSpeed;
 
         private double _airspeedIndicated;
+        
+        private bool _autopilotMaster;
+
+        private double _autoPilotAltitudeLockVar;
+
+        private bool _autopilotAltitudeLock;
+
+        private double _gpsGroundSpeed;
+
+        private double _kohlsmanSetting;
+
+        private double _planeHeadingMagnetic;
+
+        private int _autoPilotHeadingLockDir;
+
+        private bool _autopilotHeadingLock;
+
+        private double _turnCoordinatorBall;
+
+        private double _navCDI;
+
+        private double _navGSI;
 
 
         private Task<IJSObjectReference> _moduleReference;
@@ -43,6 +66,18 @@ namespace msfs_server.Components
             _indicatedAltitude = AircraftStatusFast.IndicatedAltitude;
             _verticalSpeed = AircraftStatusFast.VerticalSpeed;
             _airspeedIndicated = AircraftStatusFast.AirspeedIndicated;
+
+            _autopilotMaster = AircraftStatusFast.AutopilotMaster;
+            _autoPilotAltitudeLockVar = AircraftStatusFast.AutoPilotAltitudeLockVar;
+            _autopilotAltitudeLock = AircraftStatusFast.AutopilotAltitudeLock;
+            _gpsGroundSpeed = AircraftStatusFast.GpsGroundSpeed;
+            _kohlsmanSetting = AircraftStatusFast.KohlsmanSetting;
+            _planeHeadingMagnetic = AircraftStatusFast.PlaneHeadingMagnetic;
+            _autoPilotHeadingLockDir = AircraftStatusFast.AutoPilotHeadingLockDir;
+            _autopilotHeadingLock = AircraftStatusFast.AutopilotHeadingLock;
+            _turnCoordinatorBall = AircraftStatusFast.TurnCoordinatorBall;
+            _navCDI = AircraftStatusFast.NavCDI;
+            _navGSI = AircraftStatusFast.NavGSI;
 
             hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
@@ -64,7 +99,39 @@ namespace msfs_server.Components
                     _verticalSpeed = AircraftStatusFast.VerticalSpeed;
                     _airspeedIndicated = AircraftStatusFast.AirspeedIndicated;
 
-                    await SetG5Values(_bankDegrees, _pitchDegrees, _indicatedAltitude, _verticalSpeed, _airspeedIndicated);
+                    _autopilotMaster = AircraftStatusFast.AutopilotMaster;
+                    _autoPilotAltitudeLockVar = AircraftStatusFast.AutoPilotAltitudeLockVar;
+                    _autopilotAltitudeLock = AircraftStatusFast.AutopilotAltitudeLock;
+                    _gpsGroundSpeed = AircraftStatusFast.GpsGroundSpeed;
+                    _kohlsmanSetting = AircraftStatusFast.KohlsmanSetting;
+                    _planeHeadingMagnetic = AircraftStatusFast.PlaneHeadingMagnetic;
+                    _autoPilotHeadingLockDir = AircraftStatusFast.AutoPilotHeadingLockDir;
+                    _autopilotHeadingLock = AircraftStatusFast.AutopilotHeadingLock;
+                    _turnCoordinatorBall = AircraftStatusFast.TurnCoordinatorBall;
+                    _navCDI = AircraftStatusFast.NavCDI;
+                    _navGSI = AircraftStatusFast.NavGSI;
+
+                    await SetG5Values(
+                        _bankDegrees, 
+                        _pitchDegrees, 
+                        _indicatedAltitude,
+                        _verticalSpeed, 
+                        _airspeedIndicated,
+
+                        _autopilotMaster,
+                        _autoPilotAltitudeLockVar,
+                        _autopilotAltitudeLock,
+                        _gpsGroundSpeed,
+                        _kohlsmanSetting,
+                        _planeHeadingMagnetic,
+                        _autoPilotHeadingLockDir,
+                        _autopilotHeadingLock,
+                        _turnCoordinatorBall,
+                        _navCDI,
+                        _navGSI
+
+
+                        );
                 }
             });
 
@@ -82,10 +149,48 @@ namespace msfs_server.Components
             }
         }
 
-        async Task SetG5Values(double bankDegrees, double pitchDegrees, double indicatedAltitude, int verticalSpeed, double airspeedIndicated)
+        async Task SetG5Values(
+            double bankDegrees,
+            double pitchDegrees, 
+            double indicatedAltitude,
+            int verticalSpeed,
+            double airspeedIndicated,
+
+            bool autopilotMaster,
+            double autoPilotAltitudeLockVar,
+            bool autopilotAltitudeLock,
+            double gpsGroundSpeed,
+            double kohlsmanSetting,
+            double planeHeadingMagnetic,
+            int autoPilotHeadingLockDir,
+            bool autopilotHeadingLock,
+            double turnCoordinatorBall,
+            double navCDI,
+            double navGSI
+                
+            )
         {
             var module = await ModuleReference;
-            await module.InvokeVoidAsync("SetG5Values", bankDegrees, pitchDegrees, indicatedAltitude, verticalSpeed, airspeedIndicated);
+            await module.InvokeVoidAsync("SetG5Values", 
+                bankDegrees, 
+                pitchDegrees, 
+                indicatedAltitude,
+                verticalSpeed, 
+                airspeedIndicated,
+
+                autopilotMaster,
+                autoPilotAltitudeLockVar,
+                autopilotAltitudeLock,
+                gpsGroundSpeed,
+                kohlsmanSetting,
+                planeHeadingMagnetic,
+                autoPilotHeadingLockDir,
+                autopilotHeadingLock,
+                turnCoordinatorBall,
+                navCDI,
+                navGSI
+
+                );
         }
 
         async Task InitG5()
