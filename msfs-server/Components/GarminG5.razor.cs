@@ -53,7 +53,6 @@ namespace msfs_server.Components
 
         private double _navGSI;
 
-
         private Task<IJSObjectReference> _moduleReference;
         private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/garming5.js").AsTask();
 
