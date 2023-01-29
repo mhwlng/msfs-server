@@ -110,7 +110,7 @@ namespace msfs_server.Components
                     _navCDI = AircraftStatusFast.NavCDI;
                     _navGSI = AircraftStatusFast.NavGSI;
 
-                    await SetG5Values(
+                    await SetValues(
                         _bankDegrees, 
                         _pitchDegrees, 
                         _indicatedAltitude,
@@ -142,13 +142,13 @@ namespace msfs_server.Components
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                await InitG5();
+                await Init();
 
                 StateHasChanged();
             }
         }
 
-        async Task SetG5Values(
+        async Task SetValues(
             double bankDegrees,
             double pitchDegrees, 
             double indicatedAltitude,
@@ -192,7 +192,7 @@ namespace msfs_server.Components
                 );
         }
 
-        async Task InitG5()
+        async Task Init()
         {
             var module = await ModuleReference;
             await module.InvokeVoidAsync("Init");

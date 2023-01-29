@@ -42,6 +42,8 @@ export function SetValues(
 
 ) {
 
+    // credit https://github.com/joeherwig/portable-sim-panels
+    
     var d3obj = d3.select(document.getElementById("garminhsi").contentDocument).select('svg');
 
     var hdgValue = planeHeadingMagnetic === 0 ? 360 : planeHeadingMagnetic;

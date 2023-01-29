@@ -80,7 +80,7 @@ namespace msfs_server.Components
                     _gpsPrevWpLatitude = AircraftStatusSlow.GPSPrevWPLatitude;
                     _gpsPrevWpLongitude = AircraftStatusSlow.GPSPrevWPLongitude;
 
-                    await SetMapValues(
+                    await SetValues(
                         _latitude, 
                         _longitude, 
                         _heading,
@@ -101,13 +101,13 @@ namespace msfs_server.Components
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                await InitMap();
+                await Init();
 
                 StateHasChanged();
             }
         }
 
-        async Task SetMapValues(
+        async Task SetValues(
             double latitude, 
             double longitude, 
             double heading, 
@@ -129,7 +129,7 @@ namespace msfs_server.Components
                 gpsPrevWpLongitude);
         }
 
-        async Task InitMap()
+        async Task Init()
         {
             var module = await ModuleReference;
             await module.InvokeVoidAsync("Init");
