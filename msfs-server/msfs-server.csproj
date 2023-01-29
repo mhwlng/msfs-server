@@ -31,8 +31,20 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
 
+
+
+  <ItemGroup>
+    <Content Remove="wwwroot\js\config.js.secret" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Remove="icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\config.js.secret">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -65,9 +77,6 @@
 
   <ItemGroup>
     <Content Update="wwwroot\js\config.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\js\config.js.secret">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
