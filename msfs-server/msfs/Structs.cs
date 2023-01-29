@@ -70,6 +70,9 @@ namespace msfs_server.msfs
 
             [DataDefinition("NAV GSI:1", "number", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double NavGSI;
+            
+            [DataDefinition("NAV OBS:1", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double NavOBS;
 
 
         }

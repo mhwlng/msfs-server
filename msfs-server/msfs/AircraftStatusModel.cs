@@ -43,6 +43,8 @@ namespace msfs_server.msfs
 
         public double NavGSI { get; set; }
 
+        public double NavOBS { get; set; }
+
 
         public AircraftStatusFastModel(IHubContext<MyHub> myHub)
         {
@@ -74,6 +76,7 @@ namespace msfs_server.msfs
 
             NavCDI = statusFast.NavCDI;
             NavGSI = statusFast.NavGSI;
+            NavOBS = statusFast.NavOBS;
 
             _myHub.Clients.All.SendAsync("MsFsFastRefresh");
 

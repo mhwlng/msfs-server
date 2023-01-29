@@ -10,14 +10,18 @@
 
     #map {
         height: 450px;
-        width: 800px;
+        width: 700px;
     }
 }
 
-
-
+/* 1000 x 747 */
 #garmin {
 
+    width: 100vw;
+}
+
+/* 1034.9825 749.90594 */
+#garminhsi {
     width: 100vw;
 }
 
@@ -27,6 +31,11 @@
     #garmin {
         height: 446px;
         width: 597px;
+    }
+
+    #garminhsi {
+        height: 446px;
+        width: 618px;
     }
 }
 
