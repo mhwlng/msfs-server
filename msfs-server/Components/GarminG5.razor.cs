@@ -54,7 +54,7 @@ namespace msfs_server.Components
         private double _navGSI;
 
         private Task<IJSObjectReference> _moduleReference;
-        private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/garming5.js").AsTask();
+        private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/GarminG5.razor.js").AsTask();
 
         private HubConnection hubConnection;
 
@@ -170,7 +170,7 @@ namespace msfs_server.Components
             )
         {
             var module = await ModuleReference;
-            await module.InvokeVoidAsync("SetG5Values", 
+            await module.InvokeVoidAsync("SetValues", 
                 bankDegrees, 
                 pitchDegrees, 
                 indicatedAltitude,
@@ -195,7 +195,7 @@ namespace msfs_server.Components
         async Task InitG5()
         {
             var module = await ModuleReference;
-            await module.InvokeVoidAsync("InitG5");
+            await module.InvokeVoidAsync("Init");
         }
 
         public bool IsConnected =>

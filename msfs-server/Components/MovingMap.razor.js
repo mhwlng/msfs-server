@@ -12,10 +12,11 @@ var gpsWaypoints;
 
 var layerControl;
 
-export function InitMap() {
+export function Init() {
 
     const cartoDBlayer = L.tileLayer(`https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`, {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'   });
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+    });
 
     const openStreetMap = L.tileLayer(`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`, {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -30,16 +31,17 @@ export function InitMap() {
     });
 
     const stadiaOutdoors = L.tileLayer(`https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png`, {
-        attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'   });
+        attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+    });
 
     // openaip key: https://www.openaip.net/users/clients#tab-clients
 
     var airspaces = new L.tileLayer(`https://api.tiles.openaip.net/api/data/airspaces/{z}/{x}/{y}.png?apiKey=${config.OPENAIP_KEY}`, {
         attribution: "<a href=\"https://www.openaip.net\" target=\"_blank\" style=\"\">openAIP</a>"
-        });
+    });
 
     var reporting_points = new L.tileLayer(`https://api.tiles.openaip.net/api/data/reporting-points/{z}/{x}/{y}.png?apiKey=${config.OPENAIP_KEY}`, {
-       attribution: "<a href=\"https://www.openaip.net\" target=\"_blank\" style=\"\">openAIP</a>"
+        attribution: "<a href=\"https://www.openaip.net\" target=\"_blank\" style=\"\">openAIP</a>"
     });
 
     var airports = new L.tileLayer(`https://api.tiles.openaip.net/api/data/airports/{z}/{x}/{y}.png?apiKey=${config.OPENAIP_KEY}`, {
@@ -73,8 +75,8 @@ export function InitMap() {
         "CartoDB Voyager": cartoDBlayer,
         "Topography": topoMap,
         "Stadia Outdoors": stadiaOutdoors,
-        "Stadia Dark": StadiaDark 
-    } 
+        "Stadia Dark": StadiaDark
+    }
 
     const overlayMaps = {
         "Airspaces": airspaces,
@@ -82,7 +84,7 @@ export function InitMap() {
         "Airports": airports,
         "Navaids": navaids,
 
-        "OFM Europe" : ofm
+        "OFM Europe": ofm
     }
 
     map = L.map('map', {
@@ -103,22 +105,22 @@ export function InitMap() {
         rotationOrigin: 'center center'
     }).addTo(map);
 
-    trackline = L.polyline([], { color: 'red', smoothFactor: 3, opacity : 1.0 }).addTo(map);
+    trackline = L.polyline([], { color: 'red', smoothFactor: 3, opacity: 1.0 }).addTo(map);
 
     gpsWaypoints = L.polyline([], { color: '#c842f5', smoothFactor: 3, opacity: 1.0, dashArray: '20, 10' }).addTo(map);
 
     flightPathButton = L.easyButton({
         states: [{
-            stateName: 'display-flight-path',     
-            icon: '<span style="padding-top:4px;" class="material-icons">timeline</span>',               
-            title: 'flight path shown',     
-            onClick: function (btn, map) {     
+            stateName: 'display-flight-path',
+            icon: '<span style="padding-top:4px;" class="material-icons">timeline</span>',
+            title: 'flight path shown',
+            onClick: function (btn, map) {
 
                 trackline.setStyle({ opacity: 0 });
 
                 gpsWaypoints.setStyle({ opacity: 0 });
 
-                btn.state('hide-flight-path'); 
+                btn.state('hide-flight-path');
             }
         }, {
             stateName: 'hide-flight-path',
@@ -167,7 +169,7 @@ export function InitMap() {
 
 }
 
-export function SetMapValues(
+export function SetValues(
     latitude,
     longitude,
     heading,

@@ -38,7 +38,7 @@ namespace msfs_server.Components
         private bool _autopilotMaster;
 
         private Task<IJSObjectReference> _moduleReference;
-        private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/garming5hsi.js").AsTask();
+        private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/GarminG5HSI.razor.js").AsTask();
 
         private HubConnection hubConnection;
 
@@ -124,7 +124,7 @@ namespace msfs_server.Components
             )
         {
             var module = await ModuleReference;
-            await module.InvokeVoidAsync("SetG5HSIValues",
+            await module.InvokeVoidAsync("SetValues",
 
                 gpsGroundSpeed,
                 planeHeadingMagnetic,
@@ -141,7 +141,7 @@ namespace msfs_server.Components
         async Task InitG5()
         {
             var module = await ModuleReference;
-            await module.InvokeVoidAsync("InitG5HSI");
+            await module.InvokeVoidAsync("Init");
         }
 
         public bool IsConnected =>

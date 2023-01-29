@@ -1,36 +1,36 @@
 ﻿
 
-var _g5hsigpsGroundSpeed;
-var _g5hsiplaneHeadingMagnetic;
-var _g5hsinavCDI;
-var _g5hsinavGSI;
-var _g5hsinavOBS
-var _g5hsiautoPilotHeadingLockDir;
-var _g5hsiautopilotHeadingLock;
-var _g5hsiautopilotMaster;
+var _gpsGroundSpeed;
+var _planeHeadingMagnetic;
+var _navCDI;
+var _navGSI;
+var _navOBS
+var _autoPilotHeadingLockDir;
+var _autopilotHeadingLock;
+var _autopilotMaster;
 
-var g5hsicloseHdgLockDirBox;
+var closeHdgLockDirBox;
 
-function setG5hsiSelectedValueBoxContent(label, value) {
+function setSelectedValueBoxContent(label, value) {
 
     var d3obj = d3.select(document.getElementById("garminhsi").contentDocument).select('svg');
-    
+
     d3obj.select('#selected-value-box').text(label);
     d3obj.select('#ap-hdg-selected-value').text(value);
     d3obj.select('#ap-hdg-selected-box').style('display', 'block');
 
-    g5hsicloseHdgLockDirBox = setTimeout(function () {
+    closeHdgLockDirBox = setTimeout(function () {
         d3obj.select('#ap-hdg-selected-box').style('display', 'none');
     }, 3000);
 }
 
 
-export function InitG5HSI() {
+export function Init() {
 
 }
 
 
-export function SetG5HSIValues(
+export function SetValues(
     gpsGroundSpeed,
     planeHeadingMagnetic,
     navOBS,
@@ -39,8 +39,8 @@ export function SetG5HSIValues(
     autoPilotHeadingLockDir,
     autopilotHeadingLock,
     autopilotMaster
-    
-    ) {
+
+) {
 
     var d3obj = d3.select(document.getElementById("garminhsi").contentDocument).select('svg');
 
@@ -56,43 +56,43 @@ export function SetG5HSIValues(
     var obsValue = Math.floor(navOBS);
 
     var aphdglockdir = Math.floor(autoPilotHeadingLockDir);
-    
-    if (_g5hsigpsGroundSpeed != gpsGroundSpeed) { // GPS_GROUND_SPEED
+
+    if (_gpsGroundSpeed != gpsGroundSpeed) { // GPS_GROUND_SPEED
         d3obj.select('#gs-value').text(Math.round(gpsGroundSpeed));
     }
-    
-    if (_g5hsiplaneHeadingMagnetic != planeHeadingMagnetic || _g5hsinavOBS != navOBS) { // PLANE_HEADING_DEGREES_MAGNETIC  "x * (360 / 65536 / 65536)"
+
+    if (_planeHeadingMagnetic != planeHeadingMagnetic || _navOBS != navOBS) { // PLANE_HEADING_DEGREES_MAGNETIC  "x * (360 / 65536 / 65536)"
 
         d3obj.select('#compass-rose').attr('transform', 'rotate(' + hdgValue * -1 + ', 516.98242, 422)');
         d3obj.select('#cdi-set').attr('transform', 'rotate(' + (hdgValue2 * 1 - obsValue * 1) * -1 + ', 516.98242, 422)');
         d3obj.select('#hdg-value').text(hdgtext);
     }
 
-    if (_g5hsinavOBS != navOBS) { // NAV_1_OBS
+    if (_navOBS != navOBS) { // NAV_1_OBS
 
-        clearTimeout(g5hsicloseHdgLockDirBox);
+        clearTimeout(closeHdgLockDirBox);
 
         d3obj.select('#cdi-set').attr('transform', 'rotate(' + (hdgValue2 * 1 - obsValue * 1) * -1 + ', 516.98242, 422)');
 
-        setG5hsiSelectedValueBoxContent('Selected CRS', obsValue + '°');
+        setSelectedValueBoxContent('Selected CRS', obsValue + '°');
     }
 
-    if (_g5hsinavCDI != navCDI) { // NAV_1_CDI
+    if (_navCDI != navCDI) { // NAV_1_CDI
 
         d3obj.select('#cdi').attr('transform', 'translate(' + navCDI * 1.07 + ', 0)');
     }
-    
-    if (_g5hsinavGSI != navGSI) { // NAV_1_GSI
+
+    if (_navGSI != navGSI) { // NAV_1_GSI
 
         d3obj.select('#gsi').attr('transform', 'translate(0, ' + navGSI * 0.96 + ')');
     }
-    
-    if (_g5hsiautoPilotHeadingLockDir != autoPilotHeadingLockDir) {
 
-       setG5hsiSelectedValueBoxContent('Selected Heading', aphdglockdir + '°');
+    if (_autoPilotHeadingLockDir != autoPilotHeadingLockDir) {
+
+        setSelectedValueBoxContent('Selected Heading', aphdglockdir + '°');
     }
 
-    if (_g5hsiautopilotHeadingLock != autopilotHeadingLock || _g5hsiautoPilotHeadingLockDir != autoPilotHeadingLockDir || _g5hsiautopilotMaster != autopilotMaster) {
+    if (_autopilotHeadingLock != autopilotHeadingLock || _autoPilotHeadingLockDir != autoPilotHeadingLockDir || _autopilotMaster != autopilotMaster) {
 
         if (autopilotHeadingLock && aphdglockdir && autopilotMaster) {
             d3obj.select('#ap-selected-hdg-bug').style('display', 'block');
@@ -105,14 +105,14 @@ export function SetG5HSIValues(
         }
 
     }
-   
-    _g5hsigpsGroundSpeed = gpsGroundSpeed;
-    _g5hsiplaneHeadingMagnetic = planeHeadingMagnetic;
-    _g5hsinavCDI = navCDI;
-    _g5hsinavGSI = navGSI;
-    _g5hsinavOBS = navOBS;
-    _g5hsiautoPilotHeadingLockDir = autoPilotHeadingLockDir;
-    _g5hsiautopilotHeadingLock = autopilotHeadingLock;
-    _g5hsiautopilotMaster = autopilotMaster;
+
+    _gpsGroundSpeed = gpsGroundSpeed;
+    _planeHeadingMagnetic = planeHeadingMagnetic;
+    _navCDI = navCDI;
+    _navGSI = navGSI;
+    _navOBS = navOBS;
+    _autoPilotHeadingLockDir = autoPilotHeadingLockDir;
+    _autopilotHeadingLock = autopilotHeadingLock;
+    _autopilotMaster = autopilotMaster;
 
 }

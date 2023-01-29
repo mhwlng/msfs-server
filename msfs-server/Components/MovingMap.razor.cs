@@ -34,7 +34,7 @@ namespace msfs_server.Components
 
 
         private Task<IJSObjectReference> _moduleReference;
-        private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./js/movingmap.js").AsTask();
+        private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/MovingMap.razor.js").AsTask();
 
         private HubConnection hubConnection;
 
@@ -118,7 +118,7 @@ namespace msfs_server.Components
             double gpsPrevWpLongitude)
         {
             var module = await ModuleReference;
-            await module.InvokeVoidAsync("SetMapValues", 
+            await module.InvokeVoidAsync("SetValues", 
                 latitude, 
                 longitude,
                 heading, 
@@ -132,7 +132,7 @@ namespace msfs_server.Components
         async Task InitMap()
         {
             var module = await ModuleReference;
-            await module.InvokeVoidAsync("InitMap");
+            await module.InvokeVoidAsync("Init");
         }
 
         public bool IsConnected =>
