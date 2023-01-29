@@ -19,9 +19,9 @@ var config = {
 
     OPENAIP_KEY: "xxxxxxyyyyyyyyyyzzzzzzzzzz",
 
-    // AIRAC 2213 = europe, see https://www.openflightmaps.org/ed-germany/ top right. Changes monthly !!!
+    // AIRAC 2301 = europe, see https://www.openflightmaps.org/ed-germany/ top right. Changes monthly !!!
 
-    AIRAC : "2213"
+    AIRAC : "2301"
 
 }
 ```
