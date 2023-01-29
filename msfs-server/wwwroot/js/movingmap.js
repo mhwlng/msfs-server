@@ -62,7 +62,7 @@ export function InitMap() {
     });
     */
 
-    // AIRAC 2213 = europe, see https://www.openflightmaps.org/ed-germany/ changes monthly !!!
+    // AIRAC 2301 = europe, see https://www.openflightmaps.org/ed-germany/ changes monthly !!!
 
     var ofm = new L.tileLayer(`https://nwy-tiles-api.prod.newaydata.com/tiles/{z}/{x}/{y}.png?path=${config.AIRAC}/aero/latest`, {
         attribution: '<a target="_blank" href="http://openflightmaps.org">&copy; open flightmaps association</a>'

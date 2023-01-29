@@ -17,7 +17,7 @@ namespace msfs_server.msfs
 
         public double IndicatedAltitude { get; set; }
 
-        public int VerticalSpeed { get; set; }
+        public double VerticalSpeed { get; set; }
 
         public double AirspeedIndicated { get; set; }
 
@@ -33,7 +33,7 @@ namespace msfs_server.msfs
 
         public double PlaneHeadingMagnetic { get; set; }
 
-        public int AutoPilotHeadingLockDir { get; set; }
+        public double AutoPilotHeadingLockDir { get; set; }
 
         public bool AutopilotHeadingLock { get; set; }
 

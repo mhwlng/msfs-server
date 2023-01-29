@@ -1,29 +1,29 @@
 ﻿
-var _bankDegrees = 0;
-var _pitchDegrees = 0;
-var _indicatedAltitude = 0;
-var _verticalSpeed = 0;
-var _airspeedIndicated = 0;
+var _bankDegrees;
+var _pitchDegrees;
+var _indicatedAltitude;
+var _verticalSpeed;
+var _airspeedIndicated;
 
-var _autopilotMaster = 0;
-var _autoPilotAltitudeLockVar = -1;
-var _autopilotAltitudeLock = 0;
-var _gpsGroundSpeed = 0;
-var _kohlsmanSetting = 0;
-var _planeHeadingMagnetic = 0;
-var _autoPilotHeadingLockDir = -1;
-var _autopilotHeadingLock = 0;
-var _turnCoordinatorBall = 0;
-var _navCDI = 0;
-var _navGSI = 0;
+var _autopilotMaster;
+var _autoPilotAltitudeLockVar;
+var _autopilotAltitudeLock;
+var _gpsGroundSpeed;
+var _kohlsmanSetting;
+var _planeHeadingMagnetic;
+var _autoPilotHeadingLockDir;
+var _autopilotHeadingLock;
+var _turnCoordinatorBall;
+var _navCDI;
+var _navGSI;
 
 var selectedaltitudereached = false;
 
+var _selectedaltitudereached;
+
 var closeHdgLockDirBox;
 
-var apaltlock = -999;
-
- config = {
+ var garminconfig = {
     "AIRSPEED_INDICATED": {
         "ranges": [
             {
@@ -87,12 +87,12 @@ function addMarker(item, index) {
 export function InitG5() {
 
 
-    if (config.AIRSPEED_INDICATED?.speedBands?.length > 0) {
-        config.AIRSPEED_INDICATED.speedBands.forEach(addSpeedband)
+    if (garminconfig.AIRSPEED_INDICATED?.speedBands?.length > 0) {
+        garminconfig.AIRSPEED_INDICATED.speedBands.forEach(addSpeedband)
     }
 
-    if (config.AIRSPEED_INDICATED?.markers?.length > 0) {
-        config.AIRSPEED_INDICATED.markers.forEach(addMarker)
+    if (garminconfig.AIRSPEED_INDICATED?.markers?.length > 0) {
+        garminconfig.AIRSPEED_INDICATED.markers.forEach(addMarker)
     }
    
 
@@ -120,27 +120,27 @@ export function SetG5Values(
     ) {
 
     var d3obj = d3.select(document.getElementById("garmin").contentDocument).select('svg');
-    
-    console.log("autopilotMaster",autopilotMaster);
-    console.log("autoPilotAltitudeLockVar",autoPilotAltitudeLockVar);
-    console.log("autopilotAltitudeLock", autopilotAltitudeLock);
-    console.log("autopilotHeadingLock", autopilotHeadingLock);
-    console.log("autoPilotHeadingLockDir", autoPilotHeadingLockDir);
-
-    console.log("turnCoordinatorBall", turnCoordinatorBall);
-
-    console.log("navCDI", navCDI);
-    console.log("navGSI", navGSI);
 
     //console.log(bankDegrees, pitchDegrees, indicatedAltitude, verticalSpeed, airspeedIndicated);
 
     // credit https://github.com/joeherwig/portable-sim-panels
 
-    var aphdglockdir = Math.floor(autoPilotHeadingLockDir);
-    
-    if (_pitchDegrees != pitchDegrees || _bankDegrees != bankDegrees) { // PLANE_PITCH_DEGREES
+    var apaltlock = autoPilotAltitudeLockVar * -1;
 
-        var pitch = (pitchDegrees * 1 > 180) ? (pitchDegrees - 360) * -1 : pitchDegrees * - 1;
+    var aphdglockdir = Math.floor(autoPilotHeadingLockDir);
+
+    var hdgValue = planeHeadingMagnetic === 0 ? 360 : planeHeadingMagnetic;
+
+    var hdgtext = Math.abs(Math.floor(hdgValue % 360));
+    if (hdgValue < 0) {
+        hdgtext = 360 - Math.abs(Math.floor(hdgtext));
+    }
+
+    var vs = verticalSpeed > 0 ? verticalSpeed * -0.0752 + 746 : 746;
+
+    var pitch = (pitchDegrees * 1 > 180) ? (pitchDegrees - 360) * -1 : pitchDegrees * - 1;
+
+    if (_pitchDegrees != pitchDegrees || _bankDegrees != bankDegrees) { // PLANE_PITCH_DEGREES  "x * (360 / 65536 / 65536)"
 
         d3obj.select('#horizon-gradient').attr('gradientTransform',
             'rotate(' + bankDegrees + ', 500, 373.5) translate(0, ' + pitch * 22.825 + ')');
@@ -153,15 +153,15 @@ export function SetG5Values(
 
     }
 
-    if (_bankDegrees != bankDegrees) { // PLANE_BANK_DEGREES
-
+    if (_bankDegrees != bankDegrees) { // PLANE_BANK_DEGREES "x * (360 / 65536 / 65536) - 360"
+        
         d3obj.select('#bank-indicator').attr('transform', 'rotate(' + bankDegrees + ', 500, 373.5)');
         //d3.select('#horizon-gradient').attr('gradientTransform','translate(0 '+pitch+'), rotate('+bank+' 500, 373.5)')
         //d3.select('#pitch-ruler-fade-out-top').attr('gradientTransform','translate(0 '+pitch+'), rotate('+bank+' 500, 373.5)')
     }
 
    
-    if (_indicatedAltitude != indicatedAltitude) { // INDICATED_ALTITUDE
+    if (_indicatedAltitude != indicatedAltitude || _autoPilotAltitudeLockVar != autoPilotAltitudeLockVar || _selectedaltitudereached != selectedaltitudereached) { // INDICATED_ALTITUDE
 
         if (indicatedAltitude > 1000) {
             d3obj.select('#alt-value-thousands').text(Math.floor(indicatedAltitude / 1000));
@@ -175,15 +175,17 @@ export function SetG5Values(
 
         if (Math.abs(indicatedAltitude + apaltlock) <= 30) {
             d3obj.select('#ap-alt-value').style('fill', '#0bbbbb')
+
             selectedaltitudereached = true;
         }
+
         if (Math.abs(indicatedAltitude + apaltlock) > 200 && selectedaltitudereached) {
             d3obj.select('#ap-alt-value').style('fill', 'yellow')   // selected ap alt deviation warning
         }
     }
     
-    if (_airspeedIndicated != airspeedIndicated) { // AIRSPEED_INDICATED
-
+    if (_airspeedIndicated != airspeedIndicated) { // AIRSPEED_INDICATED "x / 128"
+        
         d3obj.select('#cas-value tspan').text(Math.round(airspeedIndicated));
         d3obj.select('#cas-ruler').attr('transform', 'translate(0,' + airspeedIndicated * 12.364 + ')')
     }
@@ -196,16 +198,10 @@ export function SetG5Values(
         d3obj.select('#baro-value').text(kohlsmanSetting.toFixed(0));
     }
     
-    if (_planeHeadingMagnetic != planeHeadingMagnetic) { // PLANE_HEADING_DEGREES_MAGNETIC
-
-        var HdgValue = planeHeadingMagnetic === 0 ? 360 : planeHeadingMagnetic;
-
-        varhdgtext = Math.abs(Math.floor(HdgValue % 360));
-        if (HdgValue < 0) {
-            hdgtext = 360 - Math.abs(Math.floor(hdgtext));
-        }
-        d3obj.select('#hdg-ruler').attr('transform', 'translate(' + Math.round(0 - HdgValue * 15.4) + ', 300)');
-        d3obj.select('#ap-selected-hdg-bug').attr('transform', 'translate(' + ((HdgValue - aphdglockdir) * -15.4) + ', 0)');
+    if (_planeHeadingMagnetic != planeHeadingMagnetic || _autoPilotHeadingLockDir != autoPilotHeadingLockDir) { // PLANE_HEADING_DEGREES_MAGNETIC  "x * (360 / 65536 / 65536)"
+        
+        d3obj.select('#hdg-ruler').attr('transform', 'translate(' + Math.round(0 - hdgValue * 15.4) + ', 300)');
+        d3obj.select('#ap-selected-hdg-bug').attr('transform', 'translate(' + ((hdgValue - aphdglockdir) * -15.4) + ', 0)');
         d3obj.select('#hdg-value').text(hdgtext);
     }
 
@@ -214,8 +210,6 @@ export function SetG5Values(
     if (_verticalSpeed != verticalSpeed) { // VERTICAL_SPEED
 
         d3obj.select('#vsi').attr('height', Math.abs(verticalSpeed * 0.0752));
-
-        var vs = verticalSpeed > 0 ? verticalSpeed * -0.0752 + 746 : 746;
 
         d3obj.select('#vsi').attr('transform', 'translate(0, ' + vs + ')');
     }
@@ -226,7 +220,7 @@ export function SetG5Values(
     }
 
 
-    if (_autopilotMaster != autopilotMaster) { // AUTOPILOT_MASTER
+    if (_autopilotMaster != autopilotMaster || _autoPilotAltitudeLockVar != autoPilotAltitudeLockVar || _autopilotHeadingLock != autopilotHeadingLock) { // AUTOPILOT_MASTER
 
         if (autopilotHeadingLock && autopilotMaster) {
             d3obj.select('#ap-selected-hdg-bug').style('display', 'block');
@@ -246,19 +240,16 @@ export function SetG5Values(
         }
     }
 
-    if (_autoPilotAltitudeLockVar != autoPilotAltitudeLockVar) { //AUTOPILOT_ALTITUDE_LOCK_VAR
+    if (_autoPilotAltitudeLockVar != autoPilotAltitudeLockVar) { //AUTOPILOT_ALTITUDE_LOCK_VAR "x * 3.28084 / 65536"
 
-        if (apaltlock !== autoPilotAltitudeLockVar * -1) {
-            selectedaltitudereached = false;
-            d3obj.select('#ap-alt-value').style('fill', '#0bbbbb')
-        }
+        selectedaltitudereached = false;
 
-        apaltlock = autoPilotAltitudeLockVar * -1;
+        d3obj.select('#ap-alt-value').style('fill', '#0bbbbb')
 
         d3obj.select('#ap-alt-value').text(Math.round(autoPilotAltitudeLockVar));
     }
 
-    if (_autopilotAltitudeLock != autopilotAltitudeLock) { // AUTOPILOT_ALTITUDE_LOCK
+    if (_autopilotAltitudeLock != autopilotAltitudeLock || _autoPilotAltitudeLockVar != autoPilotAltitudeLockVar || _autopilotMaster != autopilotMaster) { // AUTOPILOT_ALTITUDE_LOCK
 
         if (autopilotAltitudeLock && apaltlock && autopilotMaster) {
             d3obj.select('#ap-selected-alt').style("display", "block");
@@ -270,9 +261,10 @@ export function SetG5Values(
 
     }
 
-    if (_autoPilotHeadingLockDir != autoPilotHeadingLockDir) { // AUTOPILOT_HEADING_LOCK_DIR
+    if (_autoPilotHeadingLockDir != autoPilotHeadingLockDir) { // AUTOPILOT_HEADING_LOCK_DIR  "x / 65536 * 360"
 
         clearTimeout(closeHdgLockDirBox);
+
         d3obj.select('#ap-hdg-selected-value').text(aphdglockdir + '°');
         d3obj.select('#ap-hdg-selected-box').style('display', 'block');
 
@@ -282,7 +274,7 @@ export function SetG5Values(
 
     }
 
-    if (_autopilotHeadingLock != autopilotHeadingLock) { // AUTOPILOT_HEADING_LOCK
+    if (_autopilotHeadingLock != autopilotHeadingLock || _autoPilotHeadingLockDir != autoPilotHeadingLockDir || _autopilotMaster != autopilotMaster) { // AUTOPILOT_HEADING_LOCK
 
         if (autopilotHeadingLock && aphdglockdir && autopilotMaster) {
             d3obj.select('#ap-selected-hdg-bug').style('display', 'block');
@@ -327,5 +319,7 @@ export function SetG5Values(
     _turnCoordinatorBall = turnCoordinatorBall;
     _navCDI = navCDI;
     _navGSI = navGSI;
+
+    _selectedaltitudereached = selectedaltitudereached;
 
 }

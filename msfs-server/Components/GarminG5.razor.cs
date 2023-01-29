@@ -27,7 +27,7 @@ namespace msfs_server.Components
 
         private double _indicatedAltitude;
 
-        private int _verticalSpeed;
+        private double _verticalSpeed;
 
         private double _airspeedIndicated;
         
@@ -43,7 +43,7 @@ namespace msfs_server.Components
 
         private double _planeHeadingMagnetic;
 
-        private int _autoPilotHeadingLockDir;
+        private double _autoPilotHeadingLockDir;
 
         private bool _autopilotHeadingLock;
 
@@ -152,7 +152,7 @@ namespace msfs_server.Components
             double bankDegrees,
             double pitchDegrees, 
             double indicatedAltitude,
-            int verticalSpeed,
+            double verticalSpeed,
             double airspeedIndicated,
 
             bool autopilotMaster,
@@ -161,7 +161,7 @@ namespace msfs_server.Components
             double gpsGroundSpeed,
             double kohlsmanSetting,
             double planeHeadingMagnetic,
-            int autoPilotHeadingLockDir,
+            double autoPilotHeadingLockDir,
             bool autopilotHeadingLock,
             double turnCoordinatorBall,
             double navCDI,
