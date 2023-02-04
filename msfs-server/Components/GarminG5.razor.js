@@ -14,8 +14,8 @@ var _planeHeadingMagnetic;
 var _autoPilotHeadingLockDir;
 var _autopilotHeadingLock;
 var _turnCoordinatorBall;
-var _navCDI;
-var _navGSI;
+var _nav1CDI;
+var _nav1GSI;
 
 var selectedaltitudereached = false;
 
@@ -39,12 +39,6 @@ var g5config = {
                 "width": "3"
             }
         ],
-        "whitebarstart": 40,
-        "whitebarend": 70,
-        "greenbarstart": 41,
-        "greenbarend": 117,
-        "yellowbarstart": 118,
-        "yellowbarend": 144,
         "markers": [
             { "type": "fe", "value": 70.387 },
             { "type": "vne", "value": 145 },
@@ -114,8 +108,8 @@ export function SetValues(
     autoPilotHeadingLockDir,
     autopilotHeadingLock,
     turnCoordinatorBall,
-    navCDI,
-    navGSI
+    nav1CDI,
+    nav1GSI
 
 ) {
 
@@ -288,15 +282,15 @@ export function SetValues(
     }
 
 
-    if (_navCDI != navCDI) { // NAV_1_CDI
+    if (_nav1CDI != nav1CDI) { // NAV_1_CDI
 
-        d3obj.select('#cdi').attr('transform', 'translate(' + navCDI * 1.07 + ', 0)');
+        d3obj.select('#cdi').attr('transform', 'translate(' + nav1CDI * 1.07 + ', 0)');
     }
 
 
-    if (_navGSI != navGSI) { // NAV_1_GSI
+    if (_nav1GSI != nav1GSI) { // NAV_1_GSI
 
-        d3obj.select('#gsi').attr('transform', 'translate(0, ' + navGSI * 0.96 + ')');
+        d3obj.select('#gsi').attr('transform', 'translate(0, ' + nav1GSI * 0.96 + ')');
     }
 
     _bankDegrees = bankDegrees;
@@ -315,8 +309,8 @@ export function SetValues(
     _autoPilotHeadingLockDir = autoPilotHeadingLockDir;
     _autopilotHeadingLock = autopilotHeadingLock;
     _turnCoordinatorBall = turnCoordinatorBall;
-    _navCDI = navCDI;
-    _navGSI = navGSI;
+    _nav1CDI = nav1CDI;
+    _nav1GSI = nav1GSI;
 
     _selectedaltitudereached = selectedaltitudereached;
 

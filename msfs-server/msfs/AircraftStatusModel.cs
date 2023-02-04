@@ -21,29 +21,44 @@ namespace msfs_server.msfs
 
         public double AirspeedIndicated { get; set; }
 
-        public bool AutopilotMaster { get; set; }
-
-        public double AutoPilotAltitudeLockVar { get; set; }
-
-        public bool AutopilotAltitudeLock { get; set; }
-
         public double GpsGroundSpeed { get; set; }
 
         public double KohlsmanSetting { get; set; }
 
         public double PlaneHeadingMagnetic { get; set; }
+  
+        public double TurnCoordinatorBall { get; set; }
+
+        public double Nav1CDI { get; set; }
+
+        public double Nav1GSI { get; set; }
+
+        public double Nav1OBS { get; set; }
+
+
+        public double AutoPilotAltitudeLockVar { get; set; }
 
         public double AutoPilotHeadingLockDir { get; set; }
 
+
+        public bool AutopilotMaster { get; set; }
+
         public bool AutopilotHeadingLock { get; set; }
 
-        public double TurnCoordinatorBall { get; set; }
+        public bool AutopilotAltitudeLock { get; set; }
 
-        public double NavCDI { get; set; }
+        public bool AutopilotNav1Lock { get; set; }
 
-        public double NavGSI { get; set; }
+        public bool AutopilotFlightDirectorActive { get; set; }
 
-        public double NavOBS { get; set; }
+        public bool AutopilotBackcourseHold { get; set; }
+
+        public bool AutopilotVerticalHold { get; set; }
+
+        public bool AutopilotYawDamper { get; set; }
+
+        public bool AutopilotApproachHold { get; set; }
+
 
 
         public AircraftStatusFastModel(IHubContext<MyHub> myHub)
@@ -63,20 +78,33 @@ namespace msfs_server.msfs
             PlaneHeadingMagnetic = statusFast.PlaneHeadingMagnetic;
             KohlsmanSetting = statusFast.KohlsmanSetting;
 
-            AutopilotMaster = statusFast.AutopilotMaster;
+            TurnCoordinatorBall = statusFast.TurnCoordinatorBall;
+
+            Nav1CDI = statusFast.Nav1CDI;
+            Nav1GSI = statusFast.Nav1GSI;
+            Nav1OBS = statusFast.Nav1OBS;
 
             AutoPilotAltitudeLockVar = statusFast.AutoPilotAltitudeLockVar;
+            AutoPilotHeadingLockDir = statusFast.AutoPilotHeadingLockDir;
+            
+            AutopilotMaster = statusFast.AutopilotMaster;
+
             AutopilotAltitudeLock = statusFast.AutopilotAltitudeLock;
 
             AutopilotHeadingLock = statusFast.AutopilotHeadingLock;
-            AutoPilotHeadingLockDir = statusFast.AutoPilotHeadingLockDir;
 
+            AutopilotNav1Lock = statusFast.AutopilotNav1Lock;
 
-            TurnCoordinatorBall = statusFast.TurnCoordinatorBall;
+            AutopilotFlightDirectorActive = statusFast.AutopilotFlightDirectorActive;
 
-            NavCDI = statusFast.NavCDI;
-            NavGSI = statusFast.NavGSI;
-            NavOBS = statusFast.NavOBS;
+            AutopilotBackcourseHold = statusFast.AutopilotBackcourseHold;
+
+            AutopilotVerticalHold = statusFast.AutopilotVerticalHold;
+
+            AutopilotYawDamper = statusFast.AutopilotYawDamper;
+
+            AutopilotApproachHold = statusFast.AutopilotApproachHold;
+
 
             _myHub.Clients.All.SendAsync("MsFsFastRefresh");
 
@@ -114,14 +142,11 @@ namespace msfs_server.msfs
         public bool Available { get; set; }
         public bool Level { get; set; }
         public bool Approach { get; set; }
-        public bool Backcourse { get; set; }
-        public bool FlightDirector { get; set; }
         public bool Airspeed { get; set; }
         public bool Mach { get; set; }
-        public bool YawDamper { get; set; }
         public bool Autothrottle { get; set; }
-        public bool VerticalHold { get; set; }
-        public bool Nav1 { get; set; }*/
+
+        */
 
 
         public AircraftStatusSlowModel(IHubContext<MyHub> myHub)
@@ -158,16 +183,13 @@ namespace msfs_server.msfs
 
 
            Available = statusSlow.AutopilotAvailable;
-           FlightDirector = statusSlow.AutopilotFlightDirector;
            Airspeed = statusSlow.AutopilotAirspeed;
            Approach = statusSlow.AutopilotApproach;
            Autothrottle = statusSlow.AutopilotAutothrottle;
-           Backcourse = statusSlow.AutopilotBackcourse;
+   
            Level = statusSlow.AutopilotWingLevel;
            Mach = statusSlow.AutopilotMach;
-           Nav1 = statusSlow.AutopilotNav1;
-           VerticalHold = statusSlow.AutopilotVerticalHold;
-           YawDamper = statusSlow.AutopilotYawDamper;*/
+           */
 
             _myHub.Clients.All.SendAsync("MsFsSlowRefresh");
 

@@ -25,11 +25,11 @@ namespace msfs_server.Components
 
         private double _planeHeadingMagnetic;
 
-        private double _navOBS;
+        private double _nav1OBS;
 
-        private double _navCDI;
+        private double _nav1CDI;
 
-        private double _navGSI;
+        private double _nav1GSI;
 
         private double _autoPilotHeadingLockDir;
 
@@ -48,10 +48,10 @@ namespace msfs_server.Components
 
             _planeHeadingMagnetic = AircraftStatusFast.PlaneHeadingMagnetic;
 
-            _navOBS = AircraftStatusFast.NavOBS;
+            _nav1OBS = AircraftStatusFast.Nav1OBS;
 
-            _navCDI = AircraftStatusFast.NavCDI;
-            _navGSI = AircraftStatusFast.NavGSI;
+            _nav1CDI = AircraftStatusFast.Nav1CDI;
+            _nav1GSI = AircraftStatusFast.Nav1GSI;
 
             _autoPilotHeadingLockDir = AircraftStatusFast.AutoPilotHeadingLockDir;
             _autopilotHeadingLock = AircraftStatusFast.AutopilotHeadingLock;
@@ -67,14 +67,24 @@ namespace msfs_server.Components
                 //InvokeAsync(StateHasChanged);
 
                 if (_gpsGroundSpeed != AircraftStatusFast.GpsGroundSpeed ||
-                    _planeHeadingMagnetic != AircraftStatusFast.PlaneHeadingMagnetic)
+                    _planeHeadingMagnetic != AircraftStatusFast.PlaneHeadingMagnetic ||
+
+                    _nav1OBS != AircraftStatusFast.Nav1OBS ||
+                    _nav1CDI != AircraftStatusFast.Nav1CDI ||
+                    _nav1GSI != AircraftStatusFast.Nav1GSI ||
+
+                    _autoPilotHeadingLockDir != AircraftStatusFast.AutoPilotHeadingLockDir ||
+                    _autopilotHeadingLock != AircraftStatusFast.AutopilotHeadingLock ||
+
+                    _autopilotMaster != AircraftStatusFast.AutopilotMaster
+                    )
                 {
                     _gpsGroundSpeed = AircraftStatusFast.GpsGroundSpeed;
                     _planeHeadingMagnetic = AircraftStatusFast.PlaneHeadingMagnetic;
 
-                    _navOBS = AircraftStatusFast.NavOBS;
-                    _navCDI = AircraftStatusFast.NavCDI;
-                    _navGSI = AircraftStatusFast.NavGSI;
+                    _nav1OBS = AircraftStatusFast.Nav1OBS;
+                    _nav1CDI = AircraftStatusFast.Nav1CDI;
+                    _nav1GSI = AircraftStatusFast.Nav1GSI;
 
                     _autoPilotHeadingLockDir = AircraftStatusFast.AutoPilotHeadingLockDir;
                     _autopilotHeadingLock = AircraftStatusFast.AutopilotHeadingLock;
@@ -85,9 +95,9 @@ namespace msfs_server.Components
 
                         _gpsGroundSpeed,
                         _planeHeadingMagnetic,
-                        _navOBS,
-                        _navCDI,
-                        _navGSI,
+                        _nav1OBS,
+                        _nav1CDI,
+                        _nav1GSI,
                         _autoPilotHeadingLockDir,
                         _autopilotHeadingLock,
                         _autopilotMaster
@@ -114,9 +124,9 @@ namespace msfs_server.Components
 
             double gpsGroundSpeed,
             double planeHeadingMagnetic,
-            double navOBS,
-            double navCDI,
-            double navGSI,
+            double nav1OBS,
+            double nav1CDI,
+            double nav1GSI,
             double autoPilotHeadingLockDir,
             bool autopilotHeadingLock,
             bool autopilotMaster
@@ -128,9 +138,9 @@ namespace msfs_server.Components
 
                 gpsGroundSpeed,
                 planeHeadingMagnetic,
-                navOBS,
-                navCDI,
-                navGSI,
+                nav1OBS,
+                nav1CDI,
+                nav1GSI,
                 autoPilotHeadingLockDir,
                 autopilotHeadingLock,
                 autopilotMaster

@@ -1,22 +1,11 @@
 ﻿
-
 #map {
     height: 500px;
     width: 100vw;
 }
 
-
-@media screen and (max-height: 515px) {
-
-    #map {
-        height: 450px;
-        width: 700px;
-    }
-}
-
 /* 1000 x 747 */
 #garmin {
-
     width: 100vw;
 }
 
@@ -25,18 +14,33 @@
     width: 100vw;
 }
 
+/* 1034.483 54.428696 */
+#garminapbar {
+    width: 100vw;
+}
 
 @media screen and (max-height: 515px) {
 
-    #garmin {
-        height: 446px;
-        width: 597px;
+    #map {
+        height: 450px;
+        width: 700px;
     }
 
-    #garminhsi {
-        height: 446px;
-        width: 618px;
+    #garminapbar {
+        width: 560px;
+        height: 30px;
     }
+
+    #garmin {
+        width: 560px;
+        height: 420px;
+    }
+    
+    #garminhsi {
+        width: 618px;
+        height: 446px;
+    }
+
 }
 
 .leaflet-touch .leaflet-bar button {

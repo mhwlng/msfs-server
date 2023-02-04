@@ -46,33 +46,53 @@ namespace msfs_server.msfs
             [DataDefinition("KOHLSMAN SETTING MB", "millibars", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double KohlsmanSetting;
 
-            [DataDefinition("AUTOPILOT MASTER", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
-            public bool AutopilotMaster;
+            [DataDefinition("TURN COORDINATOR BALL", "Position 128", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double TurnCoordinatorBall;
+
+            [DataDefinition("NAV CDI:1", "number", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double Nav1CDI;
+
+            [DataDefinition("NAV GSI:1", "number", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double Nav1GSI;
+            
+            [DataDefinition("NAV OBS:1", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double Nav1OBS;
 
             [DataDefinition("AUTOPILOT ALTITUDE LOCK VAR", "feet", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double AutoPilotAltitudeLockVar;
 
-            [DataDefinition("AUTOPILOT ALTITUDE LOCK", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
-            public bool AutopilotAltitudeLock;
-
-            [DataDefinition("AUTOPILOT HEADING LOCK", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
-            public bool AutopilotHeadingLock;
 
             [DataDefinition("AUTOPILOT HEADING LOCK DIR", "degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double AutoPilotHeadingLockDir;
 
 
-            [DataDefinition("TURN COORDINATOR BALL", "Position 128", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
-            public double TurnCoordinatorBall;
+            [DataDefinition("AUTOPILOT MASTER", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotMaster;
 
-            [DataDefinition("NAV CDI:1", "number", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
-            public double NavCDI;
+            [DataDefinition("AUTOPILOT HEADING LOCK", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotHeadingLock;
 
-            [DataDefinition("NAV GSI:1", "number", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
-            public double NavGSI;
-            
-            [DataDefinition("NAV OBS:1", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
-            public double NavOBS;
+            [DataDefinition("AUTOPILOT ALTITUDE LOCK", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotAltitudeLock;
+
+            [DataDefinition("AUTOPILOT NAV1 LOCK", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotNav1Lock;
+
+            [DataDefinition("AUTOPILOT FLIGHT DIRECTOR ACTIVE", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotFlightDirectorActive;
+
+            [DataDefinition("AUTOPILOT BACKCOURSE HOLD", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotBackcourseHold;
+
+            [DataDefinition("AUTOPILOT VERTICAL HOLD", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotVerticalHold;
+
+            [DataDefinition("AUTOPILOT YAW DAMPER", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotYawDamper;
+
+            [DataDefinition("AUTOPILOT APPROACH HOLD", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotApproachHold;
+
 
 
         }
@@ -147,34 +167,19 @@ namespace msfs_server.msfs
             [DataDefinition("AUTOPILOT WING LEVELER", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
             public bool AutopilotWingLevel;
 
-
-            [DataDefinition("AUTOPILOT APPROACH HOLD", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
-            public bool AutopilotApproach;
-
-            [DataDefinition("AUTOPILOT BACKCOURSE HOLD", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
-            public bool AutopilotBackcourse;
-
-            [DataDefinition("AUTOPILOT FLIGHT DIRECTOR ACTIVE", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
-            public bool AutopilotFlightDirector;
-
+ 
             [DataDefinition("AUTOPILOT AIRSPEED HOLD", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
             public bool AutopilotAirspeed;
 
             [DataDefinition("AUTOPILOT MACH HOLD", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
             public bool AutopilotMach;
 
-            [DataDefinition("AUTOPILOT YAW DAMPER", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
-            public bool AutopilotYawDamper;
 
             [DataDefinition("AUTOTHROTTLE ACTIVE", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
             public bool AutopilotAutothrottle;
 
-            [DataDefinition("AUTOPILOT VERTICAL HOLD", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
-            public bool AutopilotVerticalHold;
 
-            [DataDefinition("AUTOPILOT NAV1 LOCK", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
-            public bool AutopilotNav1;
-
+        
 
 
             
@@ -376,24 +381,15 @@ namespace msfs_server.msfs
 
                 ("TRANSPONDER_CODE", "TRANSPONDER CODE:1", "number", SIMCONNECT_DATATYPE.FLOAT64),
 
-                ("AUTOPILOT_MASTER", "AUTOPILOT MASTER", "bool", SIMCONNECT_DATATYPE.FLOAT64),
-                ("AUTOPILOT_FLIGHT_DIRECTOR_ACTIVE", "AUTOPILOT FLIGHT DIRECTOR ACTIVE", "bool", SIMCONNECT_DATATYPE.FLOAT64),
                 ("GPS_DRIVES_NAV1", "GPS DRIVES NAV1", "bool", SIMCONNECT_DATATYPE.FLOAT64),
-                ("AUTOPILOT_APPROACH_HOLD", "AUTOPILOT APPROACH HOLD", "bool", SIMCONNECT_DATATYPE.FLOAT64),
-                ("AUTOPILOT_NAV1_LOCK", "AUTOPILOT NAV1 LOCK", "bool", SIMCONNECT_DATATYPE.FLOAT64),
 
-                ("AUTOPILOT_ALTITUDE_LOCK", "AUTOPILOT ALTITUDE LOCK", "bool", SIMCONNECT_DATATYPE.FLOAT64),
                 ("AUTOPILOT_ALTITUDE_LOCK_VAR", "AUTOPILOT ALTITUDE LOCK VAR:1", "feet", SIMCONNECT_DATATYPE.FLOAT64),
-                ("AUTOPILOT_HEADING_LOCK", "AUTOPILOT HEADING LOCK", "bool", SIMCONNECT_DATATYPE.FLOAT64),
                 ("AUTOPILOT_HEADING_LOCK_DIR", "AUTOPILOT HEADING LOCK DIR:1", "degrees", SIMCONNECT_DATATYPE.FLOAT64),
-                ("AUTOPILOT_VERTICAL_HOLD", "AUTOPILOT VERTICAL HOLD", "bool", SIMCONNECT_DATATYPE.FLOAT64),
                 ("AUTOPILOT_VERTICAL_HOLD_VAR", "AUTOPILOT VERTICAL HOLD VAR", "feet/minute", SIMCONNECT_DATATYPE.FLOAT64),
                 ("AUTOPILOT_FLIGHT_LEVEL_CHANGE", "AUTOPILOT FLIGHT LEVEL CHANGE", "bool", SIMCONNECT_DATATYPE.FLOAT64),
                 ("AUTOPILOT_AIRSPEED_HOLD_VAR", "AUTOPILOT AIRSPEED HOLD VAR", "knots", SIMCONNECT_DATATYPE.FLOAT64),
-                ("AUTOPILOT_YAW_DAMPER", "AUTOPILOT YAW DAMPER", "bool", SIMCONNECT_DATATYPE.FLOAT64),
                 ("AUTOPILOT_WING_LEVELER", "AUTOPILOT WING LEVELER", "bool", SIMCONNECT_DATATYPE.FLOAT64),
                 ("AUTOPILOT_THROTTLE_ARM", "AUTOPILOT THROTTLE ARM", "bool", SIMCONNECT_DATATYPE.FLOAT64),
-                ("AUTOPILOT_BACKCOURSE_HOLD", "AUTOPILOT BACKCOURSE HOLD", "bool", SIMCONNECT_DATATYPE.FLOAT64),
 
                 ("ELECTRICAL_MASTER_BATTERY", "ELECTRICAL MASTER BATTERY", "bool", SIMCONNECT_DATATYPE.FLOAT64),
                 ("GENERAL_ENG_MASTER_ALTERNATOR_1", "GENERAL ENG MASTER ALTERNATOR:1", "bool", SIMCONNECT_DATATYPE.FLOAT64),

@@ -49,9 +49,9 @@ namespace msfs_server.Components
 
         private double _turnCoordinatorBall;
 
-        private double _navCDI;
+        private double _nav1CDI;
 
-        private double _navGSI;
+        private double _nav1GSI;
 
         private Task<IJSObjectReference> _moduleReference;
         private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/GarminG5.razor.js").AsTask();
@@ -75,8 +75,8 @@ namespace msfs_server.Components
             _autoPilotHeadingLockDir = AircraftStatusFast.AutoPilotHeadingLockDir;
             _autopilotHeadingLock = AircraftStatusFast.AutopilotHeadingLock;
             _turnCoordinatorBall = AircraftStatusFast.TurnCoordinatorBall;
-            _navCDI = AircraftStatusFast.NavCDI;
-            _navGSI = AircraftStatusFast.NavGSI;
+            _nav1CDI = AircraftStatusFast.Nav1CDI;
+            _nav1GSI = AircraftStatusFast.Nav1GSI;
 
             hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
@@ -90,7 +90,21 @@ namespace msfs_server.Components
                     _pitchDegrees != AircraftStatusFast.PitchDegrees ||
                     _indicatedAltitude != AircraftStatusFast.IndicatedAltitude ||
                     _verticalSpeed != AircraftStatusFast.VerticalSpeed ||
-                    _airspeedIndicated != AircraftStatusFast.AirspeedIndicated)
+                    _airspeedIndicated != AircraftStatusFast.AirspeedIndicated ||
+
+                    _autopilotMaster != AircraftStatusFast.AutopilotMaster ||
+                    _autoPilotAltitudeLockVar != AircraftStatusFast.AutoPilotAltitudeLockVar ||
+                    _autopilotAltitudeLock != AircraftStatusFast.AutopilotAltitudeLock ||
+                    _gpsGroundSpeed != AircraftStatusFast.GpsGroundSpeed ||
+                    _kohlsmanSetting != AircraftStatusFast.KohlsmanSetting ||
+                    _planeHeadingMagnetic != AircraftStatusFast.PlaneHeadingMagnetic ||
+                    _autoPilotHeadingLockDir != AircraftStatusFast.AutoPilotHeadingLockDir ||
+                    _autopilotHeadingLock != AircraftStatusFast.AutopilotHeadingLock ||
+                    _turnCoordinatorBall != AircraftStatusFast.TurnCoordinatorBall ||
+                    _nav1CDI != AircraftStatusFast.Nav1CDI ||
+                    _nav1GSI != AircraftStatusFast.Nav1GSI 
+
+                    )
                 {
                     _bankDegrees = AircraftStatusFast.BankDegrees;
                     _pitchDegrees = AircraftStatusFast.PitchDegrees;
@@ -107,8 +121,8 @@ namespace msfs_server.Components
                     _autoPilotHeadingLockDir = AircraftStatusFast.AutoPilotHeadingLockDir;
                     _autopilotHeadingLock = AircraftStatusFast.AutopilotHeadingLock;
                     _turnCoordinatorBall = AircraftStatusFast.TurnCoordinatorBall;
-                    _navCDI = AircraftStatusFast.NavCDI;
-                    _navGSI = AircraftStatusFast.NavGSI;
+                    _nav1CDI = AircraftStatusFast.Nav1CDI;
+                    _nav1GSI = AircraftStatusFast.Nav1GSI;
 
                     await SetValues(
                         _bankDegrees, 
@@ -126,8 +140,8 @@ namespace msfs_server.Components
                         _autoPilotHeadingLockDir,
                         _autopilotHeadingLock,
                         _turnCoordinatorBall,
-                        _navCDI,
-                        _navGSI
+                        _nav1CDI,
+                        _nav1GSI
 
 
                         );
@@ -164,8 +178,8 @@ namespace msfs_server.Components
             double autoPilotHeadingLockDir,
             bool autopilotHeadingLock,
             double turnCoordinatorBall,
-            double navCDI,
-            double navGSI
+            double nav1CDI,
+            double nav1GSI
                 
             )
         {
@@ -186,8 +200,8 @@ namespace msfs_server.Components
                 autoPilotHeadingLockDir,
                 autopilotHeadingLock,
                 turnCoordinatorBall,
-                navCDI,
-                navGSI
+                nav1CDI,
+                nav1GSI
 
                 );
         }

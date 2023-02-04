@@ -2,9 +2,9 @@
 
 var _gpsGroundSpeed;
 var _planeHeadingMagnetic;
-var _navCDI;
-var _navGSI;
-var _navOBS
+var _nav1CDI;
+var _nav1GSI;
+var _nav1OBS
 var _autoPilotHeadingLockDir;
 var _autopilotHeadingLock;
 var _autopilotMaster;
@@ -33,9 +33,9 @@ export function Init() {
 export function SetValues(
     gpsGroundSpeed,
     planeHeadingMagnetic,
-    navOBS,
-    navCDI,
-    navGSI,
+    nav1OBS,
+    nav1CDI,
+    nav1GSI,
     autoPilotHeadingLockDir,
     autopilotHeadingLock,
     autopilotMaster
@@ -55,7 +55,7 @@ export function SetValues(
         hdgtext = 360 - Math.abs(Math.floor(hdgtext));
     }
 
-    var obsValue = Math.floor(navOBS);
+    var obsValue = Math.floor(nav1OBS);
 
     var aphdglockdir = Math.floor(autoPilotHeadingLockDir);
 
@@ -63,30 +63,29 @@ export function SetValues(
         d3obj.select('#gs-value').text(Math.round(gpsGroundSpeed));
     }
 
-    if (_planeHeadingMagnetic != planeHeadingMagnetic || _navOBS != navOBS) { // PLANE_HEADING_DEGREES_MAGNETIC  "x * (360 / 65536 / 65536)"
+    if (_planeHeadingMagnetic != planeHeadingMagnetic || _nav1OBS != nav1OBS) { // PLANE_HEADING_DEGREES_MAGNETIC  "x * (360 / 65536 / 65536)"
 
         d3obj.select('#compass-rose').attr('transform', 'rotate(' + hdgValue * -1 + ', 516.98242, 422)');
         d3obj.select('#cdi-set').attr('transform', 'rotate(' + (hdgValue2 * 1 - obsValue * 1) * -1 + ', 516.98242, 422)');
         d3obj.select('#hdg-value').text(hdgtext);
     }
 
-    if (_navOBS != navOBS) { // NAV_1_OBS
+    if (_nav1OBS != nav1OBS) { // NAV_1_OBS
 
         clearTimeout(closeHdgLockDirBox);
 
-        d3obj.select('#cdi-set').attr('transform', 'rotate(' + (hdgValue2 * 1 - obsValue * 1) * -1 + ', 516.98242, 422)');
 
         setSelectedValueBoxContent('Selected CRS', obsValue + '°');
     }
 
-    if (_navCDI != navCDI) { // NAV_1_CDI
+    if (_nav1CDI != nav1CDI) { // NAV_1_CDI
 
-        d3obj.select('#cdi').attr('transform', 'translate(' + navCDI * 1.07 + ', 0)');
+        d3obj.select('#cdi').attr('transform', 'translate(' + nav1CDI * 1.07 + ', 0)');
     }
 
-    if (_navGSI != navGSI) { // NAV_1_GSI
+    if (_nav1GSI != nav1GSI) { // NAV_1_GSI
 
-        d3obj.select('#gsi').attr('transform', 'translate(0, ' + navGSI * 0.96 + ')');
+        d3obj.select('#gsi').attr('transform', 'translate(0, ' + nav1GSI * 0.96 + ')');
     }
 
     if (_autoPilotHeadingLockDir != autoPilotHeadingLockDir) {
@@ -110,9 +109,9 @@ export function SetValues(
 
     _gpsGroundSpeed = gpsGroundSpeed;
     _planeHeadingMagnetic = planeHeadingMagnetic;
-    _navCDI = navCDI;
-    _navGSI = navGSI;
-    _navOBS = navOBS;
+    _nav1CDI = nav1CDI;
+    _nav1GSI = nav1GSI;
+    _nav1OBS = nav1OBS;
     _autoPilotHeadingLockDir = autoPilotHeadingLockDir;
     _autopilotHeadingLock = autopilotHeadingLock;
     _autopilotMaster = autopilotMaster;
