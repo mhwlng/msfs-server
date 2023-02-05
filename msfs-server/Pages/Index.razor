@@ -1,6 +1,8 @@
 ﻿@page "/"
 @using System.Windows
 @using msfs_server.msfs
+@using System.Runtime.CompilerServices
+@using Color = System.Drawing.Color
 
 @layout MainLayout
   
@@ -13,6 +15,21 @@
 
 </div>
 
+<div class="d-flex flex-column  flex-shrink-1 dialbar">
+
+    <Dial Value="ElevatorTrimPosition"
+          Label="Elev Trim"
+          RangeMin= "-15"
+          RangeMax= "15"
+          MinAngle= "60"
+          MaxAngle= "120"
+          Color= "Color.White"
+          InnerRadius= "68"
+          OuterRadius= "70"
+          DialRangesJson="elevatortrimposition" />
 
 
-<GarminG5HSI />
+
+</div>
+
+@* <GarminG5HSI /> *@

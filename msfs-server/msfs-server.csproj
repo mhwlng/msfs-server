@@ -76,6 +76,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="wwwroot\dialranges\elevatortrimposition.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Update="wwwroot\js\config.js">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>

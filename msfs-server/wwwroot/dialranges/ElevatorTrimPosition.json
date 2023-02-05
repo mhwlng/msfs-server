@@ -1,0 +1,23 @@
+﻿{
+  "ranges": [
+    {
+      "color": "orange",
+      "alerttype": "caution",
+      "alerttext": "low",
+      "minValue": -16,
+      "maxValue": -3,
+      "width": 0,
+      "activewidth": 30
+    },
+    {
+      "color": "orange",
+      "alerttype": "caution",
+      "alerttext": "high",
+      "minValue": 3,
+      "maxValue": 16,
+      "width": 0,
+      "activewidth": 30
+    }
+  ]
+
+}

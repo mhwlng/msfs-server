@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
 using Microsoft.FlightSimulator.SimConnect;
 
 namespace msfs_server.msfs
@@ -57,6 +58,13 @@ namespace msfs_server.msfs
             
             [DataDefinition("NAV OBS:1", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double Nav1OBS;
+
+            [DataDefinition("ELEVATOR TRIM POSITION",  "Degrees",  SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double ElevatorTrimPosition;
+
+
+
+
 
             [DataDefinition("AUTOPILOT ALTITUDE LOCK VAR", "feet", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double AutoPilotAltitudeLockVar;
@@ -213,8 +221,7 @@ namespace msfs_server.msfs
         [SimConnectVariable(Name = "RUDDER POSITION", Unit = "Position", Type = SIMCONNECT_DATATYPE.FLOAT64)]
         public double RudderPosition;
 
-        [SimConnectVariable(Name = "ELEVATOR TRIM POSITION", Unit = "Radians", Type = SIMCONNECT_DATATYPE.FLOAT64)]
-        public double ElevatorTrimPosition;
+
         [SimConnectVariable(Name = "AILERON TRIM PCT", Unit = "Percent Over 100", Type = SIMCONNECT_DATATYPE.FLOAT64)]
         public double AileronTrimPercent;
         [SimConnectVariable(Name = "RUDDER TRIM PCT", Unit = "Percent Over 100", Type = SIMCONNECT_DATATYPE.FLOAT64)]

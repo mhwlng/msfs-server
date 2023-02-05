@@ -19,6 +19,17 @@
     width: 100vw;
 }
 
+/* 150 150 */
+.dial {
+    width: 24vw;
+    height: 24vw;
+}
+
+.dialbar {
+    width: 100vw;
+    flex-direction: row!important;
+}
+
 @media screen and (max-height: 515px) {
 
     #map {
@@ -41,6 +52,15 @@
         height: 446px;
     }
 
+    .dialbar {
+        width: 112px;
+        flex-direction: column !important;
+    }
+
+    .dial {
+        width: 112px;
+        height: 112px;
+    }
 }
 
 .leaflet-touch .leaflet-bar button {

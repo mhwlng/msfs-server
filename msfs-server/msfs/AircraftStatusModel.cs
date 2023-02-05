@@ -35,6 +35,7 @@ namespace msfs_server.msfs
 
         public double Nav1OBS { get; set; }
 
+        public double ElevatorTrimPosition { get; set; }
 
         public double AutoPilotAltitudeLockVar { get; set; }
 
@@ -83,6 +84,8 @@ namespace msfs_server.msfs
             Nav1CDI = statusFast.Nav1CDI;
             Nav1GSI = statusFast.Nav1GSI;
             Nav1OBS = statusFast.Nav1OBS;
+
+            ElevatorTrimPosition = statusFast.ElevatorTrimPosition;
 
             AutoPilotAltitudeLockVar = statusFast.AutoPilotAltitudeLockVar;
             AutoPilotHeadingLockDir = statusFast.AutoPilotHeadingLockDir;
