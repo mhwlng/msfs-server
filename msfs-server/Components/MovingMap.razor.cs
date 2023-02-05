@@ -51,8 +51,14 @@ namespace msfs_server.Components
 
 
                 if (AircraftStatusSlow.Latitude != 0 && AircraftStatusSlow.Longitude != 0 &&
-                    (_latitude != AircraftStatusSlow.Latitude || _longitude != AircraftStatusSlow.Longitude ||
-                     _heading != AircraftStatusSlow.TrueHeading))
+                    (_latitude != AircraftStatusSlow.Latitude ||
+                     _longitude != AircraftStatusSlow.Longitude ||
+                     _heading != AircraftStatusSlow.TrueHeading ||
+                     _gpsFlightPlanActive != AircraftStatusSlow.GPSFlightPlanActive ||
+                     _gpsNextWpLatitude != AircraftStatusSlow.GPSNextWPLatitude ||
+                     _gpsNextWpLongitude != AircraftStatusSlow.GPSNextWPLongitude ||
+                     _gpsPrevWpLatitude != AircraftStatusSlow.GPSPrevWPLatitude ||
+                     _gpsPrevWpLongitude != AircraftStatusSlow.GPSPrevWPLongitude))
                 {
                     _latitude = AircraftStatusSlow.Latitude;
 
