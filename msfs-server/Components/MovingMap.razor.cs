@@ -20,18 +20,14 @@ namespace msfs_server.Components
 
         [Inject] public AircraftStatusSlowModel AircraftStatusSlow { get; set; }
 
-        private double _latitude;
-
-        private double _longitude;
-
-        private double _heading;
-
-        private bool _gpsFlightPlanActive;
-        private double _gpsNextWpLatitude;
-        private double _gpsNextWpLongitude;
-        private double _gpsPrevWpLatitude;
-        private double _gpsPrevWpLongitude;
-
+        private double? _latitude;
+        private double? _longitude;
+        private double? _heading;
+        private bool? _gpsFlightPlanActive;
+        private double? _gpsNextWpLatitude;
+        private double? _gpsNextWpLongitude;
+        private double? _gpsPrevWpLatitude;
+        private double? _gpsPrevWpLongitude;
 
         private Task<IJSObjectReference> _moduleReference;
         private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/MovingMap.razor.js").AsTask();
@@ -40,16 +36,6 @@ namespace msfs_server.Components
 
         protected override async Task OnInitializedAsync()
         {
-            _longitude = AircraftStatusSlow.Longitude;
-            _latitude = AircraftStatusSlow.Latitude;
-            _heading = AircraftStatusSlow.TrueHeading;
-
-            _gpsFlightPlanActive = AircraftStatusSlow.GPSFlightPlanActive;
-            _gpsNextWpLatitude = AircraftStatusSlow.GPSNextWPLatitude;
-            _gpsNextWpLongitude = AircraftStatusSlow.GPSNextWPLongitude;
-            _gpsPrevWpLatitude = AircraftStatusSlow.GPSPrevWPLatitude;
-            _gpsPrevWpLongitude = AircraftStatusSlow.GPSPrevWPLongitude;
-
             hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
                 .Build();
@@ -81,14 +67,14 @@ namespace msfs_server.Components
                     _gpsPrevWpLongitude = AircraftStatusSlow.GPSPrevWPLongitude;
 
                     await SetValues(
-                        _latitude, 
-                        _longitude, 
-                        _heading,
-                        _gpsFlightPlanActive,
-                        _gpsNextWpLatitude,
-                        _gpsNextWpLongitude,
-                        _gpsPrevWpLatitude,
-                        _gpsPrevWpLongitude);
+                        AircraftStatusSlow.Latitude,
+                        AircraftStatusSlow.Longitude,
+                        AircraftStatusSlow.TrueHeading,
+                        AircraftStatusSlow.GPSFlightPlanActive,
+                        AircraftStatusSlow.GPSNextWPLatitude,
+                        AircraftStatusSlow.GPSNextWPLongitude,
+                        AircraftStatusSlow.GPSPrevWPLatitude,
+                        AircraftStatusSlow.GPSPrevWPLongitude);
                 }
 
             });

@@ -21,21 +21,14 @@ namespace msfs_server.Components
 
         [Inject] public AircraftStatusFastModel AircraftStatusFast { get; set; }
 
-        private double _gpsGroundSpeed;
-
-        private double _planeHeadingMagnetic;
-
-        private double _nav1OBS;
-
-        private double _nav1CDI;
-
-        private double _nav1GSI;
-
-        private double _autoPilotHeadingLockDir;
-
-        private bool _autopilotHeadingLock;
-
-        private bool _autopilotMaster;
+        private double? _gpsGroundSpeed;
+        private double? _planeHeadingMagnetic;
+        private double? _nav1OBS;
+        private double? _nav1CDI;
+        private double? _nav1GSI;
+        private double? _autoPilotHeadingLockDir;
+        private bool? _autopilotHeadingLock;
+        private bool? _autopilotMaster;
 
         private Task<IJSObjectReference> _moduleReference;
         private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/GarminG5HSI.razor.js").AsTask();
@@ -44,20 +37,6 @@ namespace msfs_server.Components
 
         protected override async Task OnInitializedAsync()
         {
-            _gpsGroundSpeed = AircraftStatusFast.GpsGroundSpeed;
-
-            _planeHeadingMagnetic = AircraftStatusFast.PlaneHeadingMagnetic;
-
-            _nav1OBS = AircraftStatusFast.Nav1OBS;
-
-            _nav1CDI = AircraftStatusFast.Nav1CDI;
-            _nav1GSI = AircraftStatusFast.Nav1GSI;
-
-            _autoPilotHeadingLockDir = AircraftStatusFast.AutoPilotHeadingLockDir;
-            _autopilotHeadingLock = AircraftStatusFast.AutopilotHeadingLock;
-
-            _autopilotMaster = AircraftStatusFast.AutopilotMaster;
-
             hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
                 .Build();
@@ -93,14 +72,14 @@ namespace msfs_server.Components
 
                     await SetValues(
 
-                        _gpsGroundSpeed,
-                        _planeHeadingMagnetic,
-                        _nav1OBS,
-                        _nav1CDI,
-                        _nav1GSI,
-                        _autoPilotHeadingLockDir,
-                        _autopilotHeadingLock,
-                        _autopilotMaster
+                        AircraftStatusFast.GpsGroundSpeed,
+                        AircraftStatusFast.PlaneHeadingMagnetic,
+                        AircraftStatusFast.Nav1OBS,
+                        AircraftStatusFast.Nav1CDI,
+                        AircraftStatusFast.Nav1GSI,
+                        AircraftStatusFast.AutoPilotHeadingLockDir,
+                        AircraftStatusFast.AutopilotHeadingLock,
+                        AircraftStatusFast.AutopilotMaster
 
                     );
                 }

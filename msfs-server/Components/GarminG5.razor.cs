@@ -21,37 +21,22 @@ namespace msfs_server.Components
 
         [Inject] public AircraftStatusFastModel AircraftStatusFast { get; set; }
 
-        private double _bankDegrees;
-
-        private double _pitchDegrees;
-
-        private double _indicatedAltitude;
-
-        private double _verticalSpeed;
-
-        private double _airspeedIndicated;
-        
-        private bool _autopilotMaster;
-
-        private double _autoPilotAltitudeLockVar;
-
-        private bool _autopilotAltitudeLock;
-
-        private double _gpsGroundSpeed;
-
-        private double _kohlsmanSetting;
-
-        private double _planeHeadingMagnetic;
-
-        private double _autoPilotHeadingLockDir;
-
-        private bool _autopilotHeadingLock;
-
-        private double _turnCoordinatorBall;
-
-        private double _nav1CDI;
-
-        private double _nav1GSI;
+        private double? _bankDegrees;
+        private double? _pitchDegrees;
+        private double? _indicatedAltitude;
+        private double? _verticalSpeed;
+        private double? _airspeedIndicated;
+        private bool? _autopilotMaster;
+        private double? _autoPilotAltitudeLockVar;
+        private bool? _autopilotAltitudeLock;
+        private double? _gpsGroundSpeed;
+        private double? _kohlsmanSetting;
+        private double? _planeHeadingMagnetic;
+        private double? _autoPilotHeadingLockDir;
+        private bool? _autopilotHeadingLock;
+        private double? _turnCoordinatorBall;
+        private double? _nav1CDI;
+        private double? _nav1GSI;
 
         private Task<IJSObjectReference> _moduleReference;
         private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/GarminG5.razor.js").AsTask();
@@ -60,24 +45,6 @@ namespace msfs_server.Components
 
         protected override async Task OnInitializedAsync()
         {
-            _bankDegrees = AircraftStatusFast.BankDegrees;
-            _pitchDegrees = AircraftStatusFast.PitchDegrees;
-            _indicatedAltitude = AircraftStatusFast.IndicatedAltitude;
-            _verticalSpeed = AircraftStatusFast.VerticalSpeed;
-            _airspeedIndicated = AircraftStatusFast.AirspeedIndicated;
-
-            _autopilotMaster = AircraftStatusFast.AutopilotMaster;
-            _autoPilotAltitudeLockVar = AircraftStatusFast.AutoPilotAltitudeLockVar;
-            _autopilotAltitudeLock = AircraftStatusFast.AutopilotAltitudeLock;
-            _gpsGroundSpeed = AircraftStatusFast.GpsGroundSpeed;
-            _kohlsmanSetting = AircraftStatusFast.KohlsmanSetting;
-            _planeHeadingMagnetic = AircraftStatusFast.PlaneHeadingMagnetic;
-            _autoPilotHeadingLockDir = AircraftStatusFast.AutoPilotHeadingLockDir;
-            _autopilotHeadingLock = AircraftStatusFast.AutopilotHeadingLock;
-            _turnCoordinatorBall = AircraftStatusFast.TurnCoordinatorBall;
-            _nav1CDI = AircraftStatusFast.Nav1CDI;
-            _nav1GSI = AircraftStatusFast.Nav1GSI;
-
             hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
                 .Build();
@@ -125,23 +92,23 @@ namespace msfs_server.Components
                     _nav1GSI = AircraftStatusFast.Nav1GSI;
 
                     await SetValues(
-                        _bankDegrees, 
-                        _pitchDegrees, 
-                        _indicatedAltitude,
-                        _verticalSpeed, 
-                        _airspeedIndicated,
+                        AircraftStatusFast.BankDegrees,
+                        AircraftStatusFast.PitchDegrees,
+                        AircraftStatusFast.IndicatedAltitude,
+                        AircraftStatusFast.VerticalSpeed,
+                        AircraftStatusFast.AirspeedIndicated,
 
-                        _autopilotMaster,
-                        _autoPilotAltitudeLockVar,
-                        _autopilotAltitudeLock,
-                        _gpsGroundSpeed,
-                        _kohlsmanSetting,
-                        _planeHeadingMagnetic,
-                        _autoPilotHeadingLockDir,
-                        _autopilotHeadingLock,
-                        _turnCoordinatorBall,
-                        _nav1CDI,
-                        _nav1GSI
+                        AircraftStatusFast.AutopilotMaster,
+                        AircraftStatusFast.AutoPilotAltitudeLockVar,
+                        AircraftStatusFast.AutopilotAltitudeLock,
+                        AircraftStatusFast.GpsGroundSpeed,
+                        AircraftStatusFast.KohlsmanSetting,
+                        AircraftStatusFast.PlaneHeadingMagnetic,
+                        AircraftStatusFast.AutoPilotHeadingLockDir,
+                        AircraftStatusFast.AutopilotHeadingLock,
+                        AircraftStatusFast.TurnCoordinatorBall,
+                        AircraftStatusFast.Nav1CDI,
+                        AircraftStatusFast.Nav1GSI
 
 
                         );

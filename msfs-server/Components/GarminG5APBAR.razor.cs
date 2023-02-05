@@ -21,23 +21,15 @@ namespace msfs_server.Components
 
         [Inject] public AircraftStatusFastModel AircraftStatusFast { get; set; }
 
-        private bool _autopilotMaster;
-
-        private bool _autopilotAltitudeLock;
-
-        private bool _autopilotHeadingLock;
-
-        private bool _autopilotNav1Lock;
-
-        private bool _autopilotFlightDirectorActive;
-
-        private bool _autopilotBackcourseHold;
-
-        private bool _autopilotVerticalHold;
-
-        private bool _autopilotYawDamper;
-
-        private bool _autopilotApproachHold;
+        private bool? _autopilotMaster;
+        private bool? _autopilotAltitudeLock;
+        private bool? _autopilotHeadingLock;
+        private bool? _autopilotNav1Lock;
+        private bool? _autopilotFlightDirectorActive;
+        private bool? _autopilotBackcourseHold;
+        private bool? _autopilotVerticalHold;
+        private bool? _autopilotYawDamper;
+        private bool? _autopilotApproachHold;
 
         private Task<IJSObjectReference> _moduleReference;
         private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/GarminG5APBAR.razor.js").AsTask();
@@ -46,16 +38,6 @@ namespace msfs_server.Components
 
         protected override async Task OnInitializedAsync()
         {
-            _autopilotMaster = AircraftStatusFast.AutopilotMaster;
-            _autopilotAltitudeLock = AircraftStatusFast.AutopilotAltitudeLock;
-            _autopilotHeadingLock = AircraftStatusFast.AutopilotHeadingLock;
-            _autopilotNav1Lock = AircraftStatusFast.AutopilotNav1Lock;
-            _autopilotFlightDirectorActive = AircraftStatusFast.AutopilotFlightDirectorActive;
-            _autopilotBackcourseHold = AircraftStatusFast.AutopilotBackcourseHold;
-            _autopilotVerticalHold = AircraftStatusFast.AutopilotVerticalHold;
-            _autopilotYawDamper = AircraftStatusFast.AutopilotYawDamper;
-            _autopilotApproachHold = AircraftStatusFast.AutopilotApproachHold;
-
             hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
                 .Build();
@@ -88,15 +70,15 @@ namespace msfs_server.Components
 
                     await SetValues(
 
-                        _autopilotMaster,
-                        _autopilotAltitudeLock,
-                        _autopilotHeadingLock,
-                        _autopilotNav1Lock,
-                        _autopilotFlightDirectorActive,
-                        _autopilotBackcourseHold,
-                        _autopilotVerticalHold,
-                        _autopilotYawDamper,
-                        _autopilotApproachHold
+                        AircraftStatusFast.AutopilotMaster,
+                        AircraftStatusFast.AutopilotAltitudeLock,
+                        AircraftStatusFast.AutopilotHeadingLock,
+                        AircraftStatusFast.AutopilotNav1Lock,
+                        AircraftStatusFast.AutopilotFlightDirectorActive,
+                        AircraftStatusFast.AutopilotBackcourseHold,
+                        AircraftStatusFast.AutopilotVerticalHold,
+                        AircraftStatusFast.AutopilotYawDamper,
+                        AircraftStatusFast.AutopilotApproachHold
 
                     );
                 }
