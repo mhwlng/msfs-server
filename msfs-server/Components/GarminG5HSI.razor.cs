@@ -95,7 +95,7 @@ namespace msfs_server.Components
             {
                 await Init();
 
-                StateHasChanged();
+                //StateHasChanged();
             }
         }
 
