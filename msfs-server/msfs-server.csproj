@@ -76,10 +76,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\barranges\generalengineoiltemperature.json">
+    <Content Update="wwwroot\config\barranges\generalengineoiltemperature.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\dialranges\elevatortrimposition.json">
+    <Content Update="wwwroot\config\dialranges\elevatortrimposition.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\config\g5ranges\default.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\js\config.js">

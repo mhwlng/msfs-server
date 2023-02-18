@@ -13,7 +13,7 @@ async function loadRanges(
     var stepwidth = 150 / fullrange;
     var zeroposition = rangeMin * stepwidth * -1;
 
-    const response = await fetch(`/barranges/${fileName}.json`, { cache: "no-store" });
+    const response = await fetch(`/config/barranges/${fileName}.json`, { cache: "no-store" });
 
     barranges = await response.json();
 

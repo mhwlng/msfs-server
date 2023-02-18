@@ -21,6 +21,8 @@ namespace msfs_server.Components
 
         [Inject] public AircraftStatusFastModel AircraftStatusFast { get; set; }
 
+        [Parameter] public string RangesJson { get; set; }
+
         private double? _bankDegrees;
         private double? _pitchDegrees;
         private double? _indicatedAltitude;
@@ -123,7 +125,7 @@ namespace msfs_server.Components
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                await Init();
+                await Init(RangesJson);
 
                 //StateHasChanged();
             }
@@ -173,10 +175,11 @@ namespace msfs_server.Components
                 );
         }
 
-        async Task Init()
+        async Task Init(string rangesJson)
         {
             var module = await ModuleReference;
-            await module.InvokeVoidAsync("Init");
+            await module.InvokeVoidAsync("Init",
+                rangesJson);
         }
 
         public bool IsConnected =>

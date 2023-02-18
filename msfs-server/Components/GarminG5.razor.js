@@ -23,30 +23,7 @@ var _selectedaltitudereached;
 
 var closeHdgLockDirBox;
 
-var g5config = {
-    "AIRSPEED_INDICATED": {
-        "ranges": [
-            {
-                "color": "white",
-                "min": 40,
-                "max": 70,
-                "width": "3"
-            },
-            {
-                "color": "green",
-                "min": 41,
-                "max": 117,
-                "width": "3"
-            }
-        ],
-        "markers": [
-            { "type": "fe", "value": 70.387 },
-            { "type": "vne", "value": 145 },
-            { "type": "x", "value": 51.2695 },
-            { "type": "y", "value": 41 }
-        ]
-    }
-}
+var g5config = {}
 
 function addSpeedband(item, index) {
 
@@ -78,17 +55,26 @@ function addMarker(item, index) {
 
 }
 
-export function Init() {
+async function loadRanges(
+    fileName) {
+    
+    const response = await fetch(`/config/g5ranges/${fileName}.json`, { cache: "no-store" });
 
+    g5config = await response.json();
 
-    if (g5config.AIRSPEED_INDICATED?.speedBands?.length > 0) {
-        g5config.AIRSPEED_INDICATED.speedBands.forEach(addSpeedband)
+    if (g5config.speedBands?.length > 0) {
+        g5config.speedBands.forEach(addSpeedband)
     }
 
-    if (g5config.AIRSPEED_INDICATED?.markers?.length > 0) {
-        g5config.AIRSPEED_INDICATED.markers.forEach(addMarker)
+    if (g5config.markers?.length > 0) {
+        g5config.markers.forEach(addMarker)
     }
+   
+}
 
+export function Init(rangesFileName) {
+
+    loadRanges(rangesFileName);
 
 }
 

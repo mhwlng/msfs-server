@@ -1,0 +1,34 @@
+﻿{
+  "ranges": [
+    {
+      "color": "white",
+      "min": 40,
+      "max": 70,
+      "width": "3"
+    },
+    {
+      "color": "green",
+      "min": 41,
+      "max": 117,
+      "width": "3"
+    }
+  ],
+  "markers": [
+    {
+      "type": "fe",
+      "value": 70.387
+    },
+    {
+      "type": "vne",
+      "value": 145
+    },
+    {
+      "type": "x",
+      "value": 51.2695
+    },
+    {
+      "type": "y",
+      "value": 41
+    }
+  ]
+}

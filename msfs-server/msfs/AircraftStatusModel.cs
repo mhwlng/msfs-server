@@ -111,7 +111,7 @@ namespace msfs_server.msfs
 
             AutopilotApproachHold = statusFast.AutopilotApproachHold;
 
-            GeneralEngineOilTemperature = ((5.0/9.0 * 1.086) * statusFast.GeneralEngineOilTemperature) - 273.15; // convert to celcius
+            GeneralEngineOilTemperature = ((5.0/9.0 ) * statusFast.GeneralEngineOilTemperature) - 273.15; // convert to celcius
 
             GeneralEngineOilPressure = statusFast.GeneralEngineOilPressure / 144.0; // convert to psi
             

@@ -17,7 +17,7 @@ async function loadRanges(
     var stepangle = (maxAngle - minAngle) / (rangeMax - rangeMin);
     var zeroangle = rangeMin * stepangle * -1 + minAngle;
 
-    const response = await fetch(`/dialranges/${fileName}.json`, { cache: "no-store" });
+    const response = await fetch(`/config/dialranges/${fileName}.json`, { cache: "no-store" });
 
     dialranges = await response.json();
 
