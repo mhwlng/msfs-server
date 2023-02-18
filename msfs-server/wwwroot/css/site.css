@@ -30,6 +30,12 @@
     flex-direction: row!important;
 }
 
+/* 150 50 */
+.bar {
+    width: 150px;
+    height: 50px;
+}
+
 @media screen and (max-height: 515px) {
 
     #map {
@@ -60,6 +66,11 @@
     .dial {
         width: 112px;
         height: 112px;
+    }
+
+    .bar {
+        width: 150px;
+        height: 150px;
     }
 }
 

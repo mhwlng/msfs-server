@@ -18,7 +18,7 @@ using System.Drawing;
 
 namespace msfs_server.Components
 {
-    public partial class Dial
+    public partial class Bar
     {
         [Inject] private NavigationManager NavigationManager { get; set; }
 
@@ -30,26 +30,21 @@ namespace msfs_server.Components
 
         [Parameter] public string Label { get; set; }
 
-        [Parameter] public string DialRangesJson { get; set; }
+        [Parameter] public string BarRangesJson { get; set; }
         
         [Parameter] public double RangeMin { get; set; }
 
         [Parameter] public double RangeMax { get; set; }
 
-        [Parameter] public double MinAngle { get; set; }
+        [Parameter] public double RulerWidth { get; set; }
 
-        [Parameter] public double MaxAngle { get; set; }
-
-        [Parameter] public double InnerRadius { get; set; }
-
-        [Parameter] public double OuterRadius { get; set; }
 
         [Parameter] public System.Drawing.Color Color { get; set; }
 
 
 
         private Task<IJSObjectReference> _moduleReference;
-        private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Dial.razor.js").AsTask();
+        private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Bar.razor.js").AsTask();
 
       
         private HubConnection hubConnection;
@@ -66,10 +61,6 @@ namespace msfs_server.Components
                     Value,
                     RangeMin,
                     RangeMax,
-                    MinAngle,
-                    MaxAngle,
-                    InnerRadius,
-                    OuterRadius,
                     Color);
 
             });
@@ -88,12 +79,9 @@ namespace msfs_server.Components
                     Label,
                     RangeMin,
                     RangeMax,
-                    MinAngle,
-                    MaxAngle,
-                    InnerRadius,
-                    OuterRadius,
+                    RulerWidth,
                     Color,
-                    DialRangesJson
+                    BarRangesJson
                 );
 
                 //StateHasChanged();
@@ -104,13 +92,9 @@ namespace msfs_server.Components
         async Task SetValues(string value,
                              double rangeMin,
                              double rangeMax,
-                             double minAngle,
-                             double maxAngle,
-                             double innerRadius,
-                             double outerRadius,
                              System.Drawing.Color color)
         {
-            var id = $"dial_{value}";
+            var id = $"bar_{value}";
 
             var val = (double)(AircraftStatusFast.GetType().GetProperty(Value)?.GetValue(AircraftStatusFast, null) ?? 0);
 
@@ -119,10 +103,6 @@ namespace msfs_server.Components
                 id,
                 rangeMin,
                 rangeMax,
-                minAngle,
-                maxAngle,
-                innerRadius,
-                outerRadius,
                 ColorTranslator.ToHtml(color),
                 val
                 );
@@ -133,14 +113,11 @@ namespace msfs_server.Components
                         string label,
                         double rangeMin,
                         double rangeMax,
-                        double minAngle,
-                        double maxAngle,
-                        double innerRadius,
-                        double outerRadius,
+                        double rulerWidth,
                         System.Drawing.Color color,
-                        string dialRangesFileName)
+                        string barRangesFileName)
         {
-            var id = $"dial_{value}";
+            var id = $"bar_{value}";
 
             var module = await ModuleReference;
             await module.InvokeVoidAsync("Init",
@@ -148,12 +125,9 @@ namespace msfs_server.Components
                 label,
                 rangeMin,
                 rangeMax,
-                minAngle,
-                maxAngle,
-                innerRadius,
-                outerRadius,
+                rulerWidth,
                 ColorTranslator.ToHtml(color),
-                dialRangesFileName);
+                barRangesFileName);
         }
 
         public async ValueTask DisposeAsync()

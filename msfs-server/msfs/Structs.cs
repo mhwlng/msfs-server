@@ -102,6 +102,12 @@ namespace msfs_server.msfs
             public bool AutopilotApproachHold;
 
 
+            [DataDefinition("GENERAL ENG OIL TEMPERATURE:1", "rankine", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double GeneralEngineOilTemperature;
+
+            [DataDefinition("GENERAL ENG OIL PRESSURE:1", "psf", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double GeneralEngineOilPressure;
+
 
         }
 

@@ -60,7 +60,10 @@ namespace msfs_server.msfs
 
         public bool AutopilotApproachHold { get; set; }
 
+        public double GeneralEngineOilPressure { get; set; }
 
+        public double GeneralEngineOilTemperature { get; set; }
+        
 
         public AircraftStatusFastModel(IHubContext<MyHub> myHub)
         {
@@ -108,7 +111,10 @@ namespace msfs_server.msfs
 
             AutopilotApproachHold = statusFast.AutopilotApproachHold;
 
+            GeneralEngineOilTemperature = ((5.0/9.0 * 1.086) * statusFast.GeneralEngineOilTemperature) - 273.15; // convert to celcius
 
+            GeneralEngineOilPressure = statusFast.GeneralEngineOilPressure / 144.0; // convert to psi
+            
             _myHub.Clients.All.SendAsync("MsFsFastRefresh");
 
         }
