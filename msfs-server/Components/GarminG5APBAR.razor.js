@@ -40,6 +40,27 @@ function setValue(id, state) {
 
 export function Init() {
 
+    var d3obj = d3.select(document.getElementById("garminapbar").contentDocument).select('svg');
+
+    d3obj.select('#apFD').on("click", function () { DotNet.invokeMethodAsync('msfs-server', 'AutoPilot', 'autopilotFlightDirectorActive'); });
+
+    d3obj.select('#apHDG').on("click", function () { DotNet.invokeMethodAsync('msfs-server', 'AutoPilot', 'autopilotHeadingLock'); });
+
+    d3obj.select('#apAPR').on("click", function () { DotNet.invokeMethodAsync('msfs-server', 'AutoPilot', 'autopilotApproachHold'); });
+
+    d3obj.select('#apNAV').on("click", function () { DotNet.invokeMethodAsync('msfs-server', 'AutoPilot', 'autopilotNav1Lock'); });
+
+    d3obj.select('#apMaster').on("click", function () { DotNet.invokeMethodAsync('msfs-server', 'AutoPilot', 'autopilotMaster'); });
+
+    d3obj.select('#apYD').on("click", function () { DotNet.invokeMethodAsync('msfs-server', 'AutoPilot', 'autopilotYawDamper'); });
+
+    d3obj.select('#apVS').on("click", function () { DotNet.invokeMethodAsync('msfs-server', 'AutoPilot', 'autopilotVerticalHold'); });
+
+    d3obj.select('#apALT').on("click", function () { DotNet.invokeMethodAsync('msfs-server', 'AutoPilot', 'autopilotAltitudeLock'); });
+    
+    d3obj.select('#apBC').on("click", function () { DotNet.invokeMethodAsync('msfs-server', 'AutoPilot', 'autopilotBackcourseHold'); });
+
+
 }
 
 export function SetValues(

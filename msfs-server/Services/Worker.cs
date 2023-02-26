@@ -30,7 +30,7 @@ namespace msfs_server.Services
 
         private IntPtr WindowHandle { get; }
 
-        private SimConnect simconnect = null;
+        public static SimConnect Simconnect = null;
 
         const uint WmUserSimconnect = 0x0402;
 
@@ -56,9 +56,9 @@ namespace msfs_server.Services
             {
                 if (msg == WmUserSimconnect)
                 {
-                    if (simconnect != null && !_simDisconnected)
+                    if (Simconnect != null && !_simDisconnected)
                     {
-                        simconnect.ReceiveMessage();
+                        Simconnect.ReceiveMessage();
                     }
                 }
                 
@@ -77,12 +77,12 @@ namespace msfs_server.Services
             {
                 foreach (DataDefinition dd in fieldInfo.GetCustomAttributes(true))
                 {
-                    simconnect.AddToDataDefinition(SimConnectStructs.DEFINITIONS.AircraftStatusSlow, dd.DatumName,
+                    Simconnect.AddToDataDefinition(SimConnectStructs.DEFINITIONS.AircraftStatusSlow, dd.DatumName,
                         dd.UnitsName, dd.DatumType, dd.fEpsilon, SimConnect.SIMCONNECT_UNUSED);
                 }
             }
 
-            simconnect.RegisterDataDefineStruct<SimConnectStructs.AircraftStatusSlowStruct>(SimConnectStructs.DEFINITIONS.AircraftStatusSlow);
+            Simconnect.RegisterDataDefineStruct<SimConnectStructs.AircraftStatusSlowStruct>(SimConnectStructs.DEFINITIONS.AircraftStatusSlow);
 
             //------------------------
             
@@ -90,12 +90,12 @@ namespace msfs_server.Services
             {
                 foreach (DataDefinition dd in fieldInfo.GetCustomAttributes(true))
                 {
-                    simconnect.AddToDataDefinition(SimConnectStructs.DEFINITIONS.AircraftStatusFast, dd.DatumName,
+                    Simconnect.AddToDataDefinition(SimConnectStructs.DEFINITIONS.AircraftStatusFast, dd.DatumName,
                         dd.UnitsName, dd.DatumType, dd.fEpsilon, SimConnect.SIMCONNECT_UNUSED);
                 }
             }
 
-            simconnect.RegisterDataDefineStruct<SimConnectStructs.AircraftStatusFastStruct>(SimConnectStructs.DEFINITIONS.AircraftStatusFast);
+            Simconnect.RegisterDataDefineStruct<SimConnectStructs.AircraftStatusFastStruct>(SimConnectStructs.DEFINITIONS.AircraftStatusFast);
         }
 
         private void SimDisconnect()
@@ -142,6 +142,53 @@ namespace msfs_server.Services
             Log.Error("SimConnect exception: {0}", data.dwException);
         }
 
+        public enum GROUP_ID
+        {
+            GROUP0
+        };
+
+        public enum EVENTS
+        {
+            KEY_AP_MASTER,
+            KEY_YAW_DAMPER_TOGGLE,
+            KEY_AP_HDG_HOLD,
+            KEY_AP_ALT_HOLD,
+            KEY_AP_NAV1_HOLD,
+            KEY_AP_BC_HOLD,
+            KEY_AP_APR_HOLD,
+            KEY_AP_VS_HOLD,
+            KEY_TOGGLE_FLIGHT_DIRECTOR
+        };
+        
+        [DataDefinition("AUTOPILOT FLIGHT DIRECTOR ACTIVE", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+        public bool AutopilotFlightDirectorActive;
+
+      private void MapClientEventToSimEvent()
+        {
+            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_AP_MASTER, "AP_MASTER");
+
+            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_YAW_DAMPER_TOGGLE, "YAW_DAMPER_TOGGLE");
+
+            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_AP_HDG_HOLD, "AP_HDG_HOLD");
+
+            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_AP_ALT_HOLD, "AP_ALT_HOLD");
+
+            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_AP_NAV1_HOLD, "AP_NAV1_HOLD");
+
+            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_AP_BC_HOLD, "AP_BC_HOLD");
+
+            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_AP_APR_HOLD, "AP_APR_HOLD");
+
+            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_AP_VS_HOLD, "AP_VS_HOLD");
+
+            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_TOGGLE_FLIGHT_DIRECTOR, "TOGGLE_FLIGHT_DIRECTOR");
+
+            //Simconnect.AddClientEventToNotificationGroup(GROUP_ID.GROUP0, EVENTS.KEY_AP_MASTER, false);
+            //Simconnect.SubscribeToSystemEvent(EVENTS.KEY_AP_MASTER, "AP_MASTER");
+            // Simconnect.SetNotificationGroupPriority(GROUP_ID.GROUP0, SimConnect.SIMCONNECT_GROUP_PRIORITY_HIGHEST);
+
+
+        }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (UserHandler.ConnectedIds.Count == 0)
@@ -162,45 +209,47 @@ namespace msfs_server.Services
                         simToken.ThrowIfCancellationRequested();
                     }
 
-                    if (simconnect == null)
+                    if (Simconnect == null)
                     {
                         try
                         {
-                            simconnect = new SimConnect("MSFS Flight Following", WindowHandle, WmUserSimconnect, null, 0);
+                            Simconnect = new SimConnect("MSFS Flight Following", WindowHandle, WmUserSimconnect, null, 0);
 
-                            if (simconnect != null)
+                            if (Simconnect != null)
                             {
                                 SetFlightDataDefinitions();
-                                simconnect.OnRecvOpen += OnRecvOpen;
-                                simconnect.OnRecvQuit += OnRecvQuit;
-                                simconnect.OnRecvException += RecvExceptionHandler;
+                                Simconnect.OnRecvOpen += OnRecvOpen;
+                                Simconnect.OnRecvQuit += OnRecvQuit;
+                                Simconnect.OnRecvException += RecvExceptionHandler;
                                 
-                                simconnect.OnRecvSimobjectDataBytype += RecvSimobjectDataBytype;
+                                Simconnect.OnRecvSimobjectDataBytype += RecvSimobjectDataBytype;
+
+                                MapClientEventToSimEvent();
 
                             }
                         }
                         catch //(COMException ex)
                         {
                            // Log.Error("Unable to create new SimConnect instance: {0}", ex.Message);
-                            simconnect = null;
+                            Simconnect = null;
                         }
                     }
 
-                    if (simconnect != null)
+                    if (Simconnect != null)
                     {
                         if (_simDisconnected)
                         {
-                            simconnect.Dispose();
-                            simconnect = null;
+                            Simconnect.Dispose();
+                            Simconnect = null;
                             _simDisconnected = false;
                         }
-                        else if (simconnect != null && _simConnected)
+                        else if (Simconnect != null && _simConnected)
                         {
                             try
                             {
                                 // 10 times per second
 
-                                simconnect.RequestDataOnSimObjectType(SimConnectStructs.DATA_REQUEST.AircraftStatusFast,
+                                Simconnect.RequestDataOnSimObjectType(SimConnectStructs.DATA_REQUEST.AircraftStatusFast,
                                     SimConnectStructs.DEFINITIONS.AircraftStatusFast, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
 
                                 _fastCounter++;
@@ -210,7 +259,7 @@ namespace msfs_server.Services
                                 if (_fastCounter >= 10) // 1 per second 
                                 {
 
-                                    simconnect.RequestDataOnSimObjectType(
+                                    Simconnect.RequestDataOnSimObjectType(
                                         SimConnectStructs.DATA_REQUEST.AircraftStatusSlow,
                                         SimConnectStructs.DEFINITIONS.AircraftStatusSlow, 0,
                                         SIMCONNECT_SIMOBJECT_TYPE.USER);
@@ -241,10 +290,10 @@ namespace msfs_server.Services
 
             stoppingToken.WaitHandle.WaitOne();
 
-            if (simconnect != null)
+            if (Simconnect != null)
             {
-                simconnect.Dispose();
-                simconnect = null;
+                Simconnect.Dispose();
+                Simconnect = null;
             }
 
             _simTokenSource.Cancel();
