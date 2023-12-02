@@ -2,9 +2,9 @@
 
 **EARLY PROTOTYPE, UNDER DEVELOPMENT**
 
-Web server, **using blazor and net7**, that connects via simconnect to MSFS 2020 and serves a web page that shows a moving map and instruments.
+Web server, **using blazor and net8**, that connects via simconnect to MSFS 2020 and serves a web page that shows a moving map and instruments.
 
-You need [.NET 7.0](https://dotnet.microsoft.com/download/dotnet/7.0)  install at least : .NET Desktop Runtime \ x64
+You need [.NET 8.0](https://dotnet.microsoft.com/download/dotnet/8.0)  install at least : .NET Desktop Runtime \ x64
 
 The port number of the web server is defined in appsettings.json (default = 5002)
 
@@ -21,9 +21,9 @@ var config = {
 
     OPENAIP_KEY: "xxxxxxyyyyyyyyyyzzzzzzzzzz",
 
-    // AIRAC 2301 = europe, see https://www.openflightmaps.org/ed-germany/ top right. Changes monthly !!!
+    // AIRAC 2312 = europe, see https://www.openflightmaps.org/ed-germany/ top right. Changes monthly !!!
 
-    AIRAC : "2301"
+    AIRAC : "2312"
 
 }
 ```

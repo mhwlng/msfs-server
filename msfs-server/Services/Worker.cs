@@ -21,16 +21,16 @@ namespace msfs_server.Services
  
     public class Worker : BackgroundService
     {
-        private AircraftStatusSlowModel _aircraftStatusSlow;
+        private readonly AircraftStatusSlowModel _aircraftStatusSlow;
 
-        private AircraftStatusFastModel _aircraftStatusFast;
+        private readonly AircraftStatusFastModel _aircraftStatusFast;
 
         private static Task _simTask;
-        private static CancellationTokenSource _simTokenSource = new();
+        private static readonly CancellationTokenSource _simTokenSource = new();
 
         private IntPtr WindowHandle { get; }
 
-        public static SimConnect Simconnect = null;
+        public static SimConnect Simconnect { get; private set; } = null;
 
         const uint WmUserSimconnect = 0x0402;
 
@@ -71,12 +71,13 @@ namespace msfs_server.Services
             return IntPtr.Zero;
         }
 
-        private void SetFlightDataDefinitions()
+        private static void SetFlightDataDefinitions()
         {
             foreach (var fieldInfo in typeof(SimConnectStructs.AircraftStatusSlowStruct).GetFields())
             {
-                foreach (DataDefinition dd in fieldInfo.GetCustomAttributes(true))
+                for (var index = 0; index < fieldInfo.GetCustomAttributes(true).Length; index++)
                 {
+                    var dd = (DataDefinition)fieldInfo.GetCustomAttributes(true)[index];
                     Simconnect.AddToDataDefinition(SimConnectStructs.DEFINITIONS.AircraftStatusSlow, dd.DatumName,
                         dd.UnitsName, dd.DatumType, dd.fEpsilon, SimConnect.SIMCONNECT_UNUSED);
                 }
@@ -88,8 +89,9 @@ namespace msfs_server.Services
             
             foreach (var fieldInfo in typeof(SimConnectStructs.AircraftStatusFastStruct).GetFields())
             {
-                foreach (DataDefinition dd in fieldInfo.GetCustomAttributes(true))
+                for (var index = 0; index < fieldInfo.GetCustomAttributes(true).Length; index++)
                 {
+                    var dd = (DataDefinition)fieldInfo.GetCustomAttributes(true)[index];
                     Simconnect.AddToDataDefinition(SimConnectStructs.DEFINITIONS.AircraftStatusFast, dd.DatumName,
                         dd.UnitsName, dd.DatumType, dd.fEpsilon, SimConnect.SIMCONNECT_UNUSED);
                 }
@@ -163,7 +165,7 @@ namespace msfs_server.Services
         [DataDefinition("AUTOPILOT FLIGHT DIRECTOR ACTIVE", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
         public bool AutopilotFlightDirectorActive;
 
-      private void MapClientEventToSimEvent()
+      private static void MapClientEventToSimEvent()
         {
             Simconnect.MapClientEventToSimEvent(EVENTS.KEY_AP_MASTER, "AP_MASTER");
 
