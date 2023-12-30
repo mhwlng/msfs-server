@@ -36,6 +36,15 @@ var config = {
 
 ![touch screen](https://i.imgur.com/j7Mvyuk.jpg)
 
+The 8.8 inch touch screen, in above picture, is connected to a raspberry pi.
+More information can be found here:
+
+https://github.com/mhwlng/kiosk-server
+
+The 3d-printed enclosure can be found here:
+
+https://www.printables.com/@mhwlng_888536/collections/920676
+
 
 ![touch screen](https://i.imgur.com/4YI13mJ.jpg)
 
