@@ -21,9 +21,9 @@ namespace msfs_server
 {
     public static class Common
     {
-        public static string ExePath = null!;
-        public static IConfigurationRoot ConfigurationRoot = null!;
-  
+        public static string ExePath { get; private set; } = null!;
+        public static IConfigurationRoot ConfigurationRoot { get; private set; } = null!;
+
         public static string GetExePath()
         {
             var strExeFilePath = Assembly.GetEntryAssembly()?.Location;

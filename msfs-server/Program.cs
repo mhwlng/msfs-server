@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Globalization;
 using Microsoft.AspNetCore.ResponseCompression;
 using MudBlazor.Services;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Net;
 using System.Windows;
+using System.Threading;
 
 namespace msfs_server
 {
@@ -14,6 +16,9 @@ namespace msfs_server
         [STAThread]
         public static int Main(string[] args)
         {
+            // make sure MQTT decimal point is a '.'
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+
             Common.Startup(args);
 
             var app = new App

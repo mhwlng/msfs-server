@@ -69,14 +69,14 @@ namespace msfs_server.msfs
       [DllImport("user32.dll")]
       private static extern bool TranslateMessage(ref MSG lpMsg);
 
-      private const int ERROR_CLASS_ALREADY_EXISTS = 1410;
+      private const int ErrorClassAlreadyExists = 1410;
 
-      private bool disposed = false;
+      private bool _disposed = false;
       public IntPtr Hwnd { get; private set; }
 
       public void Dispose()
       {
-         if (!disposed)
+         if (!_disposed)
          {
             // Dispose unmanaged resources
             if (Hwnd != IntPtr.Zero)
@@ -84,27 +84,24 @@ namespace msfs_server.msfs
                DestroyWindow(Hwnd);
                Hwnd = IntPtr.Zero;
             }
-            disposed = true;
+            _disposed = true;
          }
          GC.SuppressFinalize(this);
       }
 
-      static MessageWindow instance = null;
+      static MessageWindow _instance = null;
       public static MessageWindow GetWindow()
       {
-         if (instance == null)
-            instance = new MessageWindow();
-         return instance;
+          return _instance ??= new MessageWindow();
       }
 
       private MessageWindow()
       {
          var className = Assembly.GetExecutingAssembly().GetName().Name;
-         wndProcDelegate = CustomWndProc;
-         var windClass = new WNDCLASS { lpszClassName = className, lpfnWndProc = Marshal.GetFunctionPointerForDelegate(wndProcDelegate) };
+         var windClass = new WNDCLASS { lpszClassName = className, lpfnWndProc = Marshal.GetFunctionPointerForDelegate((WndProc)CustomWndProc) };
          var classAtom = RegisterClassW(ref windClass);
          var lastError = Marshal.GetLastWin32Error();
-         if (classAtom == 0 && lastError != ERROR_CLASS_ALREADY_EXISTS)
+         if (classAtom == 0 && lastError != ErrorClassAlreadyExists)
             throw new System.Data.DuplicateNameException();
          Hwnd = CreateWindowExW(0, className, "MessagePump", 0, 0, 0, 10, 10, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
       }
@@ -117,11 +114,9 @@ namespace msfs_server.msfs
 
       public static void MessageLoop()
       {
-         var window = GetWindow(); // Ensure an instance has been created.
-         var msg = new MSG();
-         int r;
+         GetWindow();
          // Standard WIN32 message loop
-         while ((r = GetMessage(out msg, IntPtr.Zero, 0, 0)) > 0)
+         while ((GetMessage(out var msg, IntPtr.Zero, 0, 0)) > 0)
          {
             TranslateMessage(ref msg);
             DispatchMessage(ref msg);
@@ -130,6 +125,5 @@ namespace msfs_server.msfs
 
       public event WndProc WndProcHandle;
 
-      private WndProc wndProcDelegate;
-   }
+    }
 }

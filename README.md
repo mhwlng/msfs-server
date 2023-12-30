@@ -10,6 +10,12 @@ The port number of the web server is defined in appsettings.json (default = 5002
 
 The web server URL and any error messages can be found in log.txt
 
+All collected data is also sent to an MQTT broker. The MQTT connection Settings are located in appsettings.json.
+
+Note that the MQTT data is not sent, until a connection is made with the web server first.
+
+![mqtt](https://i.imgur.com/UlSnpDn.png)
+
 You need to create an account on https://www.openaip.net and then create your own api key on https://www.openaip.net/users/clients#tab-clients
 
 You then need to edit the file \wwwroot\js\config.js and update the openaip api key and AIRAC number :
@@ -21,9 +27,9 @@ var config = {
 
     OPENAIP_KEY: "xxxxxxyyyyyyyyyyzzzzzzzzzz",
 
-    // AIRAC 2312 = europe, see https://www.openflightmaps.org/ed-germany/ top right. Changes monthly !!!
+    // AIRAC 2313 = europe, see https://www.openflightmaps.org/ed-germany/ top right. Changes monthly !!!
 
-    AIRAC : "2312"
+    AIRAC : "2313"
 
 }
 ```
@@ -41,6 +47,8 @@ https://www.fontsquirrel.com/fonts/dejavu-sans
 or on raspberry pi
 
 sudo apt-get install fonts-dejavu
+
+
 
 
 thanks to

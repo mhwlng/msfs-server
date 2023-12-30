@@ -15,18 +15,15 @@ using msfs_server.Hubs;
 using System.Diagnostics;
 using msfs_server.msfs;
 using Microsoft.FlightSimulator.SimConnect;
+using msfs_server.MQTT;
 using msfs_server.Services;
 
 namespace msfs_server
 {
-    public class Startup
+    public class Startup(IConfiguration configuration)
     {
-        private IConfiguration Configuration { get; }
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
+        private IConfiguration Configuration { get; } = configuration;
 
-        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -38,13 +35,17 @@ namespace msfs_server
 
             services.AddSingleton<AircraftStatusSlowModel>();
             services.AddSingleton<AircraftStatusFastModel>();
+            services.AddSingleton<Mqtt>();
+
 
             if (!Debugger.IsAttached)
             {
+                var configureOptions = new[]{"application/octet-stream"};
+
                 services.AddResponseCompression(opts =>
                 {
                     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
-                        new[] { "application/octet-stream" });
+                        configureOptions);
                 });
             }
 

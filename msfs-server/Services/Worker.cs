@@ -18,7 +18,7 @@ namespace msfs_server.Services
 
     // thanks to https://github.com/kurt1288/msfs-flight-following
 
- 
+
     public class Worker : BackgroundService
     {
         private readonly AircraftStatusSlowModel _aircraftStatusSlow;

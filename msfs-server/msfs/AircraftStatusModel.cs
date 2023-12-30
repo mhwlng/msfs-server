@@ -3,14 +3,13 @@ using System.Windows.Controls.Primitives;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.FlightSimulator.SimConnect;
 using msfs_server.Hubs;
+using msfs_server.MQTT;
 
 namespace msfs_server.msfs
 {
 
-    public class AircraftStatusFastModel
+    public class AircraftStatusFastModel(IHubContext<MyHub> myHub, Mqtt mqtt)
     {
-        private readonly IHubContext<MyHub> _myHub;
-
         public double BankDegrees { get; set; }
 
         public double PitchDegrees { get; set; }
@@ -63,12 +62,7 @@ namespace msfs_server.msfs
         public double GeneralEngineOilPressure { get; set; }
 
         public double GeneralEngineOilTemperature { get; set; }
-        
 
-        public AircraftStatusFastModel(IHubContext<MyHub> myHub)
-        {
-            _myHub = myHub;
-        }
 
         public void SetData(SimConnectStructs.AircraftStatusFastStruct statusFast)
         {
@@ -115,16 +109,17 @@ namespace msfs_server.msfs
 
             GeneralEngineOilPressure = statusFast.GeneralEngineOilPressure / 144.0; // convert to psi
             
-            _myHub.Clients.All.SendAsync("MsFsFastRefresh");
+            myHub.Clients.All.SendAsync("MsFsFastRefresh");
+
+            mqtt.Publish(this,"fast");
+
 
         }
     }
 
-    public class AircraftStatusSlowModel
+    public class AircraftStatusSlowModel(IHubContext<MyHub> myHub, Mqtt mqtt)
     {
-      private readonly IHubContext<MyHub> _myHub;
-
-      public double Latitude { get; set; }
+        public double Latitude { get; set; }
       public double Longitude { get; set; }
       public double TrueHeading { get; set; }
 
@@ -158,12 +153,7 @@ namespace msfs_server.msfs
         */
 
 
-        public AircraftStatusSlowModel(IHubContext<MyHub> myHub)
-      {
-          _myHub = myHub;
-      }
-
-      public void SetData(SimConnectStructs.AircraftStatusSlowStruct statusSlow)
+        public void SetData(SimConnectStructs.AircraftStatusSlowStruct statusSlow)
       {
           Latitude = statusSlow.Latitude;
           Longitude = statusSlow.Longitude;
@@ -200,9 +190,12 @@ namespace msfs_server.msfs
            Mach = statusSlow.AutopilotMach;
            */
 
-            _myHub.Clients.All.SendAsync("MsFsSlowRefresh");
+            myHub.Clients.All.SendAsync("MsFsSlowRefresh");
 
-      }
+            mqtt.Publish(this, "slow");
+
+
+        }
 
 
 

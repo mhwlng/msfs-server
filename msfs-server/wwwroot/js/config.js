@@ -4,8 +4,8 @@
 
     OPENAIP_KEY: "xxxxyyyyzzzz",
 
-    // AIRAC 2312 = europe, see https://www.openflightmaps.org/ed-germany/ changes monthly
+    // AIRAC 2313 = europe, see https://www.openflightmaps.org/ed-germany/ changes monthly
 
-    AIRAC : "2312"
+    AIRAC : "2313"
 
 }
