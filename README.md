@@ -34,6 +34,9 @@ var config = {
 }
 ```
 
+![touch screen](https://i.imgur.com/j7Mvyuk.jpg)
+
+
 ![touch screen](https://i.imgur.com/4YI13mJ.jpg)
 
 
