@@ -36,21 +36,21 @@
     height: 50px;
 }
 
-@media screen and (max-height: 415px) {
+@media screen and (max-height: 450px) {
 
     #map {
         height: 100vh;
-        width: 700px;
+        width: 1404px;
     }
 
     #garminapbar {
-        width: 560px;
+        width: 515px;
         height: 30px;
     }
 
     #garmin {
-        width: 560px;
-        height: 420px;
+        width: 516px;
+        height: 386px;
     }
     
     #garminhsi {

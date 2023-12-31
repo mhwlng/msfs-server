@@ -23,14 +23,8 @@ namespace msfs_server.msfs
             AIRCRAFT_STATUS_GARMING5_HSI
         }
 
-
-        public interface ISimConnectStruct
-        {
-
-        }
-
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
-        public struct GarminG5HsiStruct : IEquatable<GarminG5HsiStruct>, ISimConnectStruct
+        public struct GarminG5HsiStruct : IEquatable<GarminG5HsiStruct>
         {
             [DataDefinition("GPS GROUND SPEED", "meters per second", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double GpsGroundSpeed;
@@ -205,20 +199,6 @@ namespace msfs_server.msfs
             [DataDefinition("AUTOPILOT ALTITUDE LOCK", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
             public bool AutopilotAltitudeLock;
 
-
-            //[DataDefinition("NAV OBS:1", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
-            //public double Nav1OBS;
-
-            //[DataDefinition("ELEVATOR TRIM POSITION", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
-            //public double ElevatorTrimPosition;
-
-            //[DataDefinition("GENERAL ENG OIL TEMPERATURE:1", "rankine", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
-            //public double GeneralEngineOilTemperature;
-
-            //[DataDefinition("GENERAL ENG OIL PRESSURE:1", "psf", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
-            //public double GeneralEngineOilPressure;
-
-
             public readonly bool Equals(GarminG5Struct other)
             {
                 return BankDegrees.Equals(other.BankDegrees) &&
@@ -321,6 +301,20 @@ namespace msfs_server.msfs
             }
 
             /*
+            [DataDefinition("NAV OBS:1", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double Nav1OBS;
+
+            [DataDefinition("ELEVATOR TRIM POSITION", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double ElevatorTrimPosition;
+
+            [DataDefinition("GENERAL ENG OIL TEMPERATURE:1", "rankine", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double GeneralEngineOilTemperature;
+            //data.GeneralEngineOilTemperature = ((5.0 / 9.0) * data.GeneralEngineOilTemperature) - 273.15; // convert to celcius
+        
+            [DataDefinition("GENERAL ENG OIL PRESSURE:1", "psf", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double GeneralEngineOilPressure;
+            //data.GeneralEngineOilPressure /= 144.0; // convert to psi
+
             [DataDefinition("PLANE ALTITUDE", "feet", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double Altitude;
 
