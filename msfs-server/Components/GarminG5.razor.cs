@@ -23,101 +23,46 @@ namespace msfs_server.Components
 
         [Parameter] public string RangesJson { get; set; }
 
-        private double? _bankDegrees;
-        private double? _pitchDegrees;
-        private double? _indicatedAltitude;
-        private double? _verticalSpeed;
-        private double? _airspeedIndicated;
-        private bool? _autopilotMaster;
-        private double? _autoPilotAltitudeLockVar;
-        private bool? _autopilotAltitudeLock;
-        private double? _gpsGroundSpeed;
-        private double? _kohlsmanSetting;
-        private double? _planeHeadingMagnetic;
-        private double? _autoPilotHeadingLockDir;
-        private bool? _autopilotHeadingLock;
-        private double? _turnCoordinatorBall;
-        private double? _nav1CDI;
-        private double? _nav1GSI;
-
         private Task<IJSObjectReference> _moduleReference;
         private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/GarminG5.razor.js").AsTask();
 
-        private HubConnection hubConnection;
+        private HubConnection _hubConnection;
 
         protected override async Task OnInitializedAsync()
         {
-            hubConnection = new HubConnectionBuilder()
+            _hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
                 .Build();
 
-            hubConnection.On("MsFsFastRefresh", async () =>
+            _hubConnection.On("MsFsFastRefresh", async () =>
             {
                 //InvokeAsync(StateHasChanged);
 
-                if (_bankDegrees != AircraftStatusFast.StatusFast.BankDegrees ||
-                    _pitchDegrees != AircraftStatusFast.StatusFast.PitchDegrees ||
-                    _indicatedAltitude != AircraftStatusFast.StatusFast.IndicatedAltitude ||
-                    _verticalSpeed != AircraftStatusFast.StatusFast.VerticalSpeed ||
-                    _airspeedIndicated != AircraftStatusFast.StatusFast.AirspeedIndicated ||
+                var module = await ModuleReference;
+                await module.InvokeVoidAsync("SetValues",
+                    AircraftStatusFast.Data.BankDegrees,
+                    AircraftStatusFast.Data.PitchDegrees,
+                    AircraftStatusFast.Data.IndicatedAltitude,
+                    AircraftStatusFast.Data.VerticalSpeed,
+                    AircraftStatusFast.Data.AirspeedIndicated,
 
-                    _autopilotMaster != AircraftStatusFast.StatusFast.AutopilotMaster ||
-                    _autoPilotAltitudeLockVar != AircraftStatusFast.StatusFast.AutoPilotAltitudeLockVar ||
-                    _autopilotAltitudeLock != AircraftStatusFast.StatusFast.AutopilotAltitudeLock ||
-                    _gpsGroundSpeed != AircraftStatusFast.StatusFast.GpsGroundSpeed ||
-                    _kohlsmanSetting != AircraftStatusFast.StatusFast.KohlsmanSetting ||
-                    _planeHeadingMagnetic != AircraftStatusFast.StatusFast.PlaneHeadingMagnetic ||
-                    _autoPilotHeadingLockDir != AircraftStatusFast.StatusFast.AutoPilotHeadingLockDir ||
-                    _autopilotHeadingLock != AircraftStatusFast.StatusFast.AutopilotHeadingLock ||
-                    _turnCoordinatorBall != AircraftStatusFast.StatusFast.TurnCoordinatorBall ||
-                    _nav1CDI != AircraftStatusFast.StatusFast.Nav1CDI ||
-                    _nav1GSI != AircraftStatusFast.StatusFast.Nav1GSI 
+                    AircraftStatusFast.Data.AutopilotMaster,
+                    AircraftStatusFast.Data.AutoPilotAltitudeLockVar,
+                    AircraftStatusFast.Data.AutopilotAltitudeLock,
+                    AircraftStatusFast.Data.GpsGroundSpeed,
+                    AircraftStatusFast.Data.KohlsmanSetting,
+                    AircraftStatusFast.Data.PlaneHeadingMagnetic,
+                    AircraftStatusFast.Data.AutoPilotHeadingLockDir,
+                    AircraftStatusFast.Data.AutopilotHeadingLock,
+                    AircraftStatusFast.Data.TurnCoordinatorBall,
+                    AircraftStatusFast.Data.Nav1CDI,
+                    AircraftStatusFast.Data.Nav1GSI
+                    
+                );
 
-                    )
-                {
-                    _bankDegrees = AircraftStatusFast.StatusFast.BankDegrees;
-                    _pitchDegrees = AircraftStatusFast.StatusFast.PitchDegrees;
-                    _indicatedAltitude = AircraftStatusFast.StatusFast.IndicatedAltitude;
-                    _verticalSpeed = AircraftStatusFast.StatusFast.VerticalSpeed;
-                    _airspeedIndicated = AircraftStatusFast.StatusFast.AirspeedIndicated;
-
-                    _autopilotMaster = AircraftStatusFast.StatusFast.AutopilotMaster;
-                    _autoPilotAltitudeLockVar = AircraftStatusFast.StatusFast.AutoPilotAltitudeLockVar;
-                    _autopilotAltitudeLock = AircraftStatusFast.StatusFast.AutopilotAltitudeLock;
-                    _gpsGroundSpeed = AircraftStatusFast.StatusFast.GpsGroundSpeed;
-                    _kohlsmanSetting = AircraftStatusFast.StatusFast.KohlsmanSetting;
-                    _planeHeadingMagnetic = AircraftStatusFast.StatusFast.PlaneHeadingMagnetic;
-                    _autoPilotHeadingLockDir = AircraftStatusFast.StatusFast.AutoPilotHeadingLockDir;
-                    _autopilotHeadingLock = AircraftStatusFast.StatusFast.AutopilotHeadingLock;
-                    _turnCoordinatorBall = AircraftStatusFast.StatusFast.TurnCoordinatorBall;
-                    _nav1CDI = AircraftStatusFast.StatusFast.Nav1CDI;
-                    _nav1GSI = AircraftStatusFast.StatusFast.Nav1GSI;
-
-                    await SetValues(
-                        AircraftStatusFast.StatusFast.BankDegrees,
-                        AircraftStatusFast.StatusFast.PitchDegrees,
-                        AircraftStatusFast.StatusFast.IndicatedAltitude,
-                        AircraftStatusFast.StatusFast.VerticalSpeed,
-                        AircraftStatusFast.StatusFast.AirspeedIndicated,
-
-                        AircraftStatusFast.StatusFast.AutopilotMaster,
-                        AircraftStatusFast.StatusFast.AutoPilotAltitudeLockVar,
-                        AircraftStatusFast.StatusFast.AutopilotAltitudeLock,
-                        AircraftStatusFast.StatusFast.GpsGroundSpeed,
-                        AircraftStatusFast.StatusFast.KohlsmanSetting,
-                        AircraftStatusFast.StatusFast.PlaneHeadingMagnetic,
-                        AircraftStatusFast.StatusFast.AutoPilotHeadingLockDir,
-                        AircraftStatusFast.StatusFast.AutopilotHeadingLock,
-                        AircraftStatusFast.StatusFast.TurnCoordinatorBall,
-                        AircraftStatusFast.StatusFast.Nav1CDI,
-                        AircraftStatusFast.StatusFast.Nav1GSI
-
-
-                        );
-                }
             });
 
-            await hubConnection.StartAsync();
+            await _hubConnection.StartAsync();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -131,50 +76,6 @@ namespace msfs_server.Components
             }
         }
 
-        async Task SetValues(
-            double bankDegrees,
-            double pitchDegrees, 
-            double indicatedAltitude,
-            double verticalSpeed,
-            double airspeedIndicated,
-
-            bool autopilotMaster,
-            double autoPilotAltitudeLockVar,
-            bool autopilotAltitudeLock,
-            double gpsGroundSpeed,
-            double kohlsmanSetting,
-            double planeHeadingMagnetic,
-            double autoPilotHeadingLockDir,
-            bool autopilotHeadingLock,
-            double turnCoordinatorBall,
-            double nav1CDI,
-            double nav1GSI
-                
-            )
-        {
-            var module = await ModuleReference;
-            await module.InvokeVoidAsync("SetValues", 
-                bankDegrees, 
-                pitchDegrees, 
-                indicatedAltitude,
-                verticalSpeed, 
-                airspeedIndicated,
-
-                autopilotMaster,
-                autoPilotAltitudeLockVar,
-                autopilotAltitudeLock,
-                gpsGroundSpeed,
-                kohlsmanSetting,
-                planeHeadingMagnetic,
-                autoPilotHeadingLockDir,
-                autopilotHeadingLock,
-                turnCoordinatorBall,
-                nav1CDI,
-                nav1GSI
-
-                );
-        }
-
         async Task Init(string rangesJson)
         {
             var module = await ModuleReference;
@@ -183,13 +84,13 @@ namespace msfs_server.Components
         }
 
         public bool IsConnected =>
-            hubConnection.State == HubConnectionState.Connected;
+            _hubConnection.State == HubConnectionState.Connected;
 
         public async ValueTask DisposeAsync()
         {
-            if (hubConnection is not null)
+            if (_hubConnection is not null)
             {
-                await hubConnection.DisposeAsync();
+                await _hubConnection.DisposeAsync();
             }
 
             if (_moduleReference != null)

@@ -26,7 +26,7 @@ namespace msfs_server.Services
         private readonly AircraftStatusFastModel _aircraftStatusFast;
 
         private static Task _simTask;
-        private static readonly CancellationTokenSource _simTokenSource = new();
+        private static readonly CancellationTokenSource SimTokenSource = new();
 
         private IntPtr WindowHandle { get; }
 
@@ -78,12 +78,12 @@ namespace msfs_server.Services
                 for (var index = 0; index < fieldInfo.GetCustomAttributes(true).Length; index++)
                 {
                     var dd = (DataDefinition)fieldInfo.GetCustomAttributes(true)[index];
-                    Simconnect.AddToDataDefinition(SimConnectStructs.DEFINITIONS.AircraftStatusSlow, dd.DatumName,
+                    Simconnect.AddToDataDefinition(SimConnectStructs.Definitions.AIRCRAFT_STATUS_SLOW, dd.DatumName,
                         dd.UnitsName, dd.DatumType, dd.fEpsilon, SimConnect.SIMCONNECT_UNUSED);
                 }
             }
 
-            Simconnect.RegisterDataDefineStruct<SimConnectStructs.AircraftStatusSlowStruct>(SimConnectStructs.DEFINITIONS.AircraftStatusSlow);
+            Simconnect.RegisterDataDefineStruct<SimConnectStructs.AircraftStatusSlowStruct>(SimConnectStructs.Definitions.AIRCRAFT_STATUS_SLOW);
 
             //------------------------
             
@@ -92,12 +92,12 @@ namespace msfs_server.Services
                 for (var index = 0; index < fieldInfo.GetCustomAttributes(true).Length; index++)
                 {
                     var dd = (DataDefinition)fieldInfo.GetCustomAttributes(true)[index];
-                    Simconnect.AddToDataDefinition(SimConnectStructs.DEFINITIONS.AircraftStatusFast, dd.DatumName,
+                    Simconnect.AddToDataDefinition(SimConnectStructs.Definitions.AIRCRAFT_STATUS_FAST, dd.DatumName,
                         dd.UnitsName, dd.DatumType, dd.fEpsilon, SimConnect.SIMCONNECT_UNUSED);
                 }
             }
 
-            Simconnect.RegisterDataDefineStruct<SimConnectStructs.AircraftStatusFastStruct>(SimConnectStructs.DEFINITIONS.AircraftStatusFast);
+            Simconnect.RegisterDataDefineStruct<SimConnectStructs.AircraftStatusFastStruct>(SimConnectStructs.Definitions.AIRCRAFT_STATUS_FAST);
         }
 
         private void SimDisconnect()
@@ -110,20 +110,38 @@ namespace msfs_server.Services
         {
             switch (data.dwRequestID)
             {
-                case (uint)SimConnectStructs.DATA_REQUEST.AircraftStatusSlow:
+                case (uint)SimConnectStructs.DataRequest.AIRCRAFT_STATUS_SLOW:
 
                     var simobjectDataSlow = (SimConnectStructs.AircraftStatusSlowStruct)data.dwData[0];
+
+                    // round to 5 digits, only if it has more than 5 digits
+
+                    simobjectDataSlow.TrueHeading = Math.Truncate(simobjectDataSlow.TrueHeading * 100000d) / 100000d;
 
                     _aircraftStatusSlow.SetData(simobjectDataSlow);
 
                     break;
-                case (uint)SimConnectStructs.DATA_REQUEST.AircraftStatusFast:
+                case (uint)SimConnectStructs.DataRequest.AIRCRAFT_STATUS_FAST:
 
                     var simobjectDataFast = (SimConnectStructs.AircraftStatusFastStruct)data.dwData[0];
 
                     simobjectDataFast.GeneralEngineOilTemperature = ((5.0 / 9.0) * simobjectDataFast.GeneralEngineOilTemperature) - 273.15; // convert to celcius
 
                     simobjectDataFast.GeneralEngineOilPressure /= 144.0; // convert to psi
+
+
+                    // round to 5 digits, only if it has more than 5 digits
+                    
+                    simobjectDataFast.BankDegrees = Math.Truncate(simobjectDataFast.BankDegrees * 100000d) / 100000d;
+                    simobjectDataFast.PitchDegrees = Math.Truncate(simobjectDataFast.PitchDegrees * 100000d) / 100000d;
+                    simobjectDataFast.IndicatedAltitude = Math.Truncate(simobjectDataFast.IndicatedAltitude * 100000d) / 100000d;
+
+                    simobjectDataFast.PlaneHeadingMagnetic = Math.Truncate(simobjectDataFast.PlaneHeadingMagnetic * 100000d) / 100000d;
+
+                    simobjectDataFast.ElevatorTrimPosition = Math.Truncate(simobjectDataFast.ElevatorTrimPosition * 100000d) / 100000d;
+
+                    simobjectDataFast.GeneralEngineOilTemperature = Math.Truncate(simobjectDataFast.GeneralEngineOilTemperature * 100000d) / 100000d;
+                    simobjectDataFast.GeneralEngineOilPressure = Math.Truncate(simobjectDataFast.GeneralEngineOilPressure * 100000d) / 100000d;
 
                     _aircraftStatusFast.SetData(simobjectDataFast);
 
@@ -152,12 +170,12 @@ namespace msfs_server.Services
             Log.Error("SimConnect exception: {0}", data.dwException);
         }
 
-        public enum GROUP_ID
+        public enum GroupId
         {
             GROUP0
         };
 
-        public enum EVENTS
+        public enum Events
         {
             KEY_AP_MASTER,
             KEY_YAW_DAMPER_TOGGLE,
@@ -175,23 +193,23 @@ namespace msfs_server.Services
 
       private static void MapClientEventToSimEvent()
         {
-            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_AP_MASTER, "AP_MASTER");
+            Simconnect.MapClientEventToSimEvent(Events.KEY_AP_MASTER, "AP_MASTER");
 
-            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_YAW_DAMPER_TOGGLE, "YAW_DAMPER_TOGGLE");
+            Simconnect.MapClientEventToSimEvent(Events.KEY_YAW_DAMPER_TOGGLE, "YAW_DAMPER_TOGGLE");
 
-            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_AP_HDG_HOLD, "AP_HDG_HOLD");
+            Simconnect.MapClientEventToSimEvent(Events.KEY_AP_HDG_HOLD, "AP_HDG_HOLD");
 
-            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_AP_ALT_HOLD, "AP_ALT_HOLD");
+            Simconnect.MapClientEventToSimEvent(Events.KEY_AP_ALT_HOLD, "AP_ALT_HOLD");
 
-            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_AP_NAV1_HOLD, "AP_NAV1_HOLD");
+            Simconnect.MapClientEventToSimEvent(Events.KEY_AP_NAV1_HOLD, "AP_NAV1_HOLD");
 
-            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_AP_BC_HOLD, "AP_BC_HOLD");
+            Simconnect.MapClientEventToSimEvent(Events.KEY_AP_BC_HOLD, "AP_BC_HOLD");
 
-            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_AP_APR_HOLD, "AP_APR_HOLD");
+            Simconnect.MapClientEventToSimEvent(Events.KEY_AP_APR_HOLD, "AP_APR_HOLD");
 
-            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_AP_VS_HOLD, "AP_VS_HOLD");
+            Simconnect.MapClientEventToSimEvent(Events.KEY_AP_VS_HOLD, "AP_VS_HOLD");
 
-            Simconnect.MapClientEventToSimEvent(EVENTS.KEY_TOGGLE_FLIGHT_DIRECTOR, "TOGGLE_FLIGHT_DIRECTOR");
+            Simconnect.MapClientEventToSimEvent(Events.KEY_TOGGLE_FLIGHT_DIRECTOR, "TOGGLE_FLIGHT_DIRECTOR");
 
             //Simconnect.AddClientEventToNotificationGroup(GROUP_ID.GROUP0, EVENTS.KEY_AP_MASTER, false);
             //Simconnect.SubscribeToSystemEvent(EVENTS.KEY_AP_MASTER, "AP_MASTER");
@@ -206,7 +224,7 @@ namespace msfs_server.Services
                 await Task.Delay(1000, stoppingToken);
             }
 
-            var simToken = _simTokenSource.Token;
+            var simToken = SimTokenSource.Token;
 
             _simTask = Task.Run(async () =>
             {
@@ -259,8 +277,8 @@ namespace msfs_server.Services
                             {
                                 // 10 times per second
 
-                                Simconnect.RequestDataOnSimObjectType(SimConnectStructs.DATA_REQUEST.AircraftStatusFast,
-                                    SimConnectStructs.DEFINITIONS.AircraftStatusFast, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
+                                Simconnect.RequestDataOnSimObjectType(SimConnectStructs.DataRequest.AIRCRAFT_STATUS_FAST,
+                                    SimConnectStructs.Definitions.AIRCRAFT_STATUS_FAST, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
 
                                 _fastCounter++;
 
@@ -270,8 +288,8 @@ namespace msfs_server.Services
                                 {
 
                                     Simconnect.RequestDataOnSimObjectType(
-                                        SimConnectStructs.DATA_REQUEST.AircraftStatusSlow,
-                                        SimConnectStructs.DEFINITIONS.AircraftStatusSlow, 0,
+                                        SimConnectStructs.DataRequest.AIRCRAFT_STATUS_SLOW,
+                                        SimConnectStructs.Definitions.AIRCRAFT_STATUS_SLOW, 0,
                                         SIMCONNECT_SIMOBJECT_TYPE.USER);
 
                                     _fastCounter = 0;
@@ -290,7 +308,7 @@ namespace msfs_server.Services
 
                     }
 
-                    await Task.Delay(100, _simTokenSource.Token);
+                    await Task.Delay(100, SimTokenSource.Token);
                 }
 
 
@@ -306,7 +324,7 @@ namespace msfs_server.Services
                 Simconnect = null;
             }
 
-            _simTokenSource.Cancel();
+            SimTokenSource.Cancel();
 
             try
             {
@@ -318,7 +336,7 @@ namespace msfs_server.Services
             }
             finally
             {
-                _simTokenSource.Dispose();
+                SimTokenSource.Dispose();
             }
 
             Log.Information("Shutdown Worker");

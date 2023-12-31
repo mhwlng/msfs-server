@@ -103,21 +103,18 @@ namespace msfs_server.MQTT
         {
             //Log.Information("Publish MQTT");
 
-            var x = obj.GetType()
-                .GetProperties();
-
-            var propertyValues = obj.GetType()
-                .GetProperties()
+            var fields = obj.GetType()
+                .GetFields()
                 .Select(field => new { name = field.Name, value = field.GetValue(obj) })
                 .ToList();
 
             try
             {
-                foreach (var propertyValue in propertyValues)
+                foreach (var fieldValue in fields)
                 {
                     var message = new MqttApplicationMessageBuilder()
-                        .WithTopic($"msfs/{topic}/{propertyValue.name}")
-                        .WithPayload(propertyValue.value.ToString())
+                        .WithTopic($"msfs/{topic}/{fieldValue.name}")
+                        .WithPayload(fieldValue.value.ToString())
                         .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
                         .WithRetainFlag()
                         .Build();

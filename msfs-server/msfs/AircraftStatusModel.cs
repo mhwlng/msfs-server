@@ -10,85 +10,57 @@ namespace msfs_server.msfs
 
     public class AircraftStatusFastModel(IHubContext<MyHub> myHub, Mqtt mqtt)
     {
-        public SimConnectStructs.AircraftStatusFastStruct StatusFast = new();
-        
-        public void SetData(SimConnectStructs.AircraftStatusFastStruct statusFast)
+        public SimConnectStructs.AircraftStatusFastStruct Data { get; private set; }
+
+        private SimConnectStructs.AircraftStatusFastStruct? _lastSentData;
+
+        public void SetData(SimConnectStructs.AircraftStatusFastStruct data)
         {
-            StatusFast = statusFast;
+            Data = data;
+
+            var refresh = _lastSentData == null;
+            _lastSentData ??= new SimConnectStructs.AircraftStatusFastStruct();
+
+            refresh = refresh || _lastSentData != data;
+            
+            if (!refresh) return;
+
+            _lastSentData = data;
 
             myHub.Clients.All.SendAsync("MsFsFastRefresh");
 
-            mqtt.Publish(this,"fast");
-
-
+            mqtt.Publish(data, "fast");
         }
     }
 
     public class AircraftStatusSlowModel(IHubContext<MyHub> myHub, Mqtt mqtt)
     {
-        public SimConnectStructs.AircraftStatusSlowStruct StatusSlow = new();
-        
-        /*
-        public double Altitude { get; set; }
-        public double TotalFuel { get; set; }
-        public double CurrentFuel { get; set; }
-         public double AirspeedTrue { get; set; }
-        public bool NavHasSignal { get; set; }
-        public bool NavHasDME { get; set; }
-        public double DMEDistance { get; set; }
-        public bool GPSWaypointModeActive { get; set; }
-        public int GPSWaypointIndex { get; set; }
-        public double GPSWaypointDistance { get; set; }
-        public double GPSWPETE { get; set; }
+        public SimConnectStructs.AircraftStatusSlowStruct Data { get; private set; }
 
-        public bool Available { get; set; }
-        public bool Level { get; set; }
-        public bool Approach { get; set; }
-        public bool Airspeed { get; set; }
-        public bool Mach { get; set; }
-        public bool Autothrottle { get; set; }
-
-        */
+        private SimConnectStructs.AircraftStatusSlowStruct? _lastSentData;
 
 
-        public void SetData(SimConnectStructs.AircraftStatusSlowStruct statusSlow)
-      {
+        public void SetData(SimConnectStructs.AircraftStatusSlowStruct data)
+        {
+            Data = data;
 
-          StatusSlow = statusSlow;
-       
+            var refresh = _lastSentData == null;
+            _lastSentData ??= new SimConnectStructs.AircraftStatusSlowStruct();
 
-            /*
-           Altitude = statusSlow.Altitude;
-           TotalFuel = statusSlow.TotalFuel;
-           CurrentFuel = statusSlow.CurrentFuel;
-           AirspeedTrue = statusSlow.AirspeedTrue;
+            refresh = refresh || _lastSentData != data;
 
-           NavHasSignal = statusSlow.NavHasSignal;
-           NavHasDME = statusSlow.NavHasDME;
-           DMEDistance = statusSlow.DMEDistance;
-           GPSWaypointModeActive = statusSlow.GPSWaypointModeActive;
-           GPSWaypointIndex = statusSlow.GPSWaypointIndex;
-           GPSWaypointDistance = statusSlow.GPSWaypointDistance;
-           GPSWPETE = statusSlow.GPSWPETE;
+            if (data.Latitude == 0 || data.Longitude == 0 || !refresh) return;
 
+            _lastSentData = data;
 
-           Available = statusSlow.AutopilotAvailable;
-           Airspeed = statusSlow.AutopilotAirspeed;
-           Approach = statusSlow.AutopilotApproach;
-           Autothrottle = statusSlow.AutopilotAutothrottle;
-   
-           Level = statusSlow.AutopilotWingLevel;
-           Mach = statusSlow.AutopilotMach;
-           */
+            /* null island ???
+              0.00040748246254171134 0.01397450300629543
+              0.000407520306147189   0.01397450300629543
+              */
 
             myHub.Clients.All.SendAsync("MsFsSlowRefresh");
 
-            mqtt.Publish(this, "slow");
-
-
+            mqtt.Publish(data, "slow");
         }
-
-
-
     }
 }

@@ -1,27 +1,25 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
-using System.Xml.Linq;
 using Microsoft.FlightSimulator.SimConnect;
 
 namespace msfs_server.msfs
 {
     public class SimConnectStructs
     {
-        public enum DEFINITIONS
+        public enum Definitions
         {
-            AircraftStatusSlow,
-            AircraftStatusFast
+            AIRCRAFT_STATUS_SLOW,
+            AIRCRAFT_STATUS_FAST
         }
 
-        public enum DATA_REQUEST
+        public enum DataRequest
         {
-            AircraftStatusSlow,
-            AircraftStatusFast
+            AIRCRAFT_STATUS_SLOW,
+            AIRCRAFT_STATUS_FAST
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
-        public struct AircraftStatusFastStruct
+        public struct AircraftStatusFastStruct : IEquatable<AircraftStatusFastStruct>
         {
             [DataDefinition("PLANE BANK DEGREES", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double BankDegrees;
@@ -55,11 +53,11 @@ namespace msfs_server.msfs
 
             [DataDefinition("NAV GSI:1", "number", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double Nav1GSI;
-            
+
             [DataDefinition("NAV OBS:1", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double Nav1OBS;
 
-            [DataDefinition("ELEVATOR TRIM POSITION",  "Degrees",  SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            [DataDefinition("ELEVATOR TRIM POSITION", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double ElevatorTrimPosition;
 
 
@@ -109,10 +107,59 @@ namespace msfs_server.msfs
             public double GeneralEngineOilPressure;
 
 
+            public readonly bool Equals(AircraftStatusFastStruct other)
+            {
+                return BankDegrees.Equals(other.BankDegrees) && 
+                       PitchDegrees.Equals(other.PitchDegrees) &&
+                       IndicatedAltitude.Equals(other.IndicatedAltitude) && 
+                       VerticalSpeed.Equals(other.VerticalSpeed) &&
+                       AirspeedIndicated.Equals(other.AirspeedIndicated) &&
+                       GpsGroundSpeed.Equals(other.GpsGroundSpeed) &&
+                       PlaneHeadingMagnetic.Equals(other.PlaneHeadingMagnetic) &&
+                       KohlsmanSetting.Equals(other.KohlsmanSetting) &&
+                       TurnCoordinatorBall.Equals(other.TurnCoordinatorBall) && 
+                       Nav1CDI.Equals(other.Nav1CDI) &&
+                       Nav1GSI.Equals(other.Nav1GSI) && 
+                       Nav1OBS.Equals(other.Nav1OBS) &&
+                       ElevatorTrimPosition.Equals(other.ElevatorTrimPosition) &&
+                       AutoPilotAltitudeLockVar.Equals(other.AutoPilotAltitudeLockVar) &&
+                       AutoPilotHeadingLockDir.Equals(other.AutoPilotHeadingLockDir) &&
+                       AutopilotMaster == other.AutopilotMaster && 
+                       AutopilotHeadingLock == other.AutopilotHeadingLock &&
+                       AutopilotAltitudeLock == other.AutopilotAltitudeLock &&
+                       AutopilotNav1Lock == other.AutopilotNav1Lock &&
+                       AutopilotFlightDirectorActive == other.AutopilotFlightDirectorActive &&
+                       AutopilotBackcourseHold == other.AutopilotBackcourseHold &&
+                       AutopilotVerticalHold == other.AutopilotVerticalHold &&
+                       AutopilotYawDamper == other.AutopilotYawDamper &&
+                       AutopilotApproachHold == other.AutopilotApproachHold &&
+                       GeneralEngineOilTemperature.Equals(other.GeneralEngineOilTemperature) &&
+                       GeneralEngineOilPressure.Equals(other.GeneralEngineOilPressure);
+            }
+
+            public readonly override bool Equals(object obj)
+            {
+                return obj is AircraftStatusFastStruct other && Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+                throw new ApplicationException("this class does not support GetHashCode and should not be used as a key for a dictionary");
+            }
+
+            public static bool operator ==(AircraftStatusFastStruct left, AircraftStatusFastStruct right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(AircraftStatusFastStruct left, AircraftStatusFastStruct right)
+            {
+                return !left.Equals(right);
+            }
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
-        public struct AircraftStatusSlowStruct
+        public struct AircraftStatusSlowStruct : IEquatable<AircraftStatusSlowStruct>
         {
             [DataDefinition("PLANE LATITUDE", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double Latitude;
@@ -138,6 +185,38 @@ namespace msfs_server.msfs
             [DataDefinition("GPS WP PREV LON", "degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double GPSPrevWPLongitude;
 
+            public readonly bool Equals(AircraftStatusSlowStruct other)
+            {
+                return Latitude.Equals(other.Latitude) && 
+                       Longitude.Equals(other.Longitude) &&
+                       TrueHeading.Equals(other.TrueHeading) && 
+                       GPSFlightPlanActive == other.GPSFlightPlanActive &&
+                       GPSNextWPLatitude.Equals(other.GPSNextWPLatitude) &&
+                       GPSNextWPLongitude.Equals(other.GPSNextWPLongitude) &&
+                       GPSPrevWPLatitude.Equals(other.GPSPrevWPLatitude) &&
+                       GPSPrevWPLongitude.Equals(other.GPSPrevWPLongitude);
+            }
+
+            public readonly override bool Equals(object obj)
+            {
+                return obj is AircraftStatusSlowStruct other && Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+                throw new ApplicationException("this class does not support GetHashCode and should not be used as a key for a dictionary");
+            }
+
+            public static bool operator ==(AircraftStatusSlowStruct left, AircraftStatusSlowStruct right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(AircraftStatusSlowStruct left, AircraftStatusSlowStruct right)
+            {
+                return !left.Equals(right);
+            }
+
             /*
             [DataDefinition("PLANE ALTITUDE", "feet", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double Altitude;
@@ -148,7 +227,7 @@ namespace msfs_server.msfs
             [DataDefinition("FUEL TOTAL CAPACITY", "gallons", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double TotalFuel;
 
- 
+
             [DataDefinition("AIRSPEED TRUE", "knots", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double AirspeedTrue;
 
@@ -177,11 +256,11 @@ namespace msfs_server.msfs
             [DataDefinition("AUTOPILOT AVAILABLE", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
             public bool AutopilotAvailable;
 
-        
+
             [DataDefinition("AUTOPILOT WING LEVELER", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
             public bool AutopilotWingLevel;
 
- 
+
             [DataDefinition("AUTOPILOT AIRSPEED HOLD", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
             public bool AutopilotAirspeed;
 
@@ -193,10 +272,10 @@ namespace msfs_server.msfs
             public bool AutopilotAutothrottle;
 
 
-        
 
 
-            
+
+
             data.AddField("ATC ID", type: DataType.String32);
             data.AddField("TITLE", type: DataType.String256);
             data.AddField("PLANE PITCH DEGREES", units: "DEGREES", type: DataType.Float64, epsilon: 1.0f);
@@ -204,8 +283,8 @@ namespace msfs_server.msfs
 
 
 
-  
-            
+
+
         [SimConnectVariable(Name = "PLANE HEADING DEGREES GYRO", Unit = "Degrees", Type = SIMCONNECT_DATATYPE.FLOAT64, Minimum = 0, Maximum = 360, Default = nameof(MagneticHeading))]
         public double GyroHeading;
         [SimConnectVariable(Name = "PLANE HEADING DEGREES TRUE", Unit = "Degrees", Type = SIMCONNECT_DATATYPE.FLOAT64, Minimum = 0, Maximum = 360)]
@@ -455,6 +534,7 @@ namespace msfs_server.msfs
                 ("GPS_GROUND_SPEED", "GPS GROUND SPEED", "meters per second", SIMCONNECT_DATATYPE.FLOAT64)
 
              */
+
         }
     }
 }

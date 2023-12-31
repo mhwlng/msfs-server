@@ -21,71 +21,38 @@ namespace msfs_server.Components
 
         [Inject] public AircraftStatusFastModel AircraftStatusFast { get; set; }
 
-        private double? _gpsGroundSpeed;
-        private double? _planeHeadingMagnetic;
-        private double? _nav1OBS;
-        private double? _nav1CDI;
-        private double? _nav1GSI;
-        private double? _autoPilotHeadingLockDir;
-        private bool? _autopilotHeadingLock;
-        private bool? _autopilotMaster;
-
         private Task<IJSObjectReference> _moduleReference;
         private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/GarminG5HSI.razor.js").AsTask();
 
-        private HubConnection hubConnection;
+        private HubConnection _hubConnection;
 
         protected override async Task OnInitializedAsync()
         {
-            hubConnection = new HubConnectionBuilder()
+            _hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
                 .Build();
 
-            hubConnection.On("MsFsFastRefresh", async () =>
+            _hubConnection.On("MsFsFastRefresh", async () =>
             {
                 //InvokeAsync(StateHasChanged);
 
-                if (_gpsGroundSpeed != AircraftStatusFast.StatusFast.GpsGroundSpeed ||
-                    _planeHeadingMagnetic != AircraftStatusFast.StatusFast.PlaneHeadingMagnetic ||
+                var module = await ModuleReference;
+                await module.InvokeVoidAsync("SetValues",
 
-                    _nav1OBS != AircraftStatusFast.StatusFast.Nav1OBS ||
-                    _nav1CDI != AircraftStatusFast.StatusFast.Nav1CDI ||
-                    _nav1GSI != AircraftStatusFast.StatusFast.Nav1GSI ||
+                    AircraftStatusFast.Data.GpsGroundSpeed,
+                    AircraftStatusFast.Data.PlaneHeadingMagnetic,
+                    AircraftStatusFast.Data.Nav1OBS,
+                    AircraftStatusFast.Data.Nav1CDI,
+                    AircraftStatusFast.Data.Nav1GSI,
+                    AircraftStatusFast.Data.AutoPilotHeadingLockDir,
+                    AircraftStatusFast.Data.AutopilotHeadingLock,
+                    AircraftStatusFast.Data.AutopilotMaster
 
-                    _autoPilotHeadingLockDir != AircraftStatusFast.StatusFast.AutoPilotHeadingLockDir ||
-                    _autopilotHeadingLock != AircraftStatusFast.StatusFast.AutopilotHeadingLock ||
+                );
 
-                    _autopilotMaster != AircraftStatusFast.StatusFast.AutopilotMaster
-                    )
-                {
-                    _gpsGroundSpeed = AircraftStatusFast.StatusFast.GpsGroundSpeed;
-                    _planeHeadingMagnetic = AircraftStatusFast.StatusFast.PlaneHeadingMagnetic;
-
-                    _nav1OBS = AircraftStatusFast.StatusFast.Nav1OBS;
-                    _nav1CDI = AircraftStatusFast.StatusFast.Nav1CDI;
-                    _nav1GSI = AircraftStatusFast.StatusFast.Nav1GSI;
-
-                    _autoPilotHeadingLockDir = AircraftStatusFast.StatusFast.AutoPilotHeadingLockDir;
-                    _autopilotHeadingLock = AircraftStatusFast.StatusFast.AutopilotHeadingLock;
-
-                    _autopilotMaster = AircraftStatusFast.StatusFast.AutopilotMaster;
-
-                    await SetValues(
-
-                        AircraftStatusFast.StatusFast.GpsGroundSpeed,
-                        AircraftStatusFast.StatusFast.PlaneHeadingMagnetic,
-                        AircraftStatusFast.StatusFast.Nav1OBS,
-                        AircraftStatusFast.StatusFast.Nav1CDI,
-                        AircraftStatusFast.StatusFast.Nav1GSI,
-                        AircraftStatusFast.StatusFast.AutoPilotHeadingLockDir,
-                        AircraftStatusFast.StatusFast.AutopilotHeadingLock,
-                        AircraftStatusFast.StatusFast.AutopilotMaster
-
-                    );
-                }
             });
 
-            await hubConnection.StartAsync();
+            await _hubConnection.StartAsync();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -99,34 +66,6 @@ namespace msfs_server.Components
             }
         }
 
-        async Task SetValues(
-
-            double gpsGroundSpeed,
-            double planeHeadingMagnetic,
-            double nav1OBS,
-            double nav1CDI,
-            double nav1GSI,
-            double autoPilotHeadingLockDir,
-            bool autopilotHeadingLock,
-            bool autopilotMaster
-
-            )
-        {
-            var module = await ModuleReference;
-            await module.InvokeVoidAsync("SetValues",
-
-                gpsGroundSpeed,
-                planeHeadingMagnetic,
-                nav1OBS,
-                nav1CDI,
-                nav1GSI,
-                autoPilotHeadingLockDir,
-                autopilotHeadingLock,
-                autopilotMaster
-
-                );
-        }
-
         async Task Init()
         {
             var module = await ModuleReference;
@@ -134,13 +73,13 @@ namespace msfs_server.Components
         }
 
         public bool IsConnected =>
-            hubConnection.State == HubConnectionState.Connected;
+            _hubConnection.State == HubConnectionState.Connected;
 
         public async ValueTask DisposeAsync()
         {
-            if (hubConnection is not null)
+            if (_hubConnection is not null)
             {
-                await hubConnection.DisposeAsync();
+                await _hubConnection.DisposeAsync();
             }
 
             if (_moduleReference != null)
