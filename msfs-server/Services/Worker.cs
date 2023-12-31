@@ -114,34 +114,12 @@ namespace msfs_server.Services
 
                     var simobjectDataSlow = (SimConnectStructs.AircraftStatusSlowStruct)data.dwData[0];
 
-                    // round to 5 digits, only if it has more than 5 digits
-
-                    simobjectDataSlow.TrueHeading = Math.Truncate(simobjectDataSlow.TrueHeading * 100000d) / 100000d;
-
                     _aircraftStatusSlow.SetData(simobjectDataSlow);
 
                     break;
                 case (uint)SimConnectStructs.DataRequest.AIRCRAFT_STATUS_FAST:
 
                     var simobjectDataFast = (SimConnectStructs.AircraftStatusFastStruct)data.dwData[0];
-
-                    simobjectDataFast.GeneralEngineOilTemperature = ((5.0 / 9.0) * simobjectDataFast.GeneralEngineOilTemperature) - 273.15; // convert to celcius
-
-                    simobjectDataFast.GeneralEngineOilPressure /= 144.0; // convert to psi
-
-
-                    // round to 5 digits, only if it has more than 5 digits
-                    
-                    simobjectDataFast.BankDegrees = Math.Truncate(simobjectDataFast.BankDegrees * 100000d) / 100000d;
-                    simobjectDataFast.PitchDegrees = Math.Truncate(simobjectDataFast.PitchDegrees * 100000d) / 100000d;
-                    simobjectDataFast.IndicatedAltitude = Math.Truncate(simobjectDataFast.IndicatedAltitude * 100000d) / 100000d;
-
-                    simobjectDataFast.PlaneHeadingMagnetic = Math.Truncate(simobjectDataFast.PlaneHeadingMagnetic * 100000d) / 100000d;
-
-                    simobjectDataFast.ElevatorTrimPosition = Math.Truncate(simobjectDataFast.ElevatorTrimPosition * 100000d) / 100000d;
-
-                    simobjectDataFast.GeneralEngineOilTemperature = Math.Truncate(simobjectDataFast.GeneralEngineOilTemperature * 100000d) / 100000d;
-                    simobjectDataFast.GeneralEngineOilPressure = Math.Truncate(simobjectDataFast.GeneralEngineOilPressure * 100000d) / 100000d;
 
                     _aircraftStatusFast.SetData(simobjectDataFast);
 
