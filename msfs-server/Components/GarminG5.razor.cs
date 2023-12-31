@@ -55,62 +55,62 @@ namespace msfs_server.Components
             {
                 //InvokeAsync(StateHasChanged);
 
-                if (_bankDegrees != AircraftStatusFast.BankDegrees ||
-                    _pitchDegrees != AircraftStatusFast.PitchDegrees ||
-                    _indicatedAltitude != AircraftStatusFast.IndicatedAltitude ||
-                    _verticalSpeed != AircraftStatusFast.VerticalSpeed ||
-                    _airspeedIndicated != AircraftStatusFast.AirspeedIndicated ||
+                if (_bankDegrees != AircraftStatusFast.StatusFast.BankDegrees ||
+                    _pitchDegrees != AircraftStatusFast.StatusFast.PitchDegrees ||
+                    _indicatedAltitude != AircraftStatusFast.StatusFast.IndicatedAltitude ||
+                    _verticalSpeed != AircraftStatusFast.StatusFast.VerticalSpeed ||
+                    _airspeedIndicated != AircraftStatusFast.StatusFast.AirspeedIndicated ||
 
-                    _autopilotMaster != AircraftStatusFast.AutopilotMaster ||
-                    _autoPilotAltitudeLockVar != AircraftStatusFast.AutoPilotAltitudeLockVar ||
-                    _autopilotAltitudeLock != AircraftStatusFast.AutopilotAltitudeLock ||
-                    _gpsGroundSpeed != AircraftStatusFast.GpsGroundSpeed ||
-                    _kohlsmanSetting != AircraftStatusFast.KohlsmanSetting ||
-                    _planeHeadingMagnetic != AircraftStatusFast.PlaneHeadingMagnetic ||
-                    _autoPilotHeadingLockDir != AircraftStatusFast.AutoPilotHeadingLockDir ||
-                    _autopilotHeadingLock != AircraftStatusFast.AutopilotHeadingLock ||
-                    _turnCoordinatorBall != AircraftStatusFast.TurnCoordinatorBall ||
-                    _nav1CDI != AircraftStatusFast.Nav1CDI ||
-                    _nav1GSI != AircraftStatusFast.Nav1GSI 
+                    _autopilotMaster != AircraftStatusFast.StatusFast.AutopilotMaster ||
+                    _autoPilotAltitudeLockVar != AircraftStatusFast.StatusFast.AutoPilotAltitudeLockVar ||
+                    _autopilotAltitudeLock != AircraftStatusFast.StatusFast.AutopilotAltitudeLock ||
+                    _gpsGroundSpeed != AircraftStatusFast.StatusFast.GpsGroundSpeed ||
+                    _kohlsmanSetting != AircraftStatusFast.StatusFast.KohlsmanSetting ||
+                    _planeHeadingMagnetic != AircraftStatusFast.StatusFast.PlaneHeadingMagnetic ||
+                    _autoPilotHeadingLockDir != AircraftStatusFast.StatusFast.AutoPilotHeadingLockDir ||
+                    _autopilotHeadingLock != AircraftStatusFast.StatusFast.AutopilotHeadingLock ||
+                    _turnCoordinatorBall != AircraftStatusFast.StatusFast.TurnCoordinatorBall ||
+                    _nav1CDI != AircraftStatusFast.StatusFast.Nav1CDI ||
+                    _nav1GSI != AircraftStatusFast.StatusFast.Nav1GSI 
 
                     )
                 {
-                    _bankDegrees = AircraftStatusFast.BankDegrees;
-                    _pitchDegrees = AircraftStatusFast.PitchDegrees;
-                    _indicatedAltitude = AircraftStatusFast.IndicatedAltitude;
-                    _verticalSpeed = AircraftStatusFast.VerticalSpeed;
-                    _airspeedIndicated = AircraftStatusFast.AirspeedIndicated;
+                    _bankDegrees = AircraftStatusFast.StatusFast.BankDegrees;
+                    _pitchDegrees = AircraftStatusFast.StatusFast.PitchDegrees;
+                    _indicatedAltitude = AircraftStatusFast.StatusFast.IndicatedAltitude;
+                    _verticalSpeed = AircraftStatusFast.StatusFast.VerticalSpeed;
+                    _airspeedIndicated = AircraftStatusFast.StatusFast.AirspeedIndicated;
 
-                    _autopilotMaster = AircraftStatusFast.AutopilotMaster;
-                    _autoPilotAltitudeLockVar = AircraftStatusFast.AutoPilotAltitudeLockVar;
-                    _autopilotAltitudeLock = AircraftStatusFast.AutopilotAltitudeLock;
-                    _gpsGroundSpeed = AircraftStatusFast.GpsGroundSpeed;
-                    _kohlsmanSetting = AircraftStatusFast.KohlsmanSetting;
-                    _planeHeadingMagnetic = AircraftStatusFast.PlaneHeadingMagnetic;
-                    _autoPilotHeadingLockDir = AircraftStatusFast.AutoPilotHeadingLockDir;
-                    _autopilotHeadingLock = AircraftStatusFast.AutopilotHeadingLock;
-                    _turnCoordinatorBall = AircraftStatusFast.TurnCoordinatorBall;
-                    _nav1CDI = AircraftStatusFast.Nav1CDI;
-                    _nav1GSI = AircraftStatusFast.Nav1GSI;
+                    _autopilotMaster = AircraftStatusFast.StatusFast.AutopilotMaster;
+                    _autoPilotAltitudeLockVar = AircraftStatusFast.StatusFast.AutoPilotAltitudeLockVar;
+                    _autopilotAltitudeLock = AircraftStatusFast.StatusFast.AutopilotAltitudeLock;
+                    _gpsGroundSpeed = AircraftStatusFast.StatusFast.GpsGroundSpeed;
+                    _kohlsmanSetting = AircraftStatusFast.StatusFast.KohlsmanSetting;
+                    _planeHeadingMagnetic = AircraftStatusFast.StatusFast.PlaneHeadingMagnetic;
+                    _autoPilotHeadingLockDir = AircraftStatusFast.StatusFast.AutoPilotHeadingLockDir;
+                    _autopilotHeadingLock = AircraftStatusFast.StatusFast.AutopilotHeadingLock;
+                    _turnCoordinatorBall = AircraftStatusFast.StatusFast.TurnCoordinatorBall;
+                    _nav1CDI = AircraftStatusFast.StatusFast.Nav1CDI;
+                    _nav1GSI = AircraftStatusFast.StatusFast.Nav1GSI;
 
                     await SetValues(
-                        AircraftStatusFast.BankDegrees,
-                        AircraftStatusFast.PitchDegrees,
-                        AircraftStatusFast.IndicatedAltitude,
-                        AircraftStatusFast.VerticalSpeed,
-                        AircraftStatusFast.AirspeedIndicated,
+                        AircraftStatusFast.StatusFast.BankDegrees,
+                        AircraftStatusFast.StatusFast.PitchDegrees,
+                        AircraftStatusFast.StatusFast.IndicatedAltitude,
+                        AircraftStatusFast.StatusFast.VerticalSpeed,
+                        AircraftStatusFast.StatusFast.AirspeedIndicated,
 
-                        AircraftStatusFast.AutopilotMaster,
-                        AircraftStatusFast.AutoPilotAltitudeLockVar,
-                        AircraftStatusFast.AutopilotAltitudeLock,
-                        AircraftStatusFast.GpsGroundSpeed,
-                        AircraftStatusFast.KohlsmanSetting,
-                        AircraftStatusFast.PlaneHeadingMagnetic,
-                        AircraftStatusFast.AutoPilotHeadingLockDir,
-                        AircraftStatusFast.AutopilotHeadingLock,
-                        AircraftStatusFast.TurnCoordinatorBall,
-                        AircraftStatusFast.Nav1CDI,
-                        AircraftStatusFast.Nav1GSI
+                        AircraftStatusFast.StatusFast.AutopilotMaster,
+                        AircraftStatusFast.StatusFast.AutoPilotAltitudeLockVar,
+                        AircraftStatusFast.StatusFast.AutopilotAltitudeLock,
+                        AircraftStatusFast.StatusFast.GpsGroundSpeed,
+                        AircraftStatusFast.StatusFast.KohlsmanSetting,
+                        AircraftStatusFast.StatusFast.PlaneHeadingMagnetic,
+                        AircraftStatusFast.StatusFast.AutoPilotHeadingLockDir,
+                        AircraftStatusFast.StatusFast.AutopilotHeadingLock,
+                        AircraftStatusFast.StatusFast.TurnCoordinatorBall,
+                        AircraftStatusFast.StatusFast.Nav1CDI,
+                        AircraftStatusFast.StatusFast.Nav1GSI
 
 
                         );

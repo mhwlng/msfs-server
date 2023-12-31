@@ -112,12 +112,20 @@ namespace msfs_server.Services
             {
                 case (uint)SimConnectStructs.DATA_REQUEST.AircraftStatusSlow:
 
-                    _aircraftStatusSlow.SetData((SimConnectStructs.AircraftStatusSlowStruct)data.dwData[0]);
+                    var simobjectDataSlow = (SimConnectStructs.AircraftStatusSlowStruct)data.dwData[0];
+
+                    _aircraftStatusSlow.SetData(simobjectDataSlow);
 
                     break;
                 case (uint)SimConnectStructs.DATA_REQUEST.AircraftStatusFast:
 
-                    _aircraftStatusFast.SetData((SimConnectStructs.AircraftStatusFastStruct)data.dwData[0]);
+                    var simobjectDataFast = (SimConnectStructs.AircraftStatusFastStruct)data.dwData[0];
+
+                    simobjectDataFast.GeneralEngineOilTemperature = ((5.0 / 9.0) * simobjectDataFast.GeneralEngineOilTemperature) - 273.15; // convert to celcius
+
+                    simobjectDataFast.GeneralEngineOilPressure /= 144.0; // convert to psi
+
+                    _aircraftStatusFast.SetData(simobjectDataFast);
 
                     break;
             }

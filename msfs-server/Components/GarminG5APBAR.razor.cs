@@ -46,39 +46,39 @@ namespace msfs_server.Components
             {
                 //InvokeAsync(StateHasChanged);
 
-                if (_autopilotMaster != AircraftStatusFast.AutopilotMaster ||
-                    _autopilotAltitudeLock != AircraftStatusFast.AutopilotAltitudeLock ||
-                    _autopilotHeadingLock != AircraftStatusFast.AutopilotHeadingLock ||
-                    _autopilotNav1Lock != AircraftStatusFast.AutopilotNav1Lock ||
-                    _autopilotFlightDirectorActive != AircraftStatusFast.AutopilotFlightDirectorActive ||
-                    _autopilotBackcourseHold != AircraftStatusFast.AutopilotBackcourseHold ||
-                    _autopilotVerticalHold != AircraftStatusFast.AutopilotVerticalHold ||
-                    _autopilotYawDamper != AircraftStatusFast.AutopilotYawDamper ||
-                    _autopilotApproachHold != AircraftStatusFast.AutopilotApproachHold
+                if (_autopilotMaster != AircraftStatusFast.StatusFast.AutopilotMaster ||
+                    _autopilotAltitudeLock != AircraftStatusFast.StatusFast.AutopilotAltitudeLock ||
+                    _autopilotHeadingLock != AircraftStatusFast.StatusFast.AutopilotHeadingLock ||
+                    _autopilotNav1Lock != AircraftStatusFast.StatusFast.AutopilotNav1Lock ||
+                    _autopilotFlightDirectorActive != AircraftStatusFast.StatusFast.AutopilotFlightDirectorActive ||
+                    _autopilotBackcourseHold != AircraftStatusFast.StatusFast.AutopilotBackcourseHold ||
+                    _autopilotVerticalHold != AircraftStatusFast.StatusFast.AutopilotVerticalHold ||
+                    _autopilotYawDamper != AircraftStatusFast.StatusFast.AutopilotYawDamper ||
+                    _autopilotApproachHold != AircraftStatusFast.StatusFast.AutopilotApproachHold
                     )
                 {
                 
-                    _autopilotMaster = AircraftStatusFast.AutopilotMaster;
-                    _autopilotAltitudeLock = AircraftStatusFast.AutopilotAltitudeLock;
-                    _autopilotHeadingLock = AircraftStatusFast.AutopilotHeadingLock;
-                    _autopilotNav1Lock = AircraftStatusFast.AutopilotNav1Lock;
-                    _autopilotFlightDirectorActive = AircraftStatusFast.AutopilotFlightDirectorActive;
-                    _autopilotBackcourseHold = AircraftStatusFast.AutopilotBackcourseHold;
-                    _autopilotVerticalHold = AircraftStatusFast.AutopilotVerticalHold;
-                    _autopilotYawDamper = AircraftStatusFast.AutopilotYawDamper;
-                    _autopilotApproachHold = AircraftStatusFast.AutopilotApproachHold;
+                    _autopilotMaster = AircraftStatusFast.StatusFast.AutopilotMaster;
+                    _autopilotAltitudeLock = AircraftStatusFast.StatusFast.AutopilotAltitudeLock;
+                    _autopilotHeadingLock = AircraftStatusFast.StatusFast.AutopilotHeadingLock;
+                    _autopilotNav1Lock = AircraftStatusFast.StatusFast.AutopilotNav1Lock;
+                    _autopilotFlightDirectorActive = AircraftStatusFast.StatusFast.AutopilotFlightDirectorActive;
+                    _autopilotBackcourseHold = AircraftStatusFast.StatusFast.AutopilotBackcourseHold;
+                    _autopilotVerticalHold = AircraftStatusFast.StatusFast.AutopilotVerticalHold;
+                    _autopilotYawDamper = AircraftStatusFast.StatusFast.AutopilotYawDamper;
+                    _autopilotApproachHold = AircraftStatusFast.StatusFast.AutopilotApproachHold;
 
                     await SetValues(
 
-                        AircraftStatusFast.AutopilotMaster,
-                        AircraftStatusFast.AutopilotAltitudeLock,
-                        AircraftStatusFast.AutopilotHeadingLock,
-                        AircraftStatusFast.AutopilotNav1Lock,
-                        AircraftStatusFast.AutopilotFlightDirectorActive,
-                        AircraftStatusFast.AutopilotBackcourseHold,
-                        AircraftStatusFast.AutopilotVerticalHold,
-                        AircraftStatusFast.AutopilotYawDamper,
-                        AircraftStatusFast.AutopilotApproachHold
+                        AircraftStatusFast.StatusFast.AutopilotMaster,
+                        AircraftStatusFast.StatusFast.AutopilotAltitudeLock,
+                        AircraftStatusFast.StatusFast.AutopilotHeadingLock,
+                        AircraftStatusFast.StatusFast.AutopilotNav1Lock,
+                        AircraftStatusFast.StatusFast.AutopilotFlightDirectorActive,
+                        AircraftStatusFast.StatusFast.AutopilotBackcourseHold,
+                        AircraftStatusFast.StatusFast.AutopilotVerticalHold,
+                        AircraftStatusFast.StatusFast.AutopilotYawDamper,
+                        AircraftStatusFast.StatusFast.AutopilotApproachHold
 
                     );
                 }

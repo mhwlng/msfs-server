@@ -45,41 +45,41 @@ namespace msfs_server.Components
             {
                 //InvokeAsync(StateHasChanged);
 
-                if (_gpsGroundSpeed != AircraftStatusFast.GpsGroundSpeed ||
-                    _planeHeadingMagnetic != AircraftStatusFast.PlaneHeadingMagnetic ||
+                if (_gpsGroundSpeed != AircraftStatusFast.StatusFast.GpsGroundSpeed ||
+                    _planeHeadingMagnetic != AircraftStatusFast.StatusFast.PlaneHeadingMagnetic ||
 
-                    _nav1OBS != AircraftStatusFast.Nav1OBS ||
-                    _nav1CDI != AircraftStatusFast.Nav1CDI ||
-                    _nav1GSI != AircraftStatusFast.Nav1GSI ||
+                    _nav1OBS != AircraftStatusFast.StatusFast.Nav1OBS ||
+                    _nav1CDI != AircraftStatusFast.StatusFast.Nav1CDI ||
+                    _nav1GSI != AircraftStatusFast.StatusFast.Nav1GSI ||
 
-                    _autoPilotHeadingLockDir != AircraftStatusFast.AutoPilotHeadingLockDir ||
-                    _autopilotHeadingLock != AircraftStatusFast.AutopilotHeadingLock ||
+                    _autoPilotHeadingLockDir != AircraftStatusFast.StatusFast.AutoPilotHeadingLockDir ||
+                    _autopilotHeadingLock != AircraftStatusFast.StatusFast.AutopilotHeadingLock ||
 
-                    _autopilotMaster != AircraftStatusFast.AutopilotMaster
+                    _autopilotMaster != AircraftStatusFast.StatusFast.AutopilotMaster
                     )
                 {
-                    _gpsGroundSpeed = AircraftStatusFast.GpsGroundSpeed;
-                    _planeHeadingMagnetic = AircraftStatusFast.PlaneHeadingMagnetic;
+                    _gpsGroundSpeed = AircraftStatusFast.StatusFast.GpsGroundSpeed;
+                    _planeHeadingMagnetic = AircraftStatusFast.StatusFast.PlaneHeadingMagnetic;
 
-                    _nav1OBS = AircraftStatusFast.Nav1OBS;
-                    _nav1CDI = AircraftStatusFast.Nav1CDI;
-                    _nav1GSI = AircraftStatusFast.Nav1GSI;
+                    _nav1OBS = AircraftStatusFast.StatusFast.Nav1OBS;
+                    _nav1CDI = AircraftStatusFast.StatusFast.Nav1CDI;
+                    _nav1GSI = AircraftStatusFast.StatusFast.Nav1GSI;
 
-                    _autoPilotHeadingLockDir = AircraftStatusFast.AutoPilotHeadingLockDir;
-                    _autopilotHeadingLock = AircraftStatusFast.AutopilotHeadingLock;
+                    _autoPilotHeadingLockDir = AircraftStatusFast.StatusFast.AutoPilotHeadingLockDir;
+                    _autopilotHeadingLock = AircraftStatusFast.StatusFast.AutopilotHeadingLock;
 
-                    _autopilotMaster = AircraftStatusFast.AutopilotMaster;
+                    _autopilotMaster = AircraftStatusFast.StatusFast.AutopilotMaster;
 
                     await SetValues(
 
-                        AircraftStatusFast.GpsGroundSpeed,
-                        AircraftStatusFast.PlaneHeadingMagnetic,
-                        AircraftStatusFast.Nav1OBS,
-                        AircraftStatusFast.Nav1CDI,
-                        AircraftStatusFast.Nav1GSI,
-                        AircraftStatusFast.AutoPilotHeadingLockDir,
-                        AircraftStatusFast.AutopilotHeadingLock,
-                        AircraftStatusFast.AutopilotMaster
+                        AircraftStatusFast.StatusFast.GpsGroundSpeed,
+                        AircraftStatusFast.StatusFast.PlaneHeadingMagnetic,
+                        AircraftStatusFast.StatusFast.Nav1OBS,
+                        AircraftStatusFast.StatusFast.Nav1CDI,
+                        AircraftStatusFast.StatusFast.Nav1GSI,
+                        AircraftStatusFast.StatusFast.AutoPilotHeadingLockDir,
+                        AircraftStatusFast.StatusFast.AutopilotHeadingLock,
+                        AircraftStatusFast.StatusFast.AutopilotMaster
 
                     );
                 }

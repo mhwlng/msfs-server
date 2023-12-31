@@ -50,37 +50,37 @@ namespace msfs_server.Components
                  */
 
 
-                if (AircraftStatusSlow.Latitude != 0 && AircraftStatusSlow.Longitude != 0 &&
-                    (_latitude != AircraftStatusSlow.Latitude ||
-                     _longitude != AircraftStatusSlow.Longitude ||
-                     _heading != AircraftStatusSlow.TrueHeading ||
-                     _gpsFlightPlanActive != AircraftStatusSlow.GPSFlightPlanActive ||
-                     _gpsNextWpLatitude != AircraftStatusSlow.GPSNextWPLatitude ||
-                     _gpsNextWpLongitude != AircraftStatusSlow.GPSNextWPLongitude ||
-                     _gpsPrevWpLatitude != AircraftStatusSlow.GPSPrevWPLatitude ||
-                     _gpsPrevWpLongitude != AircraftStatusSlow.GPSPrevWPLongitude))
+                if (AircraftStatusSlow.StatusSlow.Latitude != 0 && AircraftStatusSlow.StatusSlow.Longitude != 0 &&
+                    (_latitude != AircraftStatusSlow.StatusSlow.Latitude ||
+                     _longitude != AircraftStatusSlow.StatusSlow.Longitude ||
+                     _heading != AircraftStatusSlow.StatusSlow.TrueHeading ||
+                     _gpsFlightPlanActive != AircraftStatusSlow.StatusSlow.GPSFlightPlanActive ||
+                     _gpsNextWpLatitude != AircraftStatusSlow.StatusSlow.GPSNextWPLatitude ||
+                     _gpsNextWpLongitude != AircraftStatusSlow.StatusSlow.GPSNextWPLongitude ||
+                     _gpsPrevWpLatitude != AircraftStatusSlow.StatusSlow.GPSPrevWPLatitude ||
+                     _gpsPrevWpLongitude != AircraftStatusSlow.StatusSlow.GPSPrevWPLongitude))
                 {
-                    _latitude = AircraftStatusSlow.Latitude;
+                    _latitude = AircraftStatusSlow.StatusSlow.Latitude;
 
-                    _longitude = AircraftStatusSlow.Longitude;
+                    _longitude = AircraftStatusSlow.StatusSlow.Longitude;
 
-                    _heading = AircraftStatusSlow.TrueHeading;
+                    _heading = AircraftStatusSlow.StatusSlow.TrueHeading;
 
-                    _gpsFlightPlanActive = AircraftStatusSlow.GPSFlightPlanActive;
-                    _gpsNextWpLatitude = AircraftStatusSlow.GPSNextWPLatitude;
-                    _gpsNextWpLongitude = AircraftStatusSlow.GPSNextWPLongitude;
-                    _gpsPrevWpLatitude = AircraftStatusSlow.GPSPrevWPLatitude;
-                    _gpsPrevWpLongitude = AircraftStatusSlow.GPSPrevWPLongitude;
+                    _gpsFlightPlanActive = AircraftStatusSlow.StatusSlow.GPSFlightPlanActive;
+                    _gpsNextWpLatitude = AircraftStatusSlow.StatusSlow.GPSNextWPLatitude;
+                    _gpsNextWpLongitude = AircraftStatusSlow.StatusSlow.GPSNextWPLongitude;
+                    _gpsPrevWpLatitude = AircraftStatusSlow.StatusSlow.GPSPrevWPLatitude;
+                    _gpsPrevWpLongitude = AircraftStatusSlow.StatusSlow.GPSPrevWPLongitude;
 
                     await SetValues(
-                        AircraftStatusSlow.Latitude,
-                        AircraftStatusSlow.Longitude,
-                        AircraftStatusSlow.TrueHeading,
-                        AircraftStatusSlow.GPSFlightPlanActive,
-                        AircraftStatusSlow.GPSNextWPLatitude,
-                        AircraftStatusSlow.GPSNextWPLongitude,
-                        AircraftStatusSlow.GPSPrevWPLatitude,
-                        AircraftStatusSlow.GPSPrevWPLongitude);
+                        AircraftStatusSlow.StatusSlow.Latitude,
+                        AircraftStatusSlow.StatusSlow.Longitude,
+                        AircraftStatusSlow.StatusSlow.TrueHeading,
+                        AircraftStatusSlow.StatusSlow.GPSFlightPlanActive,
+                        AircraftStatusSlow.StatusSlow.GPSNextWPLatitude,
+                        AircraftStatusSlow.StatusSlow.GPSNextWPLongitude,
+                        AircraftStatusSlow.StatusSlow.GPSPrevWPLatitude,
+                        AircraftStatusSlow.StatusSlow.GPSPrevWPLongitude);
                 }
 
             });
