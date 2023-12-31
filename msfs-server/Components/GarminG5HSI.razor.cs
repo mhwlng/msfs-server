@@ -19,7 +19,7 @@ namespace msfs_server.Components
 
         [Inject] private IJSRuntime MyJsRuntime { get; set; }
 
-        [Inject] public AircraftStatusFastModel AircraftStatusFast { get; set; }
+        [Inject] public GarminG5HsiModel GarminG5HsiData { get; set; }
 
         private Task<IJSObjectReference> _moduleReference;
         private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/GarminG5HSI.razor.js").AsTask();
@@ -32,21 +32,21 @@ namespace msfs_server.Components
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
                 .Build();
 
-            _hubConnection.On("MsFsFastRefresh", async () =>
+            _hubConnection.On("MsFsGarminG5HSIRefresh", async () =>
             {
                 //InvokeAsync(StateHasChanged);
 
                 var module = await ModuleReference;
                 await module.InvokeVoidAsync("SetValues",
 
-                    AircraftStatusFast.Data.GpsGroundSpeed,
-                    AircraftStatusFast.Data.PlaneHeadingMagnetic,
-                    AircraftStatusFast.Data.Nav1OBS,
-                    AircraftStatusFast.Data.Nav1CDI,
-                    AircraftStatusFast.Data.Nav1GSI,
-                    AircraftStatusFast.Data.AutoPilotHeadingLockDir,
-                    AircraftStatusFast.Data.AutopilotHeadingLock,
-                    AircraftStatusFast.Data.AutopilotMaster
+                    GarminG5HsiData.Data.GpsGroundSpeed,
+                    GarminG5HsiData.Data.PlaneHeadingMagnetic,
+                    GarminG5HsiData.Data.Nav1OBS,
+                    GarminG5HsiData.Data.Nav1CDI,
+                    GarminG5HsiData.Data.Nav1GSI,
+                    GarminG5HsiData.Data.AutoPilotHeadingLockDir,
+                    GarminG5HsiData.Data.AutopilotHeadingLock,
+                    GarminG5HsiData.Data.AutopilotMaster
 
                 );
 

@@ -22,7 +22,7 @@ namespace msfs_server.Components
     {
         [Inject] private NavigationManager NavigationManager { get; set; }
 
-        [Inject] public AircraftStatusFastModel AircraftStatusFast { get; set; }
+        [Inject] public GarminG5Model DialData { get; set; }
 
         [Inject] private IJSRuntime MyJsRuntime { get; set; }
 
@@ -60,23 +60,29 @@ namespace msfs_server.Components
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
                 .Build();
 
-            hubConnection.On("MsFsFastRefresh", async () =>
+            hubConnection.On("MsFsGarminG5Refresh", async () =>
             {
-                await SetValues(
-                    Value,
+                var id = $"dial_{Value}";
+
+                var val = (double)(DialData.GetType().GetProperty(Value)?.GetValue(DialData, null) ?? 0);
+
+                var module = await ModuleReference;
+                await module.InvokeVoidAsync("SetValues",
+                    id,
                     RangeMin,
                     RangeMax,
                     MinAngle,
                     MaxAngle,
                     InnerRadius,
                     OuterRadius,
-                    Color);
+                    ColorTranslator.ToHtml(Color),
+                    val
+                );
 
             });
 
             await hubConnection.StartAsync();
         }
-
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -101,33 +107,6 @@ namespace msfs_server.Components
             }
         }
 
-        async Task SetValues(string value,
-                             double rangeMin,
-                             double rangeMax,
-                             double minAngle,
-                             double maxAngle,
-                             double innerRadius,
-                             double outerRadius,
-                             System.Drawing.Color color)
-        {
-            var id = $"dial_{value}";
-
-            var val = (double)(AircraftStatusFast.GetType().GetProperty(Value)?.GetValue(AircraftStatusFast, null) ?? 0);
-
-            var module = await ModuleReference;
-            await module.InvokeVoidAsync("SetValues",
-                id,
-                rangeMin,
-                rangeMax,
-                minAngle,
-                maxAngle,
-                innerRadius,
-                outerRadius,
-                ColorTranslator.ToHtml(color),
-                val
-                );
-
-        }
 
         async Task Init(string value, 
                         string label,

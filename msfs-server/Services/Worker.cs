@@ -21,9 +21,10 @@ namespace msfs_server.Services
 
     public class Worker : BackgroundService
     {
-        private readonly AircraftStatusSlowModel _aircraftStatusSlow;
-
-        private readonly AircraftStatusFastModel _aircraftStatusFast;
+        private readonly MovingMapModel _movingMapData;
+        private readonly GarminG5Model _garminG5Data;
+        private readonly GarminG5ApbarModel _garminG5ApbarData;
+        private readonly GarminG5HsiModel _garminG5HsiData;
 
         private static Task _simTask;
         private static readonly CancellationTokenSource SimTokenSource = new();
@@ -39,15 +40,20 @@ namespace msfs_server.Services
 
         private static int _fastCounter = 0;
 
-        public Worker(AircraftStatusSlowModel aircraftStatusSlow, AircraftStatusFastModel aircraftStatusFast)
+        public Worker(MovingMapModel movingMapData, 
+                      GarminG5Model garminG5Data, 
+                      GarminG5ApbarModel garminG5ApbarData,
+                      GarminG5HsiModel garminG5HsiData)
         {
 
             var win = MessageWindow.GetWindow();
             WindowHandle = win.Hwnd;
             win.WndProcHandle += W_WndProcHandle;
 
-            _aircraftStatusSlow = aircraftStatusSlow;
-            _aircraftStatusFast = aircraftStatusFast;
+            _movingMapData = movingMapData;
+            _garminG5Data = garminG5Data;
+            _garminG5ApbarData = garminG5ApbarData;
+            _garminG5HsiData = garminG5HsiData;
         }
 
         private IntPtr W_WndProcHandle(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
@@ -73,31 +79,66 @@ namespace msfs_server.Services
 
         private static void SetFlightDataDefinitions()
         {
-            foreach (var fieldInfo in typeof(SimConnectStructs.AircraftStatusSlowStruct).GetFields())
+            foreach (var fieldInfo in typeof(SimConnectStructs.MovingMapStruct).GetFields())
             {
                 for (var index = 0; index < fieldInfo.GetCustomAttributes(true).Length; index++)
                 {
                     var dd = (DataDefinition)fieldInfo.GetCustomAttributes(true)[index];
-                    Simconnect.AddToDataDefinition(SimConnectStructs.Definitions.AIRCRAFT_STATUS_SLOW, dd.DatumName,
+                    Simconnect.AddToDataDefinition(SimConnectStructs.Definitions.AIRCRAFT_STATUS_MOVINGMAP,
+                        dd.DatumName,
                         dd.UnitsName, dd.DatumType, dd.fEpsilon, SimConnect.SIMCONNECT_UNUSED);
                 }
             }
 
-            Simconnect.RegisterDataDefineStruct<SimConnectStructs.AircraftStatusSlowStruct>(SimConnectStructs.Definitions.AIRCRAFT_STATUS_SLOW);
+            Simconnect.RegisterDataDefineStruct<SimConnectStructs.MovingMapStruct>(SimConnectStructs.Definitions
+                .AIRCRAFT_STATUS_MOVINGMAP);
 
             //------------------------
-            
-            foreach (var fieldInfo in typeof(SimConnectStructs.AircraftStatusFastStruct).GetFields())
+
+            foreach (var fieldInfo in typeof(SimConnectStructs.GarminG5Struct).GetFields())
             {
                 for (var index = 0; index < fieldInfo.GetCustomAttributes(true).Length; index++)
                 {
                     var dd = (DataDefinition)fieldInfo.GetCustomAttributes(true)[index];
-                    Simconnect.AddToDataDefinition(SimConnectStructs.Definitions.AIRCRAFT_STATUS_FAST, dd.DatumName,
+                    Simconnect.AddToDataDefinition(SimConnectStructs.Definitions.AIRCRAFT_STATUS_GARMING5, dd.DatumName,
                         dd.UnitsName, dd.DatumType, dd.fEpsilon, SimConnect.SIMCONNECT_UNUSED);
                 }
             }
 
-            Simconnect.RegisterDataDefineStruct<SimConnectStructs.AircraftStatusFastStruct>(SimConnectStructs.Definitions.AIRCRAFT_STATUS_FAST);
+            Simconnect.RegisterDataDefineStruct<SimConnectStructs.GarminG5Struct>(SimConnectStructs.Definitions
+                .AIRCRAFT_STATUS_GARMING5);
+
+            //------------------------
+
+            foreach (var fieldInfo in typeof(SimConnectStructs.GarminG5ApbarStruct).GetFields())
+            {
+                for (var index = 0; index < fieldInfo.GetCustomAttributes(true).Length; index++)
+                {
+                    var dd = (DataDefinition)fieldInfo.GetCustomAttributes(true)[index];
+                    Simconnect.AddToDataDefinition(SimConnectStructs.Definitions.AIRCRAFT_STATUS_GARMING5_APBAR,
+                        dd.DatumName,
+                        dd.UnitsName, dd.DatumType, dd.fEpsilon, SimConnect.SIMCONNECT_UNUSED);
+                }
+            }
+
+            Simconnect.RegisterDataDefineStruct<SimConnectStructs.GarminG5ApbarStruct>(SimConnectStructs.Definitions
+                .AIRCRAFT_STATUS_GARMING5_APBAR);
+
+            //------------------------
+
+            foreach (var fieldInfo in typeof(SimConnectStructs.GarminG5HsiStruct).GetFields())
+            {
+                for (var index = 0; index < fieldInfo.GetCustomAttributes(true).Length; index++)
+                {
+                    var dd = (DataDefinition)fieldInfo.GetCustomAttributes(true)[index];
+                    Simconnect.AddToDataDefinition(SimConnectStructs.Definitions.AIRCRAFT_STATUS_GARMING5_HSI,
+                        dd.DatumName,
+                        dd.UnitsName, dd.DatumType, dd.fEpsilon, SimConnect.SIMCONNECT_UNUSED);
+                }
+            }
+
+            Simconnect.RegisterDataDefineStruct<SimConnectStructs.GarminG5HsiStruct>(SimConnectStructs.Definitions
+                .AIRCRAFT_STATUS_GARMING5_HSI);
         }
 
         private void SimDisconnect()
@@ -110,18 +151,34 @@ namespace msfs_server.Services
         {
             switch (data.dwRequestID)
             {
-                case (uint)SimConnectStructs.DataRequest.AIRCRAFT_STATUS_SLOW:
+                case (uint)SimConnectStructs.DataRequest.AIRCRAFT_STATUS_MOVINGMAP:
 
-                    var simobjectDataSlow = (SimConnectStructs.AircraftStatusSlowStruct)data.dwData[0];
+                    var simobjectDataMovingMap = (SimConnectStructs.MovingMapStruct)data.dwData[0];
 
-                    _aircraftStatusSlow.SetData(simobjectDataSlow);
+                    _movingMapData.SetData(simobjectDataMovingMap);
 
                     break;
-                case (uint)SimConnectStructs.DataRequest.AIRCRAFT_STATUS_FAST:
+                case (uint)SimConnectStructs.DataRequest.AIRCRAFT_STATUS_GARMING5:
 
-                    var simobjectDataFast = (SimConnectStructs.AircraftStatusFastStruct)data.dwData[0];
+                    var simobjectDataGarminG5 = (SimConnectStructs.GarminG5Struct)data.dwData[0];
 
-                    _aircraftStatusFast.SetData(simobjectDataFast);
+                    _garminG5Data.SetData(simobjectDataGarminG5);
+
+                    break;
+
+                case (uint)SimConnectStructs.DataRequest.AIRCRAFT_STATUS_GARMING5_APBAR:
+
+                    var simobjectDataGarminG5Apbar = (SimConnectStructs.GarminG5ApbarStruct)data.dwData[0];
+
+                    _garminG5ApbarData.SetData(simobjectDataGarminG5Apbar);
+
+                    break;
+
+                case (uint)SimConnectStructs.DataRequest.AIRCRAFT_STATUS_GARMING5_HSI:
+
+                    var simobjectDataGarminG5Hsi = (SimConnectStructs.GarminG5HsiStruct)data.dwData[0];
+
+                    _garminG5HsiData.SetData(simobjectDataGarminG5Hsi);
 
                     break;
             }
@@ -255,8 +312,14 @@ namespace msfs_server.Services
                             {
                                 // 10 times per second
 
-                                Simconnect.RequestDataOnSimObjectType(SimConnectStructs.DataRequest.AIRCRAFT_STATUS_FAST,
-                                    SimConnectStructs.Definitions.AIRCRAFT_STATUS_FAST, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
+                                Simconnect.RequestDataOnSimObjectType(SimConnectStructs.DataRequest.AIRCRAFT_STATUS_GARMING5,
+                                    SimConnectStructs.Definitions.AIRCRAFT_STATUS_GARMING5, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
+
+                                Simconnect.RequestDataOnSimObjectType(SimConnectStructs.DataRequest.AIRCRAFT_STATUS_GARMING5_APBAR,
+                                    SimConnectStructs.Definitions.AIRCRAFT_STATUS_GARMING5_APBAR, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
+
+                                Simconnect.RequestDataOnSimObjectType(SimConnectStructs.DataRequest.AIRCRAFT_STATUS_GARMING5_HSI,
+                                    SimConnectStructs.Definitions.AIRCRAFT_STATUS_GARMING5_HSI, 0, SIMCONNECT_SIMOBJECT_TYPE.USER);
 
                                 _fastCounter++;
 
@@ -266,15 +329,12 @@ namespace msfs_server.Services
                                 {
 
                                     Simconnect.RequestDataOnSimObjectType(
-                                        SimConnectStructs.DataRequest.AIRCRAFT_STATUS_SLOW,
-                                        SimConnectStructs.Definitions.AIRCRAFT_STATUS_SLOW, 0,
+                                        SimConnectStructs.DataRequest.AIRCRAFT_STATUS_MOVINGMAP,
+                                        SimConnectStructs.Definitions.AIRCRAFT_STATUS_MOVINGMAP, 0,
                                         SIMCONNECT_SIMOBJECT_TYPE.USER);
 
                                     _fastCounter = 0;
                                 }
-
-
-
 
                             }
                             catch (COMException ex)

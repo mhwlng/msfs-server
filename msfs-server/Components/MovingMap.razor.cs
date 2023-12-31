@@ -18,7 +18,7 @@ namespace msfs_server.Components
 
         [Inject] private IJSRuntime MyJsRuntime { get; set; }
 
-        [Inject] public AircraftStatusSlowModel AircraftStatusSlow { get; set; }
+        [Inject] public MovingMapModel MovingMapData { get; set; }
 
         private Task<IJSObjectReference> _moduleReference;
         private Task<IJSObjectReference> ModuleReference => _moduleReference ??= MyJsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/MovingMap.razor.js").AsTask();
@@ -31,20 +31,20 @@ namespace msfs_server.Components
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
                 .Build();
 
-            _hubConnection.On("MsFsSlowRefresh", async () =>
+            _hubConnection.On("MsFsMovingMapRefresh", async () =>
             {
                 //InvokeAsync(StateHasChanged);
 
                 var module = await ModuleReference;
                 await module.InvokeVoidAsync("SetValues",
-                    AircraftStatusSlow.Data.Latitude,
-                    AircraftStatusSlow.Data.Longitude,
-                    AircraftStatusSlow.Data.TrueHeading,
-                    AircraftStatusSlow.Data.GPSFlightPlanActive,
-                    AircraftStatusSlow.Data.GPSNextWPLatitude,
-                    AircraftStatusSlow.Data.GPSNextWPLongitude,
-                    AircraftStatusSlow.Data.GPSPrevWPLatitude,
-                    AircraftStatusSlow.Data.GPSPrevWPLongitude);
+                    MovingMapData.Data.Latitude,
+                    MovingMapData.Data.Longitude,
+                    MovingMapData.Data.TrueHeading,
+                    MovingMapData.Data.GPSFlightPlanActive,
+                    MovingMapData.Data.GPSNextWPLatitude,
+                    MovingMapData.Data.GPSNextWPLongitude,
+                    MovingMapData.Data.GPSPrevWPLatitude,
+                    MovingMapData.Data.GPSPrevWPLongitude);
 
 
             });

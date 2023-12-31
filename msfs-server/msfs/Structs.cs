@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using Microsoft.FlightSimulator.SimConnect;
+using static msfs_server.msfs.SimConnectStructs;
 
 namespace msfs_server.msfs
 {
@@ -8,18 +9,153 @@ namespace msfs_server.msfs
     {
         public enum Definitions
         {
-            AIRCRAFT_STATUS_SLOW,
-            AIRCRAFT_STATUS_FAST
+            AIRCRAFT_STATUS_MOVINGMAP,
+            AIRCRAFT_STATUS_GARMING5,
+            AIRCRAFT_STATUS_GARMING5_APBAR,
+            AIRCRAFT_STATUS_GARMING5_HSI
         }
 
         public enum DataRequest
         {
-            AIRCRAFT_STATUS_SLOW,
-            AIRCRAFT_STATUS_FAST
+            AIRCRAFT_STATUS_MOVINGMAP,
+            AIRCRAFT_STATUS_GARMING5,
+            AIRCRAFT_STATUS_GARMING5_APBAR,
+            AIRCRAFT_STATUS_GARMING5_HSI
+        }
+
+
+        public interface ISimConnectStruct
+        {
+
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
-        public struct AircraftStatusFastStruct : IEquatable<AircraftStatusFastStruct>
+        public struct GarminG5HsiStruct : IEquatable<GarminG5HsiStruct>, ISimConnectStruct
+        {
+            [DataDefinition("GPS GROUND SPEED", "meters per second", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double GpsGroundSpeed;
+
+            [DataDefinition("PLANE HEADING DEGREES MAGNETIC", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double PlaneHeadingMagnetic;
+ 
+            [DataDefinition("NAV CDI:1", "number", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double Nav1CDI;
+
+            [DataDefinition("NAV GSI:1", "number", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double Nav1GSI;
+
+            [DataDefinition("NAV OBS:1", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double Nav1OBS;
+
+            [DataDefinition("AUTOPILOT HEADING LOCK DIR", "degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            public double AutoPilotHeadingLockDir;
+
+            [DataDefinition("AUTOPILOT MASTER", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotMaster;
+
+            [DataDefinition("AUTOPILOT HEADING LOCK", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotHeadingLock;
+
+            public readonly bool Equals(GarminG5HsiStruct other)
+            {
+                return GpsGroundSpeed.Equals(other.GpsGroundSpeed) &&
+                       PlaneHeadingMagnetic.Equals(other.PlaneHeadingMagnetic) && 
+                       Nav1CDI.Equals(other.Nav1CDI) &&
+                       Nav1GSI.Equals(other.Nav1GSI) &&
+                       Nav1OBS.Equals(other.Nav1OBS) && 
+                       AutoPilotHeadingLockDir.Equals(other.AutoPilotHeadingLockDir) &&
+                       AutopilotMaster == other.AutopilotMaster &&
+                       AutopilotHeadingLock == other.AutopilotHeadingLock;
+            }
+
+            public readonly override bool Equals(object obj)
+            {
+                return obj is GarminG5HsiStruct other && Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+                throw new ApplicationException("this class does not support GetHashCode and should not be used as a key for a dictionary");
+            }
+
+            public static bool operator ==(GarminG5HsiStruct left, GarminG5HsiStruct right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(GarminG5HsiStruct left, GarminG5HsiStruct right)
+            {
+                return !left.Equals(right);
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+        public struct GarminG5ApbarStruct : IEquatable<GarminG5ApbarStruct>
+        {
+            [DataDefinition("AUTOPILOT MASTER", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotMaster;
+
+            [DataDefinition("AUTOPILOT HEADING LOCK", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotHeadingLock;
+
+            [DataDefinition("AUTOPILOT ALTITUDE LOCK", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotAltitudeLock;
+
+            [DataDefinition("AUTOPILOT NAV1 LOCK", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotNav1Lock;
+
+            [DataDefinition("AUTOPILOT FLIGHT DIRECTOR ACTIVE", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotFlightDirectorActive;
+
+            [DataDefinition("AUTOPILOT BACKCOURSE HOLD", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotBackcourseHold;
+
+            [DataDefinition("AUTOPILOT VERTICAL HOLD", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotVerticalHold;
+
+            [DataDefinition("AUTOPILOT YAW DAMPER", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotYawDamper;
+
+            [DataDefinition("AUTOPILOT APPROACH HOLD", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
+            public bool AutopilotApproachHold;
+            
+            public readonly bool Equals(GarminG5ApbarStruct other)
+            {
+                return AutopilotMaster == other.AutopilotMaster && 
+                       AutopilotHeadingLock == other.AutopilotHeadingLock &&
+                       AutopilotAltitudeLock == other.AutopilotAltitudeLock &&
+                       AutopilotNav1Lock == other.AutopilotNav1Lock &&
+                       AutopilotFlightDirectorActive == other.AutopilotFlightDirectorActive &&
+                       AutopilotBackcourseHold == other.AutopilotBackcourseHold &&
+                       AutopilotVerticalHold == other.AutopilotVerticalHold &&
+                       AutopilotYawDamper == other.AutopilotYawDamper &&
+                       AutopilotApproachHold == other.AutopilotApproachHold;
+            }
+
+            public readonly override bool Equals(object obj)
+            {
+                return obj is GarminG5ApbarStruct other && Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+                throw new ApplicationException("this class does not support GetHashCode and should not be used as a key for a dictionary");
+            }
+
+            public static bool operator ==(GarminG5ApbarStruct left, GarminG5ApbarStruct right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(GarminG5ApbarStruct left, GarminG5ApbarStruct right)
+            {
+                return !left.Equals(right);
+            }
+        }
+
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+        public struct GarminG5Struct : IEquatable<GarminG5Struct>
         {
             [DataDefinition("PLANE BANK DEGREES", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double BankDegrees;
@@ -54,23 +190,11 @@ namespace msfs_server.msfs
             [DataDefinition("NAV GSI:1", "number", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double Nav1GSI;
 
-            [DataDefinition("NAV OBS:1", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
-            public double Nav1OBS;
-
-            [DataDefinition("ELEVATOR TRIM POSITION", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
-            public double ElevatorTrimPosition;
-
-
-
-
-
             [DataDefinition("AUTOPILOT ALTITUDE LOCK VAR", "feet", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double AutoPilotAltitudeLockVar;
 
-
             [DataDefinition("AUTOPILOT HEADING LOCK DIR", "degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double AutoPilotHeadingLockDir;
-
 
             [DataDefinition("AUTOPILOT MASTER", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
             public bool AutopilotMaster;
@@ -81,65 +205,44 @@ namespace msfs_server.msfs
             [DataDefinition("AUTOPILOT ALTITUDE LOCK", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
             public bool AutopilotAltitudeLock;
 
-            [DataDefinition("AUTOPILOT NAV1 LOCK", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
-            public bool AutopilotNav1Lock;
 
-            [DataDefinition("AUTOPILOT FLIGHT DIRECTOR ACTIVE", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
-            public bool AutopilotFlightDirectorActive;
+            //[DataDefinition("NAV OBS:1", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            //public double Nav1OBS;
 
-            [DataDefinition("AUTOPILOT BACKCOURSE HOLD", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
-            public bool AutopilotBackcourseHold;
+            //[DataDefinition("ELEVATOR TRIM POSITION", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            //public double ElevatorTrimPosition;
 
-            [DataDefinition("AUTOPILOT VERTICAL HOLD", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
-            public bool AutopilotVerticalHold;
+            //[DataDefinition("GENERAL ENG OIL TEMPERATURE:1", "rankine", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            //public double GeneralEngineOilTemperature;
 
-            [DataDefinition("AUTOPILOT YAW DAMPER", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
-            public bool AutopilotYawDamper;
-
-            [DataDefinition("AUTOPILOT APPROACH HOLD", "bool", SIMCONNECT_DATATYPE.INT32, 0.0f)]
-            public bool AutopilotApproachHold;
+            //[DataDefinition("GENERAL ENG OIL PRESSURE:1", "psf", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
+            //public double GeneralEngineOilPressure;
 
 
-            [DataDefinition("GENERAL ENG OIL TEMPERATURE:1", "rankine", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
-            public double GeneralEngineOilTemperature;
-
-            [DataDefinition("GENERAL ENG OIL PRESSURE:1", "psf", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
-            public double GeneralEngineOilPressure;
-
-
-            public readonly bool Equals(AircraftStatusFastStruct other)
+            public readonly bool Equals(GarminG5Struct other)
             {
-                return BankDegrees.Equals(other.BankDegrees) && 
+                return BankDegrees.Equals(other.BankDegrees) &&
                        PitchDegrees.Equals(other.PitchDegrees) &&
-                       IndicatedAltitude.Equals(other.IndicatedAltitude) && 
+                       IndicatedAltitude.Equals(other.IndicatedAltitude) &&
                        VerticalSpeed.Equals(other.VerticalSpeed) &&
                        AirspeedIndicated.Equals(other.AirspeedIndicated) &&
                        GpsGroundSpeed.Equals(other.GpsGroundSpeed) &&
                        PlaneHeadingMagnetic.Equals(other.PlaneHeadingMagnetic) &&
                        KohlsmanSetting.Equals(other.KohlsmanSetting) &&
-                       TurnCoordinatorBall.Equals(other.TurnCoordinatorBall) && 
+                       TurnCoordinatorBall.Equals(other.TurnCoordinatorBall) &&
                        Nav1CDI.Equals(other.Nav1CDI) &&
-                       Nav1GSI.Equals(other.Nav1GSI) && 
-                       Nav1OBS.Equals(other.Nav1OBS) &&
-                       ElevatorTrimPosition.Equals(other.ElevatorTrimPosition) &&
+                       Nav1GSI.Equals(other.Nav1GSI) &&
                        AutoPilotAltitudeLockVar.Equals(other.AutoPilotAltitudeLockVar) &&
                        AutoPilotHeadingLockDir.Equals(other.AutoPilotHeadingLockDir) &&
-                       AutopilotMaster == other.AutopilotMaster && 
+                       AutopilotMaster == other.AutopilotMaster &&
                        AutopilotHeadingLock == other.AutopilotHeadingLock &&
-                       AutopilotAltitudeLock == other.AutopilotAltitudeLock &&
-                       AutopilotNav1Lock == other.AutopilotNav1Lock &&
-                       AutopilotFlightDirectorActive == other.AutopilotFlightDirectorActive &&
-                       AutopilotBackcourseHold == other.AutopilotBackcourseHold &&
-                       AutopilotVerticalHold == other.AutopilotVerticalHold &&
-                       AutopilotYawDamper == other.AutopilotYawDamper &&
-                       AutopilotApproachHold == other.AutopilotApproachHold &&
-                       GeneralEngineOilTemperature.Equals(other.GeneralEngineOilTemperature) &&
-                       GeneralEngineOilPressure.Equals(other.GeneralEngineOilPressure);
+                       AutopilotAltitudeLock == other.AutopilotAltitudeLock;
+
             }
 
             public readonly override bool Equals(object obj)
             {
-                return obj is AircraftStatusFastStruct other && Equals(other);
+                return obj is GarminG5Struct other && Equals(other);
             }
 
             public override int GetHashCode()
@@ -147,19 +250,19 @@ namespace msfs_server.msfs
                 throw new ApplicationException("this class does not support GetHashCode and should not be used as a key for a dictionary");
             }
 
-            public static bool operator ==(AircraftStatusFastStruct left, AircraftStatusFastStruct right)
+            public static bool operator ==(GarminG5Struct left, GarminG5Struct right)
             {
                 return left.Equals(right);
             }
 
-            public static bool operator !=(AircraftStatusFastStruct left, AircraftStatusFastStruct right)
+            public static bool operator !=(GarminG5Struct left, GarminG5Struct right)
             {
                 return !left.Equals(right);
             }
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
-        public struct AircraftStatusSlowStruct : IEquatable<AircraftStatusSlowStruct>
+        public struct MovingMapStruct : IEquatable<MovingMapStruct>
         {
             [DataDefinition("PLANE LATITUDE", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double Latitude;
@@ -185,7 +288,7 @@ namespace msfs_server.msfs
             [DataDefinition("GPS WP PREV LON", "degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f)]
             public double GPSPrevWPLongitude;
 
-            public readonly bool Equals(AircraftStatusSlowStruct other)
+            public readonly bool Equals(MovingMapStruct other)
             {
                 return Latitude.Equals(other.Latitude) && 
                        Longitude.Equals(other.Longitude) &&
@@ -199,7 +302,7 @@ namespace msfs_server.msfs
 
             public readonly override bool Equals(object obj)
             {
-                return obj is AircraftStatusSlowStruct other && Equals(other);
+                return obj is MovingMapStruct other && Equals(other);
             }
 
             public override int GetHashCode()
@@ -207,12 +310,12 @@ namespace msfs_server.msfs
                 throw new ApplicationException("this class does not support GetHashCode and should not be used as a key for a dictionary");
             }
 
-            public static bool operator ==(AircraftStatusSlowStruct left, AircraftStatusSlowStruct right)
+            public static bool operator ==(MovingMapStruct left, MovingMapStruct right)
             {
                 return left.Equals(right);
             }
 
-            public static bool operator !=(AircraftStatusSlowStruct left, AircraftStatusSlowStruct right)
+            public static bool operator !=(MovingMapStruct left, MovingMapStruct right)
             {
                 return !left.Equals(right);
             }

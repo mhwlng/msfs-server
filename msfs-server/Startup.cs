@@ -33,8 +33,11 @@ namespace msfs_server
             services.AddServerSideBlazor();
             services.AddMudServices();
 
-            services.AddSingleton<AircraftStatusSlowModel>();
-            services.AddSingleton<AircraftStatusFastModel>();
+            services.AddSingleton<MovingMapModel>();
+            services.AddSingleton<GarminG5Model>();
+            services.AddSingleton<GarminG5ApbarModel>();
+            services.AddSingleton<GarminG5HsiModel>();
+
             services.AddSingleton<Mqtt>();
 
 

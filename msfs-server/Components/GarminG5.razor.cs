@@ -19,7 +19,7 @@ namespace msfs_server.Components
 
         [Inject] private IJSRuntime MyJsRuntime { get; set; }
 
-        [Inject] public AircraftStatusFastModel AircraftStatusFast { get; set; }
+        [Inject] public GarminG5Model GarminG5Data { get; set; }
 
         [Parameter] public string RangesJson { get; set; }
 
@@ -34,29 +34,29 @@ namespace msfs_server.Components
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
                 .Build();
 
-            _hubConnection.On("MsFsFastRefresh", async () =>
+            _hubConnection.On("MsFsGarminG5Refresh", async () =>
             {
                 //InvokeAsync(StateHasChanged);
 
                 var module = await ModuleReference;
                 await module.InvokeVoidAsync("SetValues",
-                    AircraftStatusFast.Data.BankDegrees,
-                    AircraftStatusFast.Data.PitchDegrees,
-                    AircraftStatusFast.Data.IndicatedAltitude,
-                    AircraftStatusFast.Data.VerticalSpeed,
-                    AircraftStatusFast.Data.AirspeedIndicated,
+                    GarminG5Data.Data.BankDegrees,
+                    GarminG5Data.Data.PitchDegrees,
+                    GarminG5Data.Data.IndicatedAltitude,
+                    GarminG5Data.Data.VerticalSpeed,
+                    GarminG5Data.Data.AirspeedIndicated,
 
-                    AircraftStatusFast.Data.AutopilotMaster,
-                    AircraftStatusFast.Data.AutoPilotAltitudeLockVar,
-                    AircraftStatusFast.Data.AutopilotAltitudeLock,
-                    AircraftStatusFast.Data.GpsGroundSpeed,
-                    AircraftStatusFast.Data.KohlsmanSetting,
-                    AircraftStatusFast.Data.PlaneHeadingMagnetic,
-                    AircraftStatusFast.Data.AutoPilotHeadingLockDir,
-                    AircraftStatusFast.Data.AutopilotHeadingLock,
-                    AircraftStatusFast.Data.TurnCoordinatorBall,
-                    AircraftStatusFast.Data.Nav1CDI,
-                    AircraftStatusFast.Data.Nav1GSI
+                    GarminG5Data.Data.AutopilotMaster,
+                    GarminG5Data.Data.AutoPilotAltitudeLockVar,
+                    GarminG5Data.Data.AutopilotAltitudeLock,
+                    GarminG5Data.Data.GpsGroundSpeed,
+                    GarminG5Data.Data.KohlsmanSetting,
+                    GarminG5Data.Data.PlaneHeadingMagnetic,
+                    GarminG5Data.Data.AutoPilotHeadingLockDir,
+                    GarminG5Data.Data.AutopilotHeadingLock,
+                    GarminG5Data.Data.TurnCoordinatorBall,
+                    GarminG5Data.Data.Nav1CDI,
+                    GarminG5Data.Data.Nav1GSI
                     
                 );
 

@@ -22,7 +22,7 @@ namespace msfs_server.Components
     {
         [Inject] private NavigationManager NavigationManager { get; set; }
 
-        [Inject] public AircraftStatusFastModel AircraftStatusFast { get; set; }
+        [Inject] public GarminG5Model BarData { get; set; }
 
         [Inject] private IJSRuntime MyJsRuntime { get; set; }
 
@@ -55,20 +55,26 @@ namespace msfs_server.Components
                 .WithUrl(NavigationManager.ToAbsoluteUri("/myhub"))
                 .Build();
 
-            hubConnection.On("MsFsFastRefresh", async () =>
+            hubConnection.On("MsFsGarminG5Refresh", async () =>
             {
-                await SetValues(
-                    Value,
+                var id = $"bar_{Value}";
+
+                var val = (double)(BarData.GetType().GetProperty(Value)?.GetValue(BarData, null) ?? 0);
+
+                var module = await ModuleReference;
+                await module.InvokeVoidAsync("SetValues",
+                    id,
                     RangeMin,
                     RangeMax,
-                    Color);
+                    ColorTranslator.ToHtml(Color),
+                    val
+                );
 
             });
 
             await hubConnection.StartAsync();
         }
-
-
+        
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
@@ -89,25 +95,6 @@ namespace msfs_server.Components
             }
         }
 
-        async Task SetValues(string value,
-                             double rangeMin,
-                             double rangeMax,
-                             System.Drawing.Color color)
-        {
-            var id = $"bar_{value}";
-
-            var val = (double)(AircraftStatusFast.GetType().GetProperty(Value)?.GetValue(AircraftStatusFast, null) ?? 0);
-
-            var module = await ModuleReference;
-            await module.InvokeVoidAsync("SetValues",
-                id,
-                rangeMin,
-                rangeMax,
-                ColorTranslator.ToHtml(color),
-                val
-                );
-
-        }
 
         async Task Init(string value, 
                         string label,
