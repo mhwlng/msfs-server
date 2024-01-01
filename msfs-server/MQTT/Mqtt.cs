@@ -16,8 +16,6 @@ namespace msfs_server.MQTT
 {
     public class Mqtt
     {
-        private readonly object _mqttLock = new object();
-
         private static readonly MqttFactory Factory = new();
         private static readonly IManagedMqttClient MqttClient = Factory.CreateManagedMqttClient();
         private static readonly string ClientId = Guid.NewGuid().ToString();
@@ -124,18 +122,14 @@ namespace msfs_server.MQTT
 
                     var oldfieldValue = oldfields[index];
 
-
                     if (force || fieldValue.value.ToString() != oldfieldValue.value.ToString())
                     {
-                        lock (_mqttLock)
-                        {
-                            var message = new MqttApplicationMessageBuilder()
-                                .WithTopic($"msfs/{topic}/{fieldValue.name}")
-                                .WithPayload(fieldValue.value.ToString())
-                                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
-                                .Build();
-                            MqttClient.EnqueueAsync(message).GetAwaiter().GetResult();
-                        }
+                        var message = new MqttApplicationMessageBuilder()
+                            .WithTopic($"msfs/{topic}/{fieldValue.name}")
+                            .WithPayload(fieldValue.value.ToString())
+                            .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
+                            .Build();
+                        MqttClient.EnqueueAsync(message).GetAwaiter().GetResult();
                     }
                 }
             }

@@ -46,7 +46,7 @@ namespace msfs_server.msfs
 
             if (!force && _lastSentData == Data) return;
 
-            myHub.Clients.All.SendAsync("MsFsGarminG5HSIRefresh");
+            myHub.Clients.All.SendAsync("MsFsGarminG5HSIRefresh").GetAwaiter().GetResult(); 
 
             mqtt.Publish(Data, _lastSentData, force, "garming5hsi");
 
@@ -71,7 +71,7 @@ namespace msfs_server.msfs
 
             if (!force && _lastSentData == Data) return;
 
-            myHub.Clients.All.SendAsync("MsFsGarminG5APBARRefresh");
+            myHub.Clients.All.SendAsync("MsFsGarminG5APBARRefresh").GetAwaiter().GetResult(); 
 
             mqtt.Publish(Data, _lastSentData,force, "garming5apbar");
 
@@ -101,7 +101,7 @@ namespace msfs_server.msfs
 
             if (!force && _lastSentData == Data) return;
 
-            myHub.Clients.All.SendAsync("MsFsGarminG5Refresh");
+            myHub.Clients.All.SendAsync("MsFsGarminG5Refresh").GetAwaiter().GetResult();
 
             mqtt.Publish(Data, _lastSentData,force, "garming5");
 
@@ -132,7 +132,7 @@ namespace msfs_server.msfs
               0.000407520306147189   0.01397450300629543
               */
 
-            myHub.Clients.All.SendAsync("MsFsMovingMapRefresh");
+            myHub.Clients.All.SendAsync("MsFsMovingMapRefresh").GetAwaiter().GetResult();
 
             mqtt.Publish(Data, _lastSentData,force, "movingmap");
 
