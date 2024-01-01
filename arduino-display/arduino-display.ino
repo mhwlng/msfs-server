@@ -26,6 +26,9 @@ espMqttClient mqttClient;
 bool reconnectMqtt = false;
 uint32_t lastReconnect = 0;
 
+M5Canvas MySprite(&M5.Display); 
+
+
 void WiFiEvent(WiFiEvent_t event) {
     Serial.printf("[WiFi-event] event: %d\n", event);
     switch (event) {
@@ -91,23 +94,14 @@ void onMqttMessage(const espMqttClientTypes::MessageProperties& properties, cons
 
         if (planeHeadingMagneticNew != PlaneHeadingMagnetic) {
 
-            M5.Display.setTextColor(BLACK, BLACK);
-
-            M5.Display.drawFloat(PlaneHeadingMagnetic, 0 , M5.Display.width() / 2,
-                M5.Display.height() / 2);
-
-            M5.Display.setTextColor(GREEN, BLACK);
-
-            //M5.Display.fillScreen(TFT_BLACK);
+           MySprite.fillSprite(TFT_BLACK);
 
             PlaneHeadingMagnetic = planeHeadingMagneticNew;
 
-            M5.Display.drawFloat(PlaneHeadingMagnetic, 0, M5.Display.width() / 2,
-                M5.Display.height() / 2);
-
-            //Print text
-            //M5.Display.drawString("Hello World", M5.Display.width() / 2,
-              //  M5.Display.height() / 2);
+            MySprite.drawFloat(PlaneHeadingMagnetic, 0, MySprite.width() / 2,
+                MySprite.height() / 2);
+ 
+            MySprite.pushSprite(0, 0);
 
         }
 
@@ -124,18 +118,11 @@ void setup() {
     auto cfg = M5.config();
     M5.begin(cfg);
 
-    //M5.Display.startWrite();
-
-    //M5.Display.printf("Display %d\n", 123);
-    //M5.Display.endWrite();
-
-    M5.Display.setTextColor(GREEN, BLACK);
-    //Set font alignment
-    M5.Display.setTextDatum(middle_center);
-    //Set font
-    M5.Display.setFont(&fonts::Roboto_Thin_24);
-    //Set font size
-    M5.Display.setTextSize(1);
+    MySprite.createSprite(M5.Display.width(), M5.Display.height()); 
+    MySprite.setTextColor(GREEN, BLACK);
+    MySprite.setTextDatum(middle_center);
+    MySprite.setFont(&fonts::Roboto_Thin_24);
+    MySprite.setTextSize(1);
    
 
     mqttClient.setCredentials(mqtt_user, mqtt_password);
