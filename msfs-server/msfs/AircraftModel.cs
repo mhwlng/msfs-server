@@ -40,18 +40,18 @@ namespace msfs_server.msfs
         {
             Data = (SimConnectStructs.GarminG5HsiStruct)TruncateDoubles(data);
 
-            var refresh = _lastSentData == null;
+            var force = _lastSentData == null;
+
             _lastSentData ??= new SimConnectStructs.GarminG5HsiStruct();
 
-            refresh = refresh || _lastSentData != Data;
-
-            if (!refresh) return;
-
-            _lastSentData = Data;
+            if (!force && _lastSentData == Data) return;
 
             myHub.Clients.All.SendAsync("MsFsGarminG5HSIRefresh");
 
-            mqtt.Publish(Data, "garming5hsi");
+            mqtt.Publish(Data, _lastSentData, force, "garming5hsi");
+
+            _lastSentData = Data;
+
         }
     }
 
@@ -65,18 +65,18 @@ namespace msfs_server.msfs
         {
             Data = (SimConnectStructs.GarminG5ApbarStruct)TruncateDoubles(data);
 
-            var refresh = _lastSentData == null;
+            var force = _lastSentData == null;
+
             _lastSentData ??= new SimConnectStructs.GarminG5ApbarStruct();
 
-            refresh = refresh || _lastSentData != Data;
-
-            if (!refresh) return;
-
-            _lastSentData = Data;
+            if (!force && _lastSentData == Data) return;
 
             myHub.Clients.All.SendAsync("MsFsGarminG5APBARRefresh");
 
-            mqtt.Publish(Data, "garming5apbar");
+            mqtt.Publish(Data, _lastSentData,force, "garming5apbar");
+
+            _lastSentData = Data;
+
         }
     }
 
@@ -95,18 +95,18 @@ namespace msfs_server.msfs
 
             Data = (SimConnectStructs.GarminG5Struct)TruncateDoubles(data);
 
-            var refresh = _lastSentData == null;
+            var force = _lastSentData == null;
+
             _lastSentData ??= new SimConnectStructs.GarminG5Struct();
 
-            refresh = refresh || _lastSentData != Data;
-            
-            if (!refresh) return;
-
-            _lastSentData = Data;
+            if (!force && _lastSentData == Data) return;
 
             myHub.Clients.All.SendAsync("MsFsGarminG5Refresh");
 
-            mqtt.Publish(Data, "garming5");
+            mqtt.Publish(Data, _lastSentData,force, "garming5");
+
+            _lastSentData = Data;
+
         }
     }
 
@@ -121,15 +121,11 @@ namespace msfs_server.msfs
 
             Data = (SimConnectStructs.MovingMapStruct)TruncateDoubles(data);
 
+            var force = _lastSentData == null;
 
-            var refresh = _lastSentData == null;
             _lastSentData ??= new SimConnectStructs.MovingMapStruct();
 
-            refresh = refresh || _lastSentData != Data;
-
-            if (Data.Latitude == 0 || Data.Longitude == 0 || !refresh) return;
-
-            _lastSentData = Data;
+            if (!force && _lastSentData == Data) return;
 
             /* null island ???
               0.00040748246254171134 0.01397450300629543
@@ -138,7 +134,10 @@ namespace msfs_server.msfs
 
             myHub.Clients.All.SendAsync("MsFsMovingMapRefresh");
 
-            mqtt.Publish(Data, "movingmap");
+            mqtt.Publish(Data, _lastSentData,force, "movingmap");
+
+            _lastSentData = Data;
+
         }
     }
 }

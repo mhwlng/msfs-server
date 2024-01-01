@@ -102,7 +102,7 @@ namespace msfs_server.MQTT
 
         }
 
-        public void Publish(object obj, string topic)
+        public void Publish(object obj, object oldobj, bool force, string topic)
         {
             try
             {
@@ -113,18 +113,30 @@ namespace msfs_server.MQTT
                     .Select(field => new { name = field.Name, value = field.GetValue(obj) })
                     .ToList();
 
-                foreach (var fieldValue in fields)
+                var oldfields = oldobj.GetType()
+                    .GetFields()
+                    .Select(oldfield => new { name = oldfield.Name, value = oldfield.GetValue(oldobj) })
+                    .ToList();
+
+                for (var index = 0; index < fields.Count; index++)
                 {
-                    lock (_mqttLock)
+                    var fieldValue = fields[index];
+
+                    var oldfieldValue = oldfields[index];
+
+
+                    if (force || fieldValue.value.ToString() != oldfieldValue.value.ToString())
                     {
-                        var message = new MqttApplicationMessageBuilder()
-                            .WithTopic($"msfs/{topic}/{fieldValue.name}")
-                            .WithPayload(fieldValue.value.ToString())
-                            .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
-                            .Build();
-                        MqttClient.EnqueueAsync(message).GetAwaiter().GetResult();
+                        lock (_mqttLock)
+                        {
+                            var message = new MqttApplicationMessageBuilder()
+                                .WithTopic($"msfs/{topic}/{fieldValue.name}")
+                                .WithPayload(fieldValue.value.ToString())
+                                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
+                                .Build();
+                            MqttClient.EnqueueAsync(message).GetAwaiter().GetResult();
+                        }
                     }
-                    
                 }
             }
             catch (Exception ex)
