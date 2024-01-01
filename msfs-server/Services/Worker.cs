@@ -362,11 +362,11 @@ namespace msfs_server.Services
                 Simconnect = null;
             }
 
-            SimTokenSource.Cancel();
+            await SimTokenSource.CancelAsync();
 
             try
             {
-                _simTask?.Wait(simToken);
+                await _simTask?.WaitAsync(simToken)!;
             }
             catch (OperationCanceledException)
             {

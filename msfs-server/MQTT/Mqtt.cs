@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MQTTnet;
@@ -15,6 +16,8 @@ namespace msfs_server.MQTT
 {
     public class Mqtt
     {
+        private readonly object mqttLock = new object();
+
         private static readonly MqttFactory Factory = new();
         private static readonly IManagedMqttClient MqttClient = Factory.CreateManagedMqttClient();
         private static readonly string ClientId = Guid.NewGuid().ToString();
@@ -88,7 +91,7 @@ namespace msfs_server.MQTT
                 };
 
 
-                MqttClient.StartAsync(managedOptions);
+                MqttClient.StartAsync(managedOptions).GetAwaiter().GetResult();
 
 
             }
@@ -98,28 +101,30 @@ namespace msfs_server.MQTT
             }
 
         }
-        
+
         public void Publish(object obj, string topic)
         {
-            //Log.Information("Publish MQTT");
-
-            var fields = obj.GetType()
-                .GetFields()
-                .Select(field => new { name = field.Name, value = field.GetValue(obj) })
-                .ToList();
-
             try
             {
+                //Log.Information("Publish MQTT");
+
+                var fields = obj.GetType()
+                    .GetFields()
+                    .Select(field => new { name = field.Name, value = field.GetValue(obj) })
+                    .ToList();
+
                 foreach (var fieldValue in fields)
                 {
-                    var message = new MqttApplicationMessageBuilder()
-                        .WithTopic($"msfs/{topic}/{fieldValue.name}")
-                        .WithPayload(fieldValue.value.ToString())
-                        .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
-                        .WithRetainFlag()
-                        .Build();
-
-                    MqttClient.EnqueueAsync(message);
+                    lock (mqttLock)
+                    {
+                        var message = new MqttApplicationMessageBuilder()
+                            .WithTopic($"msfs/{topic}/{fieldValue.name}")
+                            .WithPayload(fieldValue.value.ToString())
+                            .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
+                            .Build();
+                        MqttClient.EnqueueAsync(message).GetAwaiter().GetResult();
+                    }
+                    
                 }
             }
             catch (Exception ex)
