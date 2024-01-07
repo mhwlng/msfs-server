@@ -32,7 +32,7 @@ namespace msfs_server.msfs
         }
     }
 
-    public class GarminG5HsiModel //: AircraftModel
+    public class GarminG5HsiModel : AircraftModel
     {
         public SimConnectStructs.GarminG5HsiStruct Data { get; private set; }
 
@@ -68,7 +68,7 @@ namespace msfs_server.msfs
 
         public void SetData(SimConnectStructs.GarminG5HsiStruct data)
         {
-            Data = data; // (SimConnectStructs.GarminG5HsiStruct)TruncateDoubles(data);
+            Data = (SimConnectStructs.GarminG5HsiStruct)TruncateDoubles(data);
 
             if (_thread?.IsAlive != true)
             {
@@ -87,7 +87,7 @@ namespace msfs_server.msfs
         }
     }
 
-    public class GarminG5ApbarModel //: AircraftModel
+    public class GarminG5ApbarModel : AircraftModel
     {
         public SimConnectStructs.GarminG5ApbarStruct Data { get; private set; }
 
@@ -124,7 +124,7 @@ namespace msfs_server.msfs
 
         public void SetData(SimConnectStructs.GarminG5ApbarStruct data)
         {
-            Data = data; // (SimConnectStructs.GarminG5ApbarStruct)TruncateDoubles(data);
+            Data = (SimConnectStructs.GarminG5ApbarStruct)TruncateDoubles(data);
 
             if (_thread?.IsAlive != true)
             {
@@ -144,7 +144,7 @@ namespace msfs_server.msfs
     }
 
 
-    public class GarminG5Model //: AircraftModel
+    public class GarminG5Model : AircraftModel
     {
         public SimConnectStructs.GarminG5Struct Data { get; private set; }
 
@@ -184,7 +184,7 @@ namespace msfs_server.msfs
 
             //data.GeneralEngineOilPressure /= 144.0; // convert to psi
 
-            Data = data; //(SimConnectStructs.GarminG5Struct)TruncateDoubles(data);
+            Data = (SimConnectStructs.GarminG5Struct)TruncateDoubles(data);
 
             if (_thread?.IsAlive != true)
             {
@@ -241,7 +241,7 @@ namespace msfs_server.msfs
         public void SetData(SimConnectStructs.MovingMapStruct data)
         {
 
-            Data = data; //(SimConnectStructs.MovingMapStruct)TruncateDoubles(data);
+            Data = (SimConnectStructs.MovingMapStruct)TruncateDoubles(data);
 
             if (_thread?.IsAlive != true)
             {
