@@ -16,8 +16,6 @@ namespace msfs_server
         [STAThread]
         public static int Main(string[] args)
         {
-            // make sure MQTT decimal point is a '.'
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 
             Common.Startup(args);
 

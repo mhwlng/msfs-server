@@ -9,7 +9,7 @@ namespace msfs_server.msfs
 
     public class SimVarUnits
     {
-        public static readonly Dictionary<string, SimVarDefinition> DefaultUnits = new()
+        public static readonly Dictionary<string, SimVarDefinition> DefaultUnits = new Dictionary<string, SimVarDefinition>
         {
             {"AUTOPILOT AIRSPEED HOLD",new SimVarDefinition("AUTOPILOT AIRSPEED HOLD","Airspeed hold active","bool",ConvertType("bool"),true,true)},
             {"AUTOPILOT AIRSPEED HOLD VAR",new SimVarDefinition("AUTOPILOT AIRSPEED HOLD VAR","Selected airspeed","knots",ConvertType("uif32"),true,true)},
@@ -964,20 +964,37 @@ namespace msfs_server.msfs
 
         public static SIMCONNECT_DATATYPE GetSimVarType(string type)
         {
-            var result = type switch
+            SIMCONNECT_DATATYPE result;
+            switch (type)
             {
-                null => SIMCONNECT_DATATYPE.INVALID,
-                "System.Double" => SIMCONNECT_DATATYPE.FLOAT64,
-                "System.Int16" => SIMCONNECT_DATATYPE.INT32,
-                "System.Int32" => SIMCONNECT_DATATYPE.INT32,
-                "System.UInt16" => SIMCONNECT_DATATYPE.INT32,
-                "System.UInt32" => SIMCONNECT_DATATYPE.INT32,
-                "System.UInt64" => SIMCONNECT_DATATYPE.INT64,
-                "System.Boolean" => SIMCONNECT_DATATYPE.INT32,
-                "System.Byte" => SIMCONNECT_DATATYPE.INT32,
-                "variable length string" => SIMCONNECT_DATATYPE.STRINGV,
-                _ => SIMCONNECT_DATATYPE.STRING256
-            };
+                case null:
+                    result = SIMCONNECT_DATATYPE.INVALID;
+                    break;
+                case "System.Double":
+                    result = SIMCONNECT_DATATYPE.FLOAT64;
+                    break;
+                case "System.Int16":
+                case "System.Int32":
+                case "System.UInt16":
+                case "System.UInt32":
+                    result = SIMCONNECT_DATATYPE.INT32;
+                    break;
+                case "System.UInt64":
+                    result = SIMCONNECT_DATATYPE.INT64;
+                    break;
+                case "System.Boolean":
+                    result = SIMCONNECT_DATATYPE.INT32;
+                    break;
+                case "System.Byte":
+                    result = SIMCONNECT_DATATYPE.INT32;
+                    break;
+                case "variable length string":
+                    result = SIMCONNECT_DATATYPE.STRINGV;
+                    break;
+                default:
+                    result = SIMCONNECT_DATATYPE.STRING256;
+                    break;
+            }
             return result;
         }
     }

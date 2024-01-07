@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MQTTnet;
 using MQTTnet.Client;
-using MQTTnet.Extensions.ManagedClient;
 using MQTTnet.Protocol;
 using msfs_server.msfs;
 using Newtonsoft.Json;
@@ -14,92 +13,47 @@ using Serilog;
 
 namespace msfs_server.MQTT
 {
-    public class Mqtt
+    public class Mqtt : IDisposable
     {
         private static readonly MqttFactory Factory = new();
-        private static readonly IManagedMqttClient MqttClient = Factory.CreateManagedMqttClient();
         private static readonly string ClientId = Guid.NewGuid().ToString();
-        
-        private static void MqttOnConnectingFailed(ConnectingFailedEventArgs e)
-        {
-            Log.Error($"MQTT Client: Connection Failed", e.Exception);
-        }
-
-        private static void MqttOnConnected(MqttClientConnectedEventArgs e)
-        {
-
-            Log.Information($"MQTT Client: Connected with result: {e.ConnectResult?.ResultCode}");
-        }
-
-        private static void MqttOnDisconnected(MqttClientDisconnectedEventArgs e)
-        {
-
-            Log.Error($"MQTT Client: Connection lost with reason: {e.Reason}.");
-        }
-
-
+        private static MqttClientOptions _options;
+        private static MqttClient _mqttClient;
+        private readonly object _thisLock = new();
         public Mqtt()
         {
             var mqttUri = Common.ConfigurationRoot.GetValue<string>("MQTT:mqttURI");
             var mqttUser = Common.ConfigurationRoot.GetValue<string>("MQTT:mqttUser");
             var mqttPassword = Common.ConfigurationRoot.GetValue<string>("MQTT:mqttPassword");
             var mqttPort = Common.ConfigurationRoot.GetValue<int>("MQTT:mqttPort");
-            var mqttSecure = Common.ConfigurationRoot.GetValue<bool>("MQTT:mqttSecure");
+            //var mqttSecure = Common.ConfigurationRoot.GetValue<bool>("MQTT:mqttSecure");
 
-
-            var messageBuilder = new MqttClientOptionsBuilder()
+            _options = new MqttClientOptionsBuilder()
                 //.WithProtocolVersion(MqttProtocolVersion.V500)
+                //.WithTlsOptions(o => { })
                 .WithClientId(ClientId)
                 .WithCredentials(mqttUser, mqttPassword)
                 .WithTcpServer(mqttUri, mqttPort)
-
-                .WithCleanSession();
-
-            var options = mqttSecure
-                ? messageBuilder
-                    .WithTlsOptions(o =>
-                    {
-
-                    })
-                    .Build()
-                : messageBuilder
-                    .Build();
-
-            var managedOptions = new ManagedMqttClientOptionsBuilder()
-                .WithAutoReconnectDelay(TimeSpan.FromSeconds(30))
-                .WithClientOptions(options)
+                .WithCleanSession()
                 .Build();
 
-            try
-            {
-                MqttClient.ConnectedAsync += e =>
-                {
-                    MqttOnConnected(e);
-                    return Task.CompletedTask;
-                };
-                MqttClient.DisconnectedAsync += e =>
-                {
-                    MqttOnDisconnected(e);
-                    return Task.CompletedTask;
-                };
-                MqttClient.ConnectingFailedAsync += e =>
-                {
-                    MqttOnConnectingFailed(e);
-                    return Task.CompletedTask;
-                };
+            
+            _mqttClient = (MqttClient)Factory.CreateMqttClient();
 
+            Connect();
 
-                MqttClient.StartAsync(managedOptions).GetAwaiter().GetResult();
-
-
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"MQTT CONNECT FAILED", ex);
-            }
+        }
+        public void Connect()
+        {
+            _mqttClient.ConnectAsync(_options, CancellationToken.None).GetAwaiter().GetResult();
 
         }
 
+        public void Disconnect()
+        {
+            _mqttClient.DisconnectAsync().GetAwaiter().GetResult();
+
+        }
         public void Publish(object obj, object oldobj, bool force, string topic)
         {
             try
@@ -116,30 +70,37 @@ namespace msfs_server.MQTT
                     .Select(oldfield => new { name = oldfield.Name, value = oldfield.GetValue(oldobj) })
                     .ToList();
 
-                for (var index = 0; index < fields.Count; index++)
+                lock (_thisLock)
                 {
-                    var fieldValue = fields[index];
-
-                    var oldfieldValue = oldfields[index];
-
-                    if (force || fieldValue.value.ToString() != oldfieldValue.value.ToString())
+                    for (var index = 0; index < fields.Count; index++)
                     {
-                        var message = new MqttApplicationMessageBuilder()
-                            .WithTopic($"msfs/{topic}/{fieldValue.name}")
-                            .WithPayload(fieldValue.value.ToString())
-                            .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
-                            .Build();
-                        MqttClient.EnqueueAsync(message).GetAwaiter().GetResult();
+                        var fieldValue = fields[index];
+
+                        var oldfieldValue = oldfields[index];
+
+                        if (force || fieldValue.value.ToString() != oldfieldValue.value.ToString())
+                        {
+                            var message = new MqttApplicationMessageBuilder()
+                                .WithTopic($"msfs/{topic}/{fieldValue.name}")
+                                .WithPayload(fieldValue.value.ToString())
+                                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
+                                .Build();
+                                
+                            _mqttClient.PublishAsync(message, CancellationToken.None).GetAwaiter().GetResult();
+
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Log.Error($"MQTT Client : Enqueue Failed", ex);
+                Log.Error($"MQTT Client : Failed", ex);
             }
 
-
         }
-
+        public void Dispose()
+        {
+            Disconnect();
+        }
     }
 }

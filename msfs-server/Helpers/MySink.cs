@@ -9,13 +9,21 @@ using Serilog.Formatting;
 
 namespace msfs_server.Helpers
 {
-    public class MySink(ITextFormatter formatter) : ILogEventSink
+    public class MySink : ILogEventSink
     {
+        private readonly ITextFormatter _formatter;
+
+        public MySink(ITextFormatter formatter)
+        {
+            _formatter = formatter;
+        }
+
+
         public void Emit(LogEvent logEvent)
         {
             var buffer = new StringWriter(new StringBuilder(1024));
-            formatter.Format(logEvent, buffer);
-            //var message = buffer.ToString();
+            _formatter.Format(logEvent, buffer);
+            var message = buffer.ToString();
 
             // do stuff
         }
@@ -28,7 +36,7 @@ namespace msfs_server.Helpers
             string outputTemplate
         )
         {
-            Serilog.Formatting.Display.MessageTemplateTextFormatter tf = new(outputTemplate, CultureInfo.InvariantCulture);
+            Serilog.Formatting.Display.MessageTemplateTextFormatter tf = new Serilog.Formatting.Display.MessageTemplateTextFormatter(outputTemplate, CultureInfo.InvariantCulture);
 
             return loggerConfiguration.Sink(new MySink(tf));
         }

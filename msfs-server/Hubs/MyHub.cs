@@ -7,7 +7,7 @@ namespace msfs_server.Hubs
 {
     public static class UserHandler
     {
-        public static readonly HashSet<string> ConnectedIds = [];
+        public static HashSet<string> ConnectedIds = new HashSet<string>();
     }
 
 
