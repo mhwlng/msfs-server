@@ -21,5 +21,11 @@
     <ClInclude Include="__vm\.arduino-display.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="heading.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="plane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

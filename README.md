@@ -70,3 +70,6 @@ https://github.com/kurt1288/msfs-flight-following
 https://github.com/mracko/MSFS-Mobile-Companion-App
 
 https://github.com/joeherwig/portable-sim-panels
+
+https://hackaday.io/project/188839-gc9a01-flight-displays
+
