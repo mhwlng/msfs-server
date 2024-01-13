@@ -41,6 +41,10 @@ More information can be found here:
 
 https://github.com/mhwlng/kiosk-server
 
+The 3 Dials have an ESP32 processor and are made by M5Stack :
+
+https://shop.m5stack.com/products/m5stack-dial-esp32-s3-smart-rotary-knob-w-1-28-round-touch-screen
+
 The 3d-printed enclosure can be found here:
 
 https://www.printables.com/@mhwlng_888536/collections/920676
