@@ -34,7 +34,7 @@ var config = {
 }
 ```
 
-![touch screen](https://i.imgur.com/UjlpKsy.jpg)
+![touch screen](https://i.imgur.com/PDDLZTq.jpg)
 
 The 8.8 inch touch screen, in above picture, is connected to a raspberry pi.
 More information can be found here:
