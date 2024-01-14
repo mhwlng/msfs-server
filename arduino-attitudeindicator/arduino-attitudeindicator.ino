@@ -222,13 +222,13 @@ void onMqttMessage(const espMqttClientTypes::MessageProperties& properties, cons
     
     if (strcmp(topic, mqtt_PitchDegrees_topic) == 0)
     {
-        float pitchDegreesNew = atof((char*)strval);
+        float pitchDegreesNew = - atof((char*)strval); // invert !
         // round to 1 digit
         pitchDegreesNew = float(long(pitchDegreesNew * 10)) / 10.0;
 
         //float pitchDegreesNew = round(atof((char*)strval));
 
-        Serial.printf("pitch: %f\n", pitchDegreesNew);
+        //Serial.printf("pitch: %f\n", pitchDegreesNew);
 
         if (pitchDegreesNew != PitchDegrees) {
 
@@ -246,7 +246,7 @@ void onMqttMessage(const espMqttClientTypes::MessageProperties& properties, cons
 
         //float bankDegreesNew = round(atof((char*)strval));
 
-        Serial.printf("bank: %f\n", bankDegreesNew);
+        //Serial.printf("bank: %f\n", bankDegreesNew);
 
         if (bankDegreesNew != BankDegrees) {
 
