@@ -1,7 +1,5 @@
-#include <HTTPClient.h>
 #include <WiFi.h>
 #include <espMqttClient.h>
-#include <base64.hpp>
 
 #include "heading.h"
 #include "plane.h"
@@ -19,11 +17,9 @@ const char* mqtt_password = SECRET_MQTT_PASSWORD;
 #define MQTT_HOST IPAddress(192, 168, 2, 34)
 #define MQTT_PORT 1883
 
-const char* home_assistant_prefix = "http://192.168.2.34:8123";
-
 const char* mqtt_PlaneHeadingMagnetic_topic = "msfs/garming5/PlaneHeadingMagnetic";
 
-float PlaneHeadingMagnetic;
+float PlaneHeadingMagnetic = 0;
 
 espMqttClient mqttClient;
 bool reconnectMqtt = false;
@@ -45,6 +41,9 @@ void WiFiEvent(WiFiEvent_t event) {
         Serial.println("WiFi connected");
         Serial.println("IP address: ");
         Serial.println(WiFi.localIP());
+
+        InitCanvas();
+
         connectToMqtt();
         break;
     case SYSTEM_EVENT_STA_DISCONNECTED:
@@ -73,7 +72,7 @@ void onMqttConnect(bool sessionPresent) {
     Serial.println(sessionPresent);
 
     uint16_t packetIdSub = mqttClient.subscribe(mqtt_PlaneHeadingMagnetic_topic, 0);
-    Serial.print("Subscribing at QoS 2, packetId: ");
+    Serial.print("Subscribing at QoS 0, packetId: ");
     Serial.println(packetIdSub);
 
 }
@@ -87,6 +86,31 @@ void onMqttDisconnect(espMqttClientTypes::DisconnectReason reason) {
     }
 }
 
+void InitCanvas()
+{
+    //MySprite.createSprite(M5.Display.width(), M5.Display.height()); 
+    //MySprite.setTextColor(GREEN, BLACK);
+    //MySprite.setTextDatum(middle_center);
+    //MySprite.setFont(&fonts::Roboto_Thin_24);
+    //MySprite.setTextSize(1);
+
+    canvas.setColorDepth(16);
+    canvas.createSprite(240, 240);
+    canvas.setPivot(120, 120);
+
+    //-----
+
+    dial_s.setColorDepth(8);
+    dial_s.createSprite(240, 240);
+    dial_s.setPivot(120, 120);
+    dial_s.pushImage(00, 00, 240, 240, heading);
+
+    plane_s.setColorDepth(16);
+    plane_s.createSprite(121, 190);
+    plane_s.pushImage(00, 00, 121, 190, plane);
+
+}
+
 void HeadingIndicator()
 {
     //MySprite.fillSprite(TFT_BLACK);
@@ -96,7 +120,6 @@ void HeadingIndicator()
     dial_s.pushRotated( - PlaneHeadingMagnetic, 0xc);
     plane_s.pushSprite(60, 7, 0);
     canvas.pushSprite(0, 0);
-
 
 }
 
@@ -118,7 +141,6 @@ void onMqttMessage(const espMqttClientTypes::MessageProperties& properties, cons
         //float planeHeadingMagneticNew = round(atof((char*)strval));
 
         //Serial.printf("payload: %f\n", planeHeadingMagneticNew);
-
 
         if (planeHeadingMagneticNew != PlaneHeadingMagnetic) {
 
@@ -144,28 +166,8 @@ void setup() {
     auto cfg = M5.config();
     M5.begin(cfg);
 
-    //MySprite.createSprite(M5.Display.width(), M5.Display.height()); 
-    //MySprite.setTextColor(GREEN, BLACK);
-    //MySprite.setTextDatum(middle_center);
-    //MySprite.setFont(&fonts::Roboto_Thin_24);
-    //MySprite.setTextSize(1);
-
-    canvas.setColorDepth(16);
-    canvas.createSprite(240, 240);
-    canvas.setPivot(120, 120);
-
-    //-----
-
-    dial_s.setColorDepth(8);
-    dial_s.createSprite(240, 240);
-    dial_s.setPivot(120, 120);
-    dial_s.pushImage(00, 00, 240, 240, heading);
-
-    plane_s.setColorDepth(16);
-    plane_s.createSprite(121, 190);
-    plane_s.pushImage(00, 00, 121, 190, plane);
-
     //------------
+
     mqttClient.setCredentials(mqtt_user, mqtt_password);
     mqttClient.setServer(MQTT_HOST, MQTT_PORT);
 
