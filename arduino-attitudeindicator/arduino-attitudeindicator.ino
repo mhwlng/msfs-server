@@ -29,11 +29,6 @@ M5Canvas canvas(&M5.Display);
 
 // thanks to https://www.hackster.io/SeeedStudio/wio-terminal-attitude-indicator-eae8d6
 
-#define EARTH24 0xB45F06U
-#define SKY24   0x0000FFU
-#define DEARTH24 0xA55706U
-#define DSKY24   0x0000DBU
-
 M5Canvas bank(&canvas);
 M5Canvas pitch(&bank);
 
@@ -93,7 +88,6 @@ void onMqttDisconnect(espMqttClientTypes::DisconnectReason reason) {
     }
 }
 
-
 void InitCanvas()
 {
     canvas.setColorDepth(8);
@@ -108,14 +102,20 @@ void InitCanvas()
 
 }
 
+
+#define EARTH 0xB45F06U
+#define SKY   0x0000FFU
+#define DEARTH 0x824C13U
+#define DSKY   0x1414B8U
+
 void AttitudeIndicator()
 {
     float mult = 240.0 / 180.0; // original image was 180x180
 
     //pitch sprite
-    pitch.fillRect(0 * mult, 0 * mult, 140 * mult, 70 * mult + 2 * mult * PitchDegrees, DSKY24);
-    pitch.fillRect(0 * mult, 70 * mult + 2 * mult * PitchDegrees, 140 * mult, 140 * mult, DEARTH24);
-    pitch.drawFastHLine(0 * mult, 70 * mult + 2 * mult * PitchDegrees, 140 * mult, TFT_WHITE);   //0
+    pitch.fillRect(0, 0, 140 * mult, 70 * mult + 2 * mult * PitchDegrees, DSKY);
+    pitch.fillRect(0, 70 * mult + 2 * mult * PitchDegrees, 140 * mult, 140 * mult, DEARTH);
+    pitch.drawFastHLine(0, 70 * mult + 2 * mult * PitchDegrees, 140 * mult, TFT_WHITE);   //0
     pitch.drawFastHLine(30 * mult, 30 * mult + 2 * mult * PitchDegrees, 80 * mult, TFT_WHITE);   //20
     pitch.drawFastHLine(50 * mult, 50 * mult + 2 * mult * PitchDegrees, 40 * mult, TFT_WHITE);   //10
     pitch.drawFastHLine(55 * mult, 60 * mult + 2 * mult * PitchDegrees, 30 * mult, TFT_WHITE);   //5
@@ -124,11 +124,11 @@ void AttitudeIndicator()
     pitch.drawFastHLine(50 * mult, 90 * mult + 2 * mult * PitchDegrees, 40 * mult, TFT_BLACK);   //10
     pitch.drawFastHLine(55 * mult, 80 * mult + 2 * mult * PitchDegrees, 30 * mult, TFT_BLACK);   //5
     pitch.drawFastHLine(55 * mult, 100 * mult + 2 * mult * PitchDegrees, 30 * mult, TFT_BLACK);   //15
-    //pitch.fillArc(70 * mult,70 * mult,70 * mult,90 * mult,0,359,TFT_BLACK);
-    pitch.fillTriangle(0 * mult, 0 * mult, 41 * mult, 0 * mult, 0 * mult, 41 * mult, TFT_BLACK);
-    pitch.fillTriangle(140 * mult, 0 * mult, 99 * mult, 0 * mult, 140 * mult, 41 * mult, TFT_BLACK);
+
+    pitch.fillTriangle(0, 0, 41 * mult, 0, 0, 41 * mult, TFT_BLACK);
+    pitch.fillTriangle(140 * mult, 0, 99 * mult, 0, 140 * mult, 41 * mult, TFT_BLACK);
     pitch.fillTriangle(140 * mult, 140 * mult, 140 * mult, 99 * mult, 99 * mult, 140 * mult, TFT_BLACK);
-    pitch.fillTriangle(0 * mult, 140 * mult, 41 * mult, 140 * mult, 0 * mult, 99 * mult, TFT_BLACK);
+    pitch.fillTriangle(0, 140 * mult, 41 * mult, 140 * mult, 0, 99 * mult, TFT_BLACK);
     pitch.setTextSize(1);
     pitch.drawNumber(20, 20 * mult, 27 * mult + 2 * mult * PitchDegrees);
     pitch.drawNumber(20, 110 * mult, 27 * mult + 2 * mult * PitchDegrees);
@@ -143,10 +143,10 @@ void AttitudeIndicator()
     pitch.setPivot(70 * mult, 70 * mult);
     pitch.pushRotateZoom(90 * mult, 90 * mult, 0, 1, 1);
 
-    bank.fillArc(90 * mult, 90 * mult, 90 * mult, 70 * mult, 0, 180, EARTH24);
-    bank.fillArc(90 * mult, 90 * mult, 90 * mult, 70 * mult, 180, 360, SKY24);
+    bank.fillArc(90 * mult, 90 * mult, 90 * mult, 70 * mult, 0, 180, EARTH);
+    bank.fillArc(90 * mult, 90 * mult, 90 * mult, 70 * mult, 180, 360, SKY);
     bank.fillTriangle(90 * mult, 20 * mult, 85 * mult, 3 * mult, 95 * mult, 3 * mult, TFT_WHITE);
-    bank.drawFastHLine(0 * mult, 90 * mult, 20 * mult, TFT_WHITE);
+    bank.drawFastHLine(0, 90 * mult, 20 * mult, TFT_WHITE);
     bank.drawFastHLine(160 * mult, 90 * mult, 20 * mult, TFT_WHITE);
     
     bank.drawLine(90 * mult - 90.0 * mult * cos(30.0 / 180.0 * PI), 90 * mult - 90.0 * mult * sin(30.0 / 180.0 * PI), 90 * mult - 70.0 * mult * cos(30.0 / 180.0 * PI), 90 * mult - 70.0 * mult * sin(30.0 / 180.0 * PI), TFT_WHITE);
@@ -168,7 +168,7 @@ void AttitudeIndicator()
 
     bank.pushRotateZoom(90 * mult, 90 * mult, BankDegrees, 1, 1);
 
-    canvas.drawTriangle(90 * mult, 20 * mult, 85 * mult, 30 * mult, 95 * mult, 30 * mult, TFT_ORANGE);
+    canvas.drawTriangle(90 * mult, 21 * mult, 85 * mult, 30 * mult, 95 * mult, 30 * mult, TFT_ORANGE);
     canvas.drawCircle(90 * mult, 90 * mult, 5 * mult, TFT_RED);
     canvas.drawFastHLine(30 * mult, 90 * mult, 50 * mult, TFT_ORANGE);
     canvas.drawFastHLine(100 * mult, 90 * mult, 50 * mult, TFT_ORANGE);
@@ -181,7 +181,7 @@ void AttitudeIndicator()
 
 void onMqttMessage(const espMqttClientTypes::MessageProperties& properties, const char* topic, const uint8_t* payload, size_t len, size_t index, size_t total) {
     //Serial.println("Publish received:");
-    Serial.printf("  topic: %s\n  payload:", topic);
+    //Serial.printf("  topic: %s\n  payload:", topic);
 
     char* strval = new char[len + 1];
 
