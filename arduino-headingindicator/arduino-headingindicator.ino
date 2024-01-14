@@ -3,7 +3,6 @@
 #include <espMqttClient.h>
 #include <base64.hpp>
 
-// thanks to https://hackaday.io/project/188839-gc9a01-flight-displays
 #include "heading.h"
 #include "plane.h"
 
@@ -32,10 +31,12 @@ uint32_t lastReconnect = 0;
 
 //M5Canvas MySprite(&M5.Display); 
 
-M5Canvas fb(&M5.Display);
-M5Canvas dial_s(&M5.Display);
-M5Canvas plane_s(&M5.Display);
+M5Canvas canvas(&M5.Display);
 
+// thanks to https://hackaday.io/project/188839-gc9a01-flight-displays
+
+M5Canvas dial_s(&canvas);
+M5Canvas plane_s(&canvas);
 
 void WiFiEvent(WiFiEvent_t event) {
     Serial.printf("[WiFi-event] event: %d\n", event);
@@ -86,35 +87,51 @@ void onMqttDisconnect(espMqttClientTypes::DisconnectReason reason) {
     }
 }
 
+void HeadingIndicator()
+{
+    //MySprite.fillSprite(TFT_BLACK);
+    //MySprite.drawFloat(PlaneHeadingMagnetic, 0, MySprite.width() / 2, MySprite.height() / 2);
+    //MySprite.pushSprite(0, 0);
+
+    dial_s.pushRotated( - PlaneHeadingMagnetic, 0xc);
+    plane_s.pushSprite(60, 7, 0);
+    canvas.pushSprite(0, 0);
+
+
+}
+
 void onMqttMessage(const espMqttClientTypes::MessageProperties& properties, const char* topic, const uint8_t* payload, size_t len, size_t index, size_t total) {
     //Serial.println("Publish received:");
     //Serial.printf("  topic: %s\n  payload:", topic);
 
+    char* strval = new char[len+1];
+
+    memcpy(strval, payload, len);
+    strval[len] = '\0';
+
     if (strcmp(topic, mqtt_PlaneHeadingMagnetic_topic) == 0)
     {
-
-        float planeHeadingMagneticNew = atof((char*)payload);
+        float planeHeadingMagneticNew = atof((char*)strval);
         // round to 1 digit
         planeHeadingMagneticNew = float(long(planeHeadingMagneticNew * 10)) / 10.0;
 
-        //float planeHeadingMagneticNew = round(atof((char*)payload));
+        //float planeHeadingMagneticNew = round(atof((char*)strval));
+
+        //Serial.printf("payload: %f\n", planeHeadingMagneticNew);
+
 
         if (planeHeadingMagneticNew != PlaneHeadingMagnetic) {
 
             PlaneHeadingMagnetic = planeHeadingMagneticNew;
 
-            //MySprite.fillSprite(TFT_BLACK);
-            //MySprite.drawFloat(PlaneHeadingMagnetic, 0, MySprite.width() / 2, MySprite.height() / 2);
-            //MySprite.pushSprite(0, 0);
-
-            dial_s.pushRotated(&fb, - PlaneHeadingMagnetic, 0xc);
-            plane_s.pushSprite(&fb, 60, 7, 0);
-
-            fb.pushSprite(0, 0);
+            HeadingIndicator();
 
         }
 
     }
+
+    delete[] strval;
+
 
 }
 
@@ -133,13 +150,11 @@ void setup() {
     //MySprite.setFont(&fonts::Roboto_Thin_24);
     //MySprite.setTextSize(1);
 
+    canvas.setColorDepth(16);
+    canvas.createSprite(240, 240);
+    canvas.setPivot(120, 120);
+
     //-----
-
-    //M5.Display.setRotation(0);
-
-    fb.setColorDepth(16);
-    fb.createSprite(240, 240);
-    fb.setPivot(120, 120);
 
     dial_s.setColorDepth(8);
     dial_s.createSprite(240, 240);
@@ -150,11 +165,7 @@ void setup() {
     plane_s.createSprite(121, 190);
     plane_s.pushImage(00, 00, 121, 190, plane);
 
-    //M5.Display.setPivot(120, 120);
-
-    //-----
-   
-
+    //------------
     mqttClient.setCredentials(mqtt_user, mqtt_password);
     mqttClient.setServer(MQTT_HOST, MQTT_PORT);
 
