@@ -96,119 +96,87 @@ void onMqttDisconnect(espMqttClientTypes::DisconnectReason reason) {
 
 void InitCanvas()
 {
-    canvas.setColorDepth(16);
-    canvas.createSprite(180, 180);
+    canvas.setColorDepth(8);
+    canvas.createSprite(240, 240);
     canvas.setPivot(120, 120);
 
-    bank.setColorDepth(16);
-    bank.createSprite(180, 180);
+    bank.setColorDepth(8);
+    bank.createSprite(240, 240);
 
-    pitch.setColorDepth(16);
-    pitch.createSprite(140, 140);
-
-    //Pitch sprite
-    pitch.fillArc(70, 70, 70, 1, 0, 180, DEARTH24);
-    pitch.fillArc(70, 70, 70, 1, 180, 360, DSKY24);
-    pitch.drawFastHLine(0, 70, 140, TFT_WHITE);   //0
-    pitch.drawFastHLine(30, 30, 80, TFT_WHITE);   //20
-    pitch.drawFastHLine(50, 50, 40, TFT_WHITE);   //10
-    pitch.drawFastHLine(55, 60, 30, TFT_WHITE);   //5
-    pitch.drawFastHLine(55, 40, 30, TFT_WHITE);   //15
-
-    //Bank sprite
-    pitch.setPivot(70, 70);
-    pitch.pushRotateZoom(90, 90, 0, 1, 1);
-
-    bank.fillArc(90, 90, 90, 70, 0, 180, EARTH24);
-    bank.fillArc(90, 90, 90, 70, 180, 360, SKY24);
-    bank.fillTriangle(90, 20, 85, 3, 95, 3, TFT_WHITE);
-    bank.drawFastHLine(0, 90, 20, TFT_WHITE);
-    bank.drawFastHLine(160, 90, 20, TFT_WHITE);
-    bank.drawLine(90 - 90.0 * cos(30.0 / 180.0 * PI), 90 - 90.0 * sin(30.0 / 180.0 * PI), 90 - 70.0 * cos(30.0 / 180.0 * PI), 90 - 70.0 * sin(30.0 / 180.0 * PI), TFT_WHITE);
-    bank.drawLine(90 - 90.0 * cos(60.0 / 180.0 * PI), 90 - 90.0 * sin(60.0 / 180.0 * PI), 90 - 70.0 * cos(60.0 / 180.0 * PI), 90 - 70.0 * sin(60.0 / 180.0 * PI), TFT_WHITE);
-    bank.drawLine(90 - 80.0 * cos(70.0 / 180.0 * PI), 90 - 80.0 * sin(70.0 / 180.0 * PI), 90 - 70.0 * cos(70.0 / 180.0 * PI), 90 - 70.0 * sin(70.0 / 180.0 * PI), TFT_WHITE);
-    bank.drawLine(90 - 80.0 * cos(80.0 / 180.0 * PI), 90 - 80.0 * sin(80.0 / 180.0 * PI), 90 - 70.0 * cos(80.0 / 180.0 * PI), 90 - 70.0 * sin(80.0 / 180.0 * PI), TFT_WHITE);
-    bank.fillTriangle(40, 40, 35, 31, 31, 35, TFT_WHITE);
-    bank.drawLine(90 + 90.0 * cos(30.0 / 180.0 * PI), 90 - 90.0 * sin(30.0 / 180.0 * PI), 90 + 70.0 * cos(30.0 / 180.0 * PI), 90 - 70.0 * sin(30.0 / 180.0 * PI), TFT_WHITE);
-    bank.drawLine(90 + 90.0 * cos(60.0 / 180.0 * PI), 90 - 90.0 * sin(60.0 / 180.0 * PI), 90 + 70.0 * cos(60.0 / 180.0 * PI), 90 - 70.0 * sin(60.0 / 180.0 * PI), TFT_WHITE);
-    bank.drawLine(90 + 80.0 * cos(70.0 / 180.0 * PI), 90 - 80.0 * sin(70.0 / 180.0 * PI), 90 + 70.0 * cos(70.0 / 180.0 * PI), 90 - 70.0 * sin(70.0 / 180.0 * PI), TFT_WHITE);
-    bank.drawLine(90 + 80.0 * cos(80.0 / 180.0 * PI), 90 - 80.0 * sin(80.0 / 180.0 * PI), 90 + 70.0 * cos(80.0 / 180.0 * PI), 90 - 70.0 * sin(80.0 / 180.0 * PI), TFT_WHITE);
-    bank.fillTriangle(139, 40, 144, 31, 148, 35, TFT_WHITE);
-
-    bank.setPivot(90, 90);
-    bank.pushRotateZoom(90, 90, 0, 1, 1);
-
-    canvas.drawTriangle(90, 20, 85, 30, 95, 30, TFT_ORANGE);
-    canvas.drawCircle(90, 90, 5, TFT_RED);
-    canvas.drawFastHLine(30, 90, 50, TFT_ORANGE);
-    canvas.drawFastHLine(100, 90, 50, TFT_ORANGE);
-    canvas.drawFastVLine(80, 90, 5, TFT_ORANGE);
-    canvas.drawFastVLine(100, 90, 5, TFT_ORANGE);
-    canvas.drawCircle(90, 90, 70, TFT_BLACK);
-
-    canvas.pushSprite(30, 30);
+    pitch.setColorDepth(8);
+    pitch.createSprite(187, 187);
 
 }
 
 void AttitudeIndicator()
 {
+    float mult = 240.0 / 180.0; // original image was 180x180
+
     //pitch sprite
-    pitch.fillRect(0, 0, 140, 70 + 2 * PitchDegrees, DSKY24);
-    pitch.fillRect(0, 70 + 2 * PitchDegrees, 140, 140, DEARTH24);
-    pitch.drawFastHLine(0, 70 + 2 * PitchDegrees, 140, TFT_WHITE);   //0
-    pitch.drawFastHLine(30, 30 + 2 * PitchDegrees, 80, TFT_WHITE);   //20
-    pitch.drawFastHLine(50, 50 + 2 * PitchDegrees, 40, TFT_WHITE);   //10
-    pitch.drawFastHLine(55, 60 + 2 * PitchDegrees, 30, TFT_WHITE);   //5
-    pitch.drawFastHLine(55, 40 + 2 * PitchDegrees, 30, TFT_WHITE);   //15
-    pitch.drawFastHLine(30, 110 + 2 * PitchDegrees, 80, TFT_BLACK);   //20
-    pitch.drawFastHLine(50, 90 + 2 * PitchDegrees, 40, TFT_BLACK);   //10
-    pitch.drawFastHLine(55, 80 + 2 * PitchDegrees, 30, TFT_BLACK);   //5
-    pitch.drawFastHLine(55, 100 + 2 * PitchDegrees, 30, TFT_BLACK);   //15
-    //pitch.fillArc(70,70,70,90,0,359,TFT_BLACK);
-    pitch.fillTriangle(0, 0, 41, 0, 0, 41, TFT_BLACK);
-    pitch.fillTriangle(140, 0, 99, 0, 140, 41, TFT_BLACK);
-    pitch.fillTriangle(140, 140, 140, 99, 99, 140, TFT_BLACK);
-    pitch.fillTriangle(0, 140, 41, 140, 0, 99, TFT_BLACK);
+    pitch.fillRect(0 * mult, 0 * mult, 140 * mult, 70 * mult + 2 * mult * PitchDegrees, DSKY24);
+    pitch.fillRect(0 * mult, 70 * mult + 2 * mult * PitchDegrees, 140 * mult, 140 * mult, DEARTH24);
+    pitch.drawFastHLine(0 * mult, 70 * mult + 2 * mult * PitchDegrees, 140 * mult, TFT_WHITE);   //0
+    pitch.drawFastHLine(30 * mult, 30 * mult + 2 * mult * PitchDegrees, 80 * mult, TFT_WHITE);   //20
+    pitch.drawFastHLine(50 * mult, 50 * mult + 2 * mult * PitchDegrees, 40 * mult, TFT_WHITE);   //10
+    pitch.drawFastHLine(55 * mult, 60 * mult + 2 * mult * PitchDegrees, 30 * mult, TFT_WHITE);   //5
+    pitch.drawFastHLine(55 * mult, 40 * mult + 2 * mult * PitchDegrees, 30 * mult, TFT_WHITE);   //15
+    pitch.drawFastHLine(30 * mult, 110 * mult + 2 * mult * PitchDegrees, 80 * mult, TFT_BLACK);   //20
+    pitch.drawFastHLine(50 * mult, 90 * mult + 2 * mult * PitchDegrees, 40 * mult, TFT_BLACK);   //10
+    pitch.drawFastHLine(55 * mult, 80 * mult + 2 * mult * PitchDegrees, 30 * mult, TFT_BLACK);   //5
+    pitch.drawFastHLine(55 * mult, 100 * mult + 2 * mult * PitchDegrees, 30 * mult, TFT_BLACK);   //15
+    //pitch.fillArc(70 * mult,70 * mult,70 * mult,90 * mult,0,359,TFT_BLACK);
+    pitch.fillTriangle(0 * mult, 0 * mult, 41 * mult, 0 * mult, 0 * mult, 41 * mult, TFT_BLACK);
+    pitch.fillTriangle(140 * mult, 0 * mult, 99 * mult, 0 * mult, 140 * mult, 41 * mult, TFT_BLACK);
+    pitch.fillTriangle(140 * mult, 140 * mult, 140 * mult, 99 * mult, 99 * mult, 140 * mult, TFT_BLACK);
+    pitch.fillTriangle(0 * mult, 140 * mult, 41 * mult, 140 * mult, 0 * mult, 99 * mult, TFT_BLACK);
     pitch.setTextSize(1);
-    pitch.drawNumber(20, 20, 27 + 2 * PitchDegrees);  pitch.drawNumber(20, 110, 27 + 2 * PitchDegrees);
-    pitch.drawNumber(10, 20, 47 + 2 * PitchDegrees);  pitch.drawNumber(10, 110, 47 + 2 * PitchDegrees);
-    pitch.drawNumber(20, 20, 107 + 2 * PitchDegrees);  pitch.drawNumber(20, 110, 107 + 2 * PitchDegrees);
-    pitch.drawNumber(10, 20, 87 + 2 * PitchDegrees);  pitch.drawNumber(10, 110, 87 + 2 * PitchDegrees);
+    pitch.drawNumber(20, 20 * mult, 27 * mult + 2 * mult * PitchDegrees);
+    pitch.drawNumber(20, 110 * mult, 27 * mult + 2 * mult * PitchDegrees);
+    pitch.drawNumber(10, 20 * mult, 47 * mult + 2 * mult * PitchDegrees);
+    pitch.drawNumber(10, 110 * mult, 47 * mult + 2 * mult * PitchDegrees);
+    pitch.drawNumber(20, 20 * mult, 107 * mult + 2 * mult * PitchDegrees);
+    pitch.drawNumber(20, 110 * mult, 107 * mult + 2 * mult * PitchDegrees);
+    pitch.drawNumber(10, 20 * mult, 87 * mult + 2 * mult * PitchDegrees);
+    pitch.drawNumber(10, 110 * mult, 87 * mult + 2 * mult * PitchDegrees);
 
     //Bank sprite
-    pitch.setPivot(70, 70);
-    pitch.pushRotateZoom(90, 90, 0, 1, 1);
+    pitch.setPivot(70 * mult, 70 * mult);
+    pitch.pushRotateZoom(90 * mult, 90 * mult, 0, 1, 1);
 
-    bank.fillArc(90, 90, 90, 70, 0, 180, EARTH24);
-    bank.fillArc(90, 90, 90, 70, 180, 360, SKY24);
-    bank.fillTriangle(90, 20, 85, 3, 95, 3, TFT_WHITE);
-    bank.drawFastHLine(0, 90, 20, TFT_WHITE);
-    bank.drawFastHLine(160, 90, 20, TFT_WHITE);
-    bank.drawLine(90 - 90.0 * cos(30.0 / 180.0 * PI), 90 - 90.0 * sin(30.0 / 180.0 * PI), 90 - 70.0 * cos(30.0 / 180.0 * PI), 90 - 70.0 * sin(30.0 / 180.0 * PI), TFT_WHITE);
-    bank.drawLine(90 - 90.0 * cos(60.0 / 180.0 * PI), 90 - 90.0 * sin(60.0 / 180.0 * PI), 90 - 70.0 * cos(60.0 / 180.0 * PI), 90 - 70.0 * sin(60.0 / 180.0 * PI), TFT_WHITE);
-    bank.drawLine(90 - 80.0 * cos(70.0 / 180.0 * PI), 90 - 80.0 * sin(70.0 / 180.0 * PI), 90 - 70.0 * cos(70.0 / 180.0 * PI), 90 - 70.0 * sin(70.0 / 180.0 * PI), TFT_WHITE);
-    bank.drawLine(90 - 80.0 * cos(80.0 / 180.0 * PI), 90 - 80.0 * sin(80.0 / 180.0 * PI), 90 - 70.0 * cos(80.0 / 180.0 * PI), 90 - 70.0 * sin(80.0 / 180.0 * PI), TFT_WHITE);
-    bank.fillTriangle(40, 40, 35, 31, 31, 35, TFT_WHITE);
-    bank.drawLine(90 + 90.0 * cos(30.0 / 180.0 * PI), 90 - 90.0 * sin(30.0 / 180.0 * PI), 90 + 70.0 * cos(30.0 / 180.0 * PI), 90 - 70.0 * sin(30.0 / 180.0 * PI), TFT_WHITE);
-    bank.drawLine(90 + 90.0 * cos(60.0 / 180.0 * PI), 90 - 90.0 * sin(60.0 / 180.0 * PI), 90 + 70.0 * cos(60.0 / 180.0 * PI), 90 - 70.0 * sin(60.0 / 180.0 * PI), TFT_WHITE);
-    bank.drawLine(90 + 80.0 * cos(70.0 / 180.0 * PI), 90 - 80.0 * sin(70.0 / 180.0 * PI), 90 + 70.0 * cos(70.0 / 180.0 * PI), 90 - 70.0 * sin(70.0 / 180.0 * PI), TFT_WHITE);
-    bank.drawLine(90 + 80.0 * cos(80.0 / 180.0 * PI), 90 - 80.0 * sin(80.0 / 180.0 * PI), 90 + 70.0 * cos(80.0 / 180.0 * PI), 90 - 70.0 * sin(80.0 / 180.0 * PI), TFT_WHITE);
-    bank.fillTriangle(139, 40, 144, 31, 148, 35, TFT_WHITE);
+    bank.fillArc(90 * mult, 90 * mult, 90 * mult, 70 * mult, 0, 180, EARTH24);
+    bank.fillArc(90 * mult, 90 * mult, 90 * mult, 70 * mult, 180, 360, SKY24);
+    bank.fillTriangle(90 * mult, 20 * mult, 85 * mult, 3 * mult, 95 * mult, 3 * mult, TFT_WHITE);
+    bank.drawFastHLine(0 * mult, 90 * mult, 20 * mult, TFT_WHITE);
+    bank.drawFastHLine(160 * mult, 90 * mult, 20 * mult, TFT_WHITE);
+    
+    bank.drawLine(90 * mult - 90.0 * mult * cos(30.0 / 180.0 * PI), 90 * mult - 90.0 * mult * sin(30.0 / 180.0 * PI), 90 * mult - 70.0 * mult * cos(30.0 / 180.0 * PI), 90 * mult - 70.0 * mult * sin(30.0 / 180.0 * PI), TFT_WHITE);
+    bank.drawLine(90 * mult - 90.0 * mult * cos(60.0 / 180.0 * PI), 90 * mult - 90.0 * mult * sin(60.0 / 180.0 * PI), 90 * mult - 70.0 * mult * cos(60.0 / 180.0 * PI), 90 * mult - 70.0 * mult * sin(60.0 / 180.0 * PI), TFT_WHITE);
+    bank.drawLine(90 * mult - 80.0 * mult * cos(70.0 / 180.0 * PI), 90 * mult - 80.0 * mult * sin(70.0 / 180.0 * PI), 90 * mult - 70.0 * mult * cos(70.0 / 180.0 * PI), 90 * mult - 70.0 * mult * sin(70.0 / 180.0 * PI), TFT_WHITE);
+    bank.drawLine(90 * mult - 80.0 * mult * cos(80.0 / 180.0 * PI), 90 * mult - 80.0 * mult * sin(80.0 / 180.0 * PI), 90 * mult - 70.0 * mult * cos(80.0 / 180.0 * PI), 90 * mult - 70.0 * mult * sin(80.0 / 180.0 * PI), TFT_WHITE);
+    
+    bank.fillTriangle(40 * mult, 40 * mult, 35 * mult, 31 * mult, 31 * mult, 35 * mult, TFT_WHITE);
+    
+    bank.drawLine(90 * mult + 90.0 * mult * cos(30.0 / 180.0 * PI), 90 * mult - 90.0 * mult * sin(30.0 / 180.0 * PI), 90 * mult + 70.0 * mult * cos(30.0 / 180.0 * PI), 90 * mult - 70.0 * mult * sin(30.0 / 180.0 * PI), TFT_WHITE);
+    bank.drawLine(90 * mult + 90.0 * mult * cos(60.0 / 180.0 * PI), 90 * mult - 90.0 * mult * sin(60.0 / 180.0 * PI), 90 * mult + 70.0 * mult * cos(60.0 / 180.0 * PI), 90 * mult - 70.0 * mult * sin(60.0 / 180.0 * PI), TFT_WHITE);
+    bank.drawLine(90 * mult + 80.0 * mult * cos(70.0 / 180.0 * PI), 90 * mult - 80.0 * mult * sin(70.0 / 180.0 * PI), 90 * mult + 70.0 * mult * cos(70.0 / 180.0 * PI), 90 * mult - 70.0 * mult * sin(70.0 / 180.0 * PI), TFT_WHITE);
+    bank.drawLine(90 * mult + 80.0 * mult * cos(80.0 / 180.0 * PI), 90 * mult - 80.0 * mult * sin(80.0 / 180.0 * PI), 90 * mult + 70.0 * mult * cos(80.0 / 180.0 * PI), 90 * mult - 70.0 * mult * sin(80.0 / 180.0 * PI), TFT_WHITE);
+    
+    bank.fillTriangle(139 * mult, 40 * mult, 144 * mult, 31 * mult, 148 * mult, 35 * mult, TFT_WHITE);
 
-    bank.setPivot(90, 90);
-    pitch.setPivot(70, 70);
+    bank.setPivot(90 * mult, 90 * mult);
+    pitch.setPivot(70 * mult, 70 * mult);
 
-    bank.pushRotateZoom(90, 90, BankDegrees, 1, 1);
+    bank.pushRotateZoom(90 * mult, 90 * mult, BankDegrees, 1, 1);
 
-    canvas.drawTriangle(90, 20, 85, 30, 95, 30, TFT_ORANGE);
-    canvas.drawCircle(90, 90, 5, TFT_RED);
-    canvas.drawFastHLine(30, 90, 50, TFT_ORANGE);
-    canvas.drawFastHLine(100, 90, 50, TFT_ORANGE);
-    canvas.drawFastVLine(80, 90, 5, TFT_ORANGE);
-    canvas.drawFastVLine(100, 90, 5, TFT_ORANGE);
-    canvas.drawCircle(90, 90, 70, TFT_BLACK);
+    canvas.drawTriangle(90 * mult, 20 * mult, 85 * mult, 30 * mult, 95 * mult, 30 * mult, TFT_ORANGE);
+    canvas.drawCircle(90 * mult, 90 * mult, 5 * mult, TFT_RED);
+    canvas.drawFastHLine(30 * mult, 90 * mult, 50 * mult, TFT_ORANGE);
+    canvas.drawFastHLine(100 * mult, 90 * mult, 50 * mult, TFT_ORANGE);
+    canvas.drawFastVLine(80 * mult, 90 * mult, 5 * mult, TFT_ORANGE);
+    canvas.drawFastVLine(100 * mult, 90 * mult, 5 * mult, TFT_ORANGE);
+    canvas.drawCircle(90 * mult, 90 * mult, 70 * mult, TFT_BLACK);
 
-    canvas.pushSprite(30, 30);
+    canvas.pushSprite(0, 0);
 } 
 
 void onMqttMessage(const espMqttClientTypes::MessageProperties& properties, const char* topic, const uint8_t* payload, size_t len, size_t index, size_t total) {
