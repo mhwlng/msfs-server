@@ -12,7 +12,7 @@ The web server URL and any error messages can be found in log.txt
 
 All collected data is also sent to an MQTT broker. The MQTT connection Settings are located in appsettings.json.
 
-Note that the MQTT data is not sent, until a connection is made with the web server first.
+**Note that the MQTT data is not sent, until a connection is made with the web server first.**
 
 ![mqtt](https://i.imgur.com/UlSnpDn.png)
 
