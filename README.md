@@ -77,3 +77,6 @@ https://github.com/joeherwig/portable-sim-panels
 
 https://hackaday.io/project/188839-gc9a01-flight-displays
 
+https://www.hackster.io/SeeedStudio/wio-terminal-attitude-indicator-eae8d6
+
+
