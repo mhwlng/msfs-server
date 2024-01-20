@@ -10,7 +10,11 @@ The port number of the web server is defined in appsettings.json (default = 5002
 
 The web server URL and any error messages can be found in log.txt
 
-All collected data is also sent to an MQTT broker. The MQTT connection Settings are located in appsettings.json.
+**This project requires an MQTT broker:**
+
+All collected data from MSFS is also sent to an MQTT broker. 
+
+The MQTT connection Settings are located in appsettings.json.
 
 **Note that the MQTT data is not sent, until a connection is made with the web server first.**
 
@@ -74,6 +78,22 @@ https://github.com/kurt1288/msfs-flight-following
 https://github.com/mracko/MSFS-Mobile-Companion-App
 
 https://github.com/joeherwig/portable-sim-panels
+
+# Arduino
+
+This project includes various arduino applications, that show flight instruments on M5Stack dial displays (ESP32) :
+
+https://shop.m5stack.com/products/m5stack-dial-esp32-s3-smart-rotary-knob-w-1-28-round-touch-screen
+
+
+note that espMqttClient.h references this specific library:
+
+https://github.com/bertmelis/espMqttClient
+
+
+
+
+thanks to
 
 https://hackaday.io/project/188839-gc9a01-flight-displays
 
