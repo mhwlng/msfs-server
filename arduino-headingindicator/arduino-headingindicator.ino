@@ -1,8 +1,7 @@
+#include "FS.h"
+#include "SPIFFS.h"
 #include <WiFi.h>
 #include <espMqttClient.h>
-
-#include "heading.h"
-#include "plane.h"
 
 #include <M5Unified.h>
 
@@ -28,8 +27,6 @@ uint32_t lastReconnect = 0;
 //M5Canvas MySprite(&M5.Display); 
 
 M5Canvas canvas(&M5.Display);
-
-// thanks to https://hackaday.io/project/188839-gc9a01-flight-displays
 
 M5Canvas dial_s(&canvas);
 M5Canvas plane_s(&canvas);
@@ -103,11 +100,15 @@ void InitCanvas()
     dial_s.setColorDepth(8);
     dial_s.createSprite(240, 240);
     dial_s.setPivot(120, 120);
-    dial_s.pushImage(00, 00, 240, 240, heading);
+  
+    auto dialBmp = SPIFFS.open("/dial.bmp");
+    dial_s.drawBmp(&dialBmp, 0, 0);
 
-    plane_s.setColorDepth(16);
-    plane_s.createSprite(121, 190);
-    plane_s.pushImage(00, 00, 121, 190, plane);
+    plane_s.setColorDepth(8);
+    plane_s.createSprite(85, 106);
+
+    auto planeBmp = SPIFFS.open("/plane.bmp");
+    plane_s.drawBmp(&planeBmp, 0, 0);
 
 }
 
@@ -118,9 +119,12 @@ void HeadingIndicator()
     //MySprite.pushSprite(0, 0);
 
     dial_s.pushRotated( - PlaneHeadingMagnetic, 0xc);
-    plane_s.pushSprite(60, 7, 0);
-    canvas.pushSprite(0, 0);
 
+    plane_s.pushSprite(78, 63);
+
+    canvas.fillRect(119, 15, 3, 51, 0xF9A0);
+
+    canvas.pushSprite(0, 0);
 }
 
 void onMqttMessage(const espMqttClientTypes::MessageProperties& properties, const char* topic, const uint8_t* payload, size_t len, size_t index, size_t total) {
@@ -162,6 +166,8 @@ void setup() {
     Serial.println();
     Serial.println();
     delay(1000);
+
+    SPIFFS.begin();
 
     auto cfg = M5.config();
     M5.begin(cfg);

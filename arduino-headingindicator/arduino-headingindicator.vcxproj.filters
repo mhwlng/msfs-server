@@ -27,4 +27,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\dial.bmp">
+      <Filter>Misc Files</Filter>
+    </Image>
+    <Image Include="data\plane.bmp">
+      <Filter>Misc Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

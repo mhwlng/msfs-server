@@ -90,7 +90,8 @@ note that espMqttClient.h references this specific library:
 
 https://github.com/bertmelis/espMqttClient
 
-
+The heading indicator requires dial.bmp and plane.bmp to be uploaded to SPIFFS
+These bitmaps have 8-bit colors
 
 
 thanks to
@@ -98,5 +99,8 @@ thanks to
 https://hackaday.io/project/188839-gc9a01-flight-displays
 
 https://www.hackster.io/SeeedStudio/wio-terminal-attitude-indicator-eae8d6
+
+https://en.m.wikipedia.org/wiki/File:Heading_indicator.svg
+
 
 
