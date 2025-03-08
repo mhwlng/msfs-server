@@ -1,7 +1,5 @@
 # msfs-server
 
-**EARLY PROTOTYPE, UNDER DEVELOPMENT**
-
 Web server, **using blazor and net8**, that connects via simconnect to MSFS 2020 and serves a web page that shows a moving map and instruments.
 
 You need [.NET 8.0](https://dotnet.microsoft.com/download/dotnet/8.0)  install at least : .NET Desktop Runtime \ x64
